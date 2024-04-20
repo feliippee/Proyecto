@@ -25,12 +25,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Surface(color = MaterialTheme.colorScheme.secondary) {
                 NutricionYDeporteFRTheme {
                     Titulo()
-
                 }
-            }
         }
     }
 }
@@ -86,7 +83,13 @@ fun Titulo() {
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(100.dp))
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Iniciar Sesión")
+            }
+            Button (onClick = { /*TODO*/ }) {
+                Text(text = "Iniciar Sesión con Google")
+            }
 
         }
     }
@@ -98,7 +101,10 @@ fun Titulo() {
 
     ) {
         item {
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.padding(12.dp)) {
+            Button(onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                modifier = Modifier.padding(12.dp))
+            {
                 Text(text = "Registro")
             }
             Button(onClick = { /*TODO*/ }, modifier = Modifier.padding(12.dp)) {
@@ -109,19 +115,13 @@ fun Titulo() {
     }
 }
 
-@Composable
-fun Botones() {
-
-}
-
 @Preview(showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
-fun DefaultPreview() {
+fun Vista() {
     NutricionYDeporteFRTheme {
         Titulo()
-
     }
 }
+
 
 

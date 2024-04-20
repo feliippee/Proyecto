@@ -11,3 +11,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val White = Color.White
 val Black = Color.Black
+//Tema Oscuro
+val Gris = Color(0xFF333333)
+val VerdeOscuro = Color(0xFF265C3B)
+//Tema normal
+val VerdeClaro = Color(0xFF7BE1A1)
