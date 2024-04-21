@@ -14,8 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.nutricionydeportefr.ui.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -30,7 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             NutricionYDeporteFRTheme {
-                Titulo()
+                Login()
             }
         }
     }
@@ -39,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Titulo() {
+fun Login() {
     //Variables
     var showSnackBar by remember { mutableStateOf(false) }
     //LazyColumn es un composable que permite desplazarse verticalmente
@@ -56,7 +54,7 @@ fun Titulo() {
                     .background(MaterialTheme.colorScheme.primary),
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSecondary,
+               color = MaterialTheme.colorScheme.onPrimary,
             )
             //Añadir espacio entre campos
             Spacer(modifier = Modifier.height(10.dp))
@@ -113,7 +111,7 @@ fun Titulo() {
             Button(
                 onClick = { /*TODO*/ },
                 //Poner el fondo del boton en blanco
-                colors = ButtonDefaults.buttonColors(Color.White)
+               // colors = ButtonDefaults.buttonColors(MaterialTheme)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
@@ -124,7 +122,6 @@ fun Titulo() {
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = "Iniciar Sesión con Google",
-                        color = Color.Black
                     )
                 }
             }
@@ -142,7 +139,6 @@ fun Titulo() {
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = "Iniciar Sesión con Facebook",
-                        color = Color.Black
                     )
                 }
             }
@@ -179,7 +175,7 @@ fun Titulo() {
 @Composable
 fun Vista() {
     NutricionYDeporteFRTheme {
-        Titulo()
+        Login()
     }
 }
 
