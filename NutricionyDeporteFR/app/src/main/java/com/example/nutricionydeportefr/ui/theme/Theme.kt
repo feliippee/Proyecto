@@ -10,25 +10,33 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Black,
-    secondary = Naranja,
-    tertiary = Black,
-    background = White,
-    onBackground = White
+    primary = Verde,
+    onPrimary = Black,
+    background = Black,
+    onBackground = Black,
+    onSurface = Black,
+    onSecondary = Black,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Black,
-    secondary = Naranja,
-    tertiary = Pink40,
-    background = White,
-     onBackground = Black
+    //Color para botones y otros elementos
+    primary = Naranja,
+    //Color para los textos de los botones
+    onPrimary = White,
+    //Color para el titulo
+    surface = Purple80,
+    //Color secundario para botones
+    secondary = AzulFacebook,
+    //Color para los textos de los botones secundarios
+    onSecondary = White,
+
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

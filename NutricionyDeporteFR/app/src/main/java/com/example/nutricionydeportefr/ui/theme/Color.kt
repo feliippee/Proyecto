@@ -1,5 +1,4 @@
 package com.example.nutricionydeportefr.ui.theme
-
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -12,7 +11,5 @@ val Pink40 = Color(0xFF7D5260)
 val White = Color.White
 val Black = Color.Black
 //Tema Oscuro
-val Gris = Color(0xFF333333)
-val VerdeOscuro = Color(0xFF265C3B)
-//Tema normal
-val VerdeClaro = Color(0xFF7BE1A1)
+val Verde= Color(0xFF46B62D)
+val AzulFacebook = Color(0xFF3B5998)
