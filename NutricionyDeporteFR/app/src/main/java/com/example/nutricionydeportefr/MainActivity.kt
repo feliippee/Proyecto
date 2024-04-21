@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.nutricionydeportefr.navegacion.Navegacion
 import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Surface(color = MaterialTheme.colorScheme.background) {
                 NutricionYDeporteFRTheme {
+                    Navegacion()
                 }
             }
         }
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
 fun Vista() {
     Surface(color = MaterialTheme.colorScheme.background) {
         NutricionYDeporteFRTheme {
-
+            Navegacion()
         }
     }
 }

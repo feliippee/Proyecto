@@ -18,11 +18,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login() {
+fun Login(navController: NavController) {
     //Variables
     var showSnackBar by remember { mutableStateOf(false) }
     //LazyColumn es un composable que permite desplazarse verticalmente
@@ -154,13 +155,4 @@ fun Login() {
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
-@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun Vista() {
-    Surface(color = MaterialTheme.colorScheme.background) {
-        NutricionYDeporteFRTheme {
-            Login()
-        }
-    }
-}
+
