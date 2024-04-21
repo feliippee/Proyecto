@@ -27,6 +27,8 @@ private val DarkColorScheme = darkColorScheme(
     secondary = AzulFacebook,
     //Color para los textos de los botones secundarios
     onSecondary = White,
+    onBackground = Black,
+    background = Black,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,6 +40,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = AzulFacebook,
     //Color de textos secundarios
     onSecondary = Black,
+    background = Color.Gray,
+    onBackground = Color.Gray
 
 )
 
