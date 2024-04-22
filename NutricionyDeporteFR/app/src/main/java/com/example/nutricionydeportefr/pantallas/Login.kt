@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.navegacion.Escenas
 import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,8 +141,9 @@ fun Login(navController: NavController) {
     ) {
         item {
             Button(
-                onClick = { /*TODO*/ },
-
+                onClick = {
+                          navController.navigate(route = Escenas.Registro.ruta)
+                          },
                 modifier = Modifier.padding(12.dp)
             )
             {
