@@ -25,8 +25,7 @@ import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavController) {
-    //Variables
-    var showSnackBar by remember { mutableStateOf(false) }
+
     //LazyColumn es un composable que permite desplazarse verticalmente
     LazyColumn(
         modifier = Modifier
@@ -78,22 +77,11 @@ fun Login(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(125.dp))
             Button(onClick = { /*TODO*/
-                showSnackBar = true
+
             }) {
                 Text(text = "Iniciar Sesión")
             }
-            if (showSnackBar) {
-                Snackbar(
-                    modifier = Modifier.padding(12.dp),
-                    action = {
-                        Button(onClick = { showSnackBar = false }) {
-                            Text("Cerrar")
-                        }
-                    }
-                ) {
-                    Text("Usuario o contraseña incorrectos")
-                }
-            }
+
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = { /*TODO*/ },
@@ -147,7 +135,7 @@ fun Login(navController: NavController) {
                 modifier = Modifier.padding(12.dp)
             )
             {
-                Text(text = "Registro")
+                Text(text = "Registrate")
             }
             Button(onClick = { /*TODO*/ }, modifier = Modifier.padding(12.dp)) {
                 Text(text = "Recuperar Contraseña")
