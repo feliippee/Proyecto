@@ -26,10 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.R
+import com.google.firebase.Firebase
+import com.google.firebase.auth.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
+//Variables de Firebase
+private lateinit var firebaseAuth: FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,142 +58,216 @@ fun Registro(navController: NavController) {
     var fechaNacimientoDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    //Instanciamos firebase
+    firebaseAuth = FirebaseAuth.getInstance()
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            // Texto de bienvenida
+            Text(
+                text = "Crear Cuenta",
+                style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth(),
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                // Texto de bienvenida
+
+                )
+            Spacer(modifier = Modifier.height(15.dp))
+            // OutlinedTextfield para registrar el nombre del usuario
+            OutlinedTextField(value = usuario,
+                onValueChange = {
+                    usuario = it
+                },
+                label = { Text("Nombre de usuario") })
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            // OutlinedTextfield para registrar la contraseña del usuario
+            OutlinedTextField(
+                //Vinculamos el valor del campo de texto con la variable contrasena
+                value = contrasena,
+                //Cuando el usuario introduce la contraseña, se guarda en la variable contrasena
+                onValueChange = { contrasena = it },
+                label = { Text("Contraseña") },
+                //Si mostrarContrasenas es true, se muestra la contraseña, si no, se oculta
+                visualTransformation = if (mostrarContrasenas) VisualTransformation.None else PasswordVisualTransformation()
+
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+            // OutlinedTextfield para confirmar la contraseña del usuario
+            OutlinedTextField(
+
+                value = confirmarcontrasena,
+                onValueChange = { confirmarcontrasena = it },
+                label = { Text("Confirmar Contraseña") },
+                visualTransformation = if (mostrarContrasenas) VisualTransformation.None else PasswordVisualTransformation(),
+                //Si las contraseñas no coinciden, se muestra un mensaje de error
+                isError = errorConfirmarContraseña,
+            )
+            if (errorConfirmarContraseña) {
                 Text(
-                    text = "Crear Cuenta",
-                    style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-
-
+                    text = "Las contraseñas no coinciden",
+                    color = Color.Red
                 )
-                Spacer(modifier = Modifier.height(15.dp))
-                // OutlinedTextfield para registrar el nombre del usuario
-                OutlinedTextField(value = usuario,
-                    onValueChange = {
-                        usuario = it
-                    },
-                    label = { Text("Nombre de usuario") })
+            }
+            Spacer(modifier = Modifier.height(15.dp))
 
-                Spacer(modifier = Modifier.height(15.dp))
-
-                // OutlinedTextfield para registrar la contraseña del usuario
-                OutlinedTextField(
-                    //Vinculamos el valor del campo de texto con la variable contrasena
-                    value = contrasena,
-                    //Cuando el usuario introduce la contraseña, se guarda en la variable contrasena
-                    onValueChange = { contrasena = it },
-                    label = { Text("Contraseña") },
-                    //Si mostrarContrasenas es true, se muestra la contraseña, si no, se oculta
-                    visualTransformation = if (mostrarContrasenas) VisualTransformation.None else PasswordVisualTransformation()
-
+            // Checkbox para mostrar/ocultar contraseñas
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = mostrarContrasenas,
+                    onCheckedChange = { mostrarContrasenas = it }
                 )
-                Spacer(modifier = Modifier.height(15.dp))
+                Text("Mostrar contraseña")
+            }
+            Spacer(modifier = Modifier.height(15.dp))
 
-                // OutlinedTextfield para confirmar la contraseña del usuario
-                OutlinedTextField(
+            OutlinedTextField(
+                value = correo,
+                onValueChange = {
+                    correo = it
+                    correvalido = !validarCorreo(correo)
 
-                    value = confirmarcontrasena,
-                    onValueChange = { confirmarcontrasena = it },
-                    label = { Text("Confirmar Contraseña") },
-                    visualTransformation = if (mostrarContrasenas) VisualTransformation.None else PasswordVisualTransformation(),
-                    //Si las contraseñas no coinciden, se muestra un mensaje de error
-                    isError = errorConfirmarContraseña,
+                },
+                label = { Text("Correo") },
+                isError = correvalido
+            )
+            if (correvalido) {
+                Text(
+                    text = "Correo no valido",
+                    color = Color.Red
                 )
-                if (errorConfirmarContraseña) {
-                    Text(
-                        text = "Las contraseñas no coinciden",
-                        color = Color.Red
+            }
+            Spacer(modifier = Modifier.height(15.dp))
+            // OutlinedTextfield para registrar la fecha de nacimiento del usuario
+            OutlinedTextField(
+                value = fechaNacimiento,
+                onValueChange = { fechaNacimiento = it },
+                label = { Text("Fecha de nacimiento") },
+                readOnly = true,
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.calendario),
+                        contentDescription = "Fecha de nacimiento",
+                        modifier = Modifier.clickable {
+                            fechaNacimientoDialog = true
+                        }
                     )
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-
-                // Checkbox para mostrar/ocultar contraseñas
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = mostrarContrasenas,
-                        onCheckedChange = { mostrarContrasenas = it }
-                    )
-                    Text("Mostrar contraseña")
+            )
+            if (fechaNacimientoDialog) {
+                FechaDialog(calendar) {
+                    fechaNacimiento = it
+                    fechaNacimientoDialog = false
                 }
-                Spacer(modifier = Modifier.height(15.dp))
+            }
+            Spacer(modifier = Modifier.height(15.dp))
 
-                OutlinedTextField(
-                    value = correo,
-                    onValueChange = {
-                        correo = it
-                        correvalido = !validarCorreo(correo)
+            //Boton de registro
+            Button(onClick = {
+                //Comprobamos si los campos estan vacios
+                if (usuario.isEmpty() || contrasena.isEmpty() || confirmarcontrasena.isEmpty() || correo.isEmpty() || fechaNacimiento.isEmpty()) {
+                    //Muestro error en los campos
+                    Toast.makeText(context, "Los campos no pueden estar vacios", Toast.LENGTH_SHORT).show()
+                } else {
+                    //Comprobamos si las contraseñas coinciden y si el email es valido.
+                    if (contrasena == confirmarcontrasena && !correvalido) {
+                        registrarUsuario(usuario, contrasena, correo, fechaNacimiento, context, navController)
 
-                    },
-                    label = { Text("Correo") },
-                    isError = correvalido
-                )
-                if (correvalido) {
-                    Text(
-                        text = "Correo no valido",
-                        color = Color.Red
-                    )
+                    } else {
+                        errorConfirmarContraseña = true
+                    }
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-                // OutlinedTextfield para registrar la fecha de nacimiento del usuario
-                OutlinedTextField(
-                    value = fechaNacimiento,
-                    onValueChange = { fechaNacimiento = it },
-                    label = { Text("Fecha de nacimiento") },
-                    readOnly = true,
-                    trailingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.calendario),
-                            contentDescription = "Fecha de nacimiento",
-                            modifier = Modifier.clickable {
-                                fechaNacimientoDialog = true
+            }) {
+                Text(text = "Registrarse")
+            }
+
+        }
+    }
+
+}
+//Funcion para registrar usuario en firebase
+private fun registrarUsuario(
+    usuario: String,
+    contrasena: String,
+    correo: String,
+    fechaNacimiento: String,
+    //Context es para indicarle donde queremos mostrar el mesaje
+    context: android.content.Context,
+    navController: NavController
+) {
+    firebaseAuth.createUserWithEmailAndPassword(correo, contrasena)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                //Obtenemos el usuario logueado en firebase
+                val user = firebaseAuth.currentUser
+                //Actualizamos el perfil del usuario y le ponemos el nombre
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName(usuario)
+                    .build()
+
+                user?.updateProfile(profileUpdates)
+                    ?.addOnCompleteListener { updateTask ->
+                        if (updateTask.isSuccessful) {
+                            Toast.makeText(context, "Usuario registrado con exito", Toast.LENGTH_SHORT).show()
+                            registrarDatosUsuarios(usuario, correo, fechaNacimiento)
+                            GlobalScope.launch(Dispatchers.Main) {
+                                delay(1500)
                             }
-                        )
+                            navController.navigate("home")
+                        }
                     }
-                )
-                if (fechaNacimientoDialog) {
-                    FechaDialog(calendar) {
-                        fechaNacimiento = it
-                        fechaNacimientoDialog = false
+            } else {
+                val exception = task.exception
+                when (exception) {
+                    is FirebaseAuthInvalidCredentialsException -> {
+                        //Contraseña invalida
+                        Toast.makeText(context, "La contraseña  debe de contener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+                    }
+                    is FirebaseAuthInvalidUserException -> {
+                        //Email invalido
+                        Toast.makeText(context, "El correo introducido no es válido", Toast.LENGTH_SHORT).show()
+                    }
+                    is FirebaseAuthUserCollisionException -> {
+                        //Email en uso
+                        Toast.makeText(context, "El correo introducido ya está en uso", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        //Otros errores
+                        Toast.makeText(context, "Error al registrar el usuario", Toast.LENGTH_SHORT).show()
                     }
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-
-                //Boton de registro
-                Button(onClick = {
-                    //Comprobamos si los campos estan vacios
-                    if (usuario.isEmpty() || contrasena.isEmpty() || confirmarcontrasena.isEmpty() || correo.isEmpty() || fechaNacimiento.isEmpty()) {
-                        Toast.makeText(context, "Los campos no pueden estar vacios", Toast.LENGTH_SHORT).show()
-                    }
-                    //Comprobamos si las contraseñas coinciden
-                    errorConfirmarContraseña = if (contrasena != confirmarcontrasena) {
-                        true
-                    } else {
-                        false
-                    }
-                    //Comprobamos si el correo es valido
-                    correvalido = if (validarCorreo(correo)) {
-                        false
-                    } else {
-                        true
-                    }
-                }) {
-                    Text(text = "Registrarse")
-                }
-                //Mostrar mensaje de error si algun campo esta vacio
 
             }
         }
+}
 
+//Funcion para guardar los datos de los usuarios en Firebase
+fun registrarDatosUsuarios(
+    usuario: String,
+    correo: String,
+    fechaNacimiento: String
+) {
+    val db = Firebase.firestore
+    val usuario = hashMapOf(
+        "nombre" to usuario,
+        "correo" to correo,
+        "fecha" to fechaNacimiento
+    )
+    db.collection("usuarios")
+        .add(usuario)
+        .addOnSuccessListener { documentReference ->
+            println("DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            println("Error adding document $e")
+        }
 }
 
 //Funcion para validar el correo

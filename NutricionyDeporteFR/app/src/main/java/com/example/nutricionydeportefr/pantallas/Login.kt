@@ -1,6 +1,7 @@
 package com.example.nutricionydeportefr.pantallas
 
 import android.content.res.Configuration
+import android.widget.Toast
 import com.example.nutricionydeportefr.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -21,10 +23,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.navegacion.Escenas
 import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
-
+import com.google.firebase.auth.FirebaseAuth
+private lateinit var firebaseAuth: FirebaseAuth
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavController) {
+    //Variables
+    var correo by remember { mutableStateOf("") }
+    var contrasena by remember { mutableStateOf("") }
+    var mostrarContrasena by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     //LazyColumn es un composable que permite desplazarse verticalmente
     LazyColumn(
@@ -33,6 +41,8 @@ fun Login(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            //Instanciamos firebase
+            firebaseAuth = FirebaseAuth.getInstance()
             Text(
                 text = "Nutricion y Deporte FR",
                 modifier = Modifier
@@ -52,15 +62,14 @@ fun Login(navController: NavController) {
                     .fillMaxWidth()
                     .height(150.dp)
             )
-            var usuario by remember { mutableStateOf("") }
-            OutlinedTextField(value = usuario,
+
+            OutlinedTextField(value = correo,
                 onValueChange = {
-                    usuario = it
+                    correo = it
                 },
-                label = { Text("Nombre de usuario") })
+                label = { Text("Correo") })
             Spacer(modifier = Modifier.height(10.dp))
-            var contrasena by remember { mutableStateOf("") }
-            var mostrarContrasena by remember { mutableStateOf(false) }
+
             OutlinedTextField(
                 value = contrasena,
                 onValueChange = { contrasena = it },
@@ -76,7 +85,15 @@ fun Login(navController: NavController) {
                 }
             )
             Spacer(modifier = Modifier.height(125.dp))
-            Button(onClick = { /*TODO*/
+            Button(onClick = {
+                //Comprobamos que los campos no esten vacios
+                if (correo.isEmpty() || contrasena.isEmpty()) {
+                    Toast.makeText(context, "Introduce el Correo y Contraseña para Iniciar Sesion", Toast.LENGTH_SHORT).show()
+                    return@Button
+                } else {
+                    //Comprobamos el inicio de sesion
+                    comprobarInicioSesion(correo, contrasena, context, navController)
+                }
 
             }) {
                 Text(text = "Iniciar Sesión")
@@ -143,6 +160,25 @@ fun Login(navController: NavController) {
         }
 
     }
+}
+//Funcion para comprobar el inicio de sesion
+private fun comprobarInicioSesion(
+    email: String,
+    password: String,
+    context: android.content.Context,
+    navController: NavController
+) {
+    firebaseAuth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener() { task ->
+            if (task.isSuccessful) {
+                //Mostramos un mensaje y llamamos al menu
+                Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
+                navController.navigate("home")
+            } else {
+                //Si no se ha podido iniciar sesion mostramos un mensaje
+                Toast.makeText(context, "Error al iniciar sesion, comprueba los datos", Toast.LENGTH_SHORT).show()
+            }
+        }
 }
 
 

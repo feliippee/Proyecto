@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "911309946399",
+    "project_id": "nutricion-y-deporte-fr",
+    "storage_bucket": "nutricion-y-deporte-fr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911309946399:android:582ff8aa4a46dd738e1f2a",
+        "android_client_info": {
+          "package_name": "com.example.nutricionydeportefr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911309946399-8d55bc5ib0jquefaheu1qufmn3f7314h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nutricionydeportefr",
+            "certificate_hash": "85c37570bd76503bd048a2afd47e3725f3efc86e"
+          }
+        },
+        {
+          "client_id": "911309946399-8obn3pn0ctlvijarvfdsrnv08e4ug00h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx7YmnW2Nb01leHJ5OwmuCcNA1J29Vy1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911309946399-8obn3pn0ctlvijarvfdsrnv08e4ug00h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
