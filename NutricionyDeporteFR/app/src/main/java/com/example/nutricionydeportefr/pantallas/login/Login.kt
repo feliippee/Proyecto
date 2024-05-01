@@ -35,8 +35,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
-private lateinit var firebaseAuth: FirebaseAuth
-private const val RC_SIGN_IN = 123
+
 
 
 @Composable
@@ -70,7 +69,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
             Recuperarcontraseña(navController)
             Spacer(modifier = Modifier.height(30.dp))
-            Botonlogin(correo = email, contrasena = password , context = context, navController = navController )
+            Botonlogin(correo = email, contrasena = password , context = context, navController = navController, loginViewModel )
             Spacer(modifier = Modifier.height(30.dp))
             //Linea Divisora
             Row(
@@ -168,7 +167,11 @@ fun Recuperarcontraseña(navController: NavController,) {
     )
 }
 @Composable
-fun Botonlogin(correo: String, contrasena: String, context: android.content.Context, navController: NavController) {
+fun Botonlogin(correo: String,
+               contrasena: String,
+               context: android.content.Context,
+               navController: NavController,
+               loginViewModel: LoginViewModel) {
     Button(onClick = {
         //Comprobamos que los campos no esten vacios
         if (correo.isEmpty() || contrasena.isEmpty()) {
@@ -177,7 +180,7 @@ fun Botonlogin(correo: String, contrasena: String, context: android.content.Cont
             return@Button
         } else {
             //Comprobamos el inicio de sesion
-            comprobarInicioSesion(correo, contrasena, context, navController)
+            loginViewModel.comprobarInicioSesion(correo, contrasena, context, navController)
         }
 
     }, modifier = Modifier
