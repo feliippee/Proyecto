@@ -1,4 +1,4 @@
-package com.example.nutricionydeportefr.pantallas
+package com.example.nutricionydeportefr.pantallas.login
 
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCaller
@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,10 +40,9 @@ private const val RC_SIGN_IN = 123
 
 
 @Composable
-fun Login(navController: NavController) {
-    var correo by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
-    var mostrarContrasena by remember { mutableStateOf(false) }
+fun Login(navController: NavController, loginViewModel: LoginViewModel) {
+    val email:String by loginViewModel.email.observeAsState(initial = "")
+    val password:String by loginViewModel.password.observeAsState(initial = "")
     val context = LocalContext.current
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(context.getString(R.string.default_web_client_id))
@@ -66,14 +66,13 @@ fun Login(navController: NavController) {
             Fotologin()
             Spacer(modifier = Modifier.height(10.dp))
             //Campos de texto
-            Camposlogin()
+            Camposlogin(loginViewModel)
             Spacer(modifier = Modifier.height(10.dp))
             Recuperarcontraseña(navController)
             Spacer(modifier = Modifier.height(30.dp))
-            Botonlogin(correo = correo, contrasena = contrasena , context = context, navController = navController )
+            Botonlogin(correo = email, contrasena = password , context = context, navController = navController )
             Spacer(modifier = Modifier.height(30.dp))
             //Linea Divisora
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -123,28 +122,33 @@ fun Fotologin() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Camposlogin() {
-    var correo by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
-    var mostrarContrasena by remember { mutableStateOf(false) }
+fun Camposlogin(loginViewModel: LoginViewModel) {
+    val email:String by loginViewModel.email.observeAsState(initial = "")
+    val password:String by loginViewModel.password.observeAsState(initial = "")
+    val mostrarpassword by loginViewModel.mostrartpassword.observeAsState(initial = false)
 
-    OutlinedTextField(value = correo,
+    OutlinedTextField(value = email,
         onValueChange = {
-            correo = it
+            loginViewModel.onEmailChanged(it)
         },
         label = { Text("Correo") })
     Spacer(modifier = Modifier.height(10.dp))
 
     OutlinedTextField(
-        value = contrasena,
-        onValueChange = { contrasena = it },
+        value = password,
+        onValueChange = {
+            loginViewModel.onPasswordChanged(it)
+                        },
         label = { Text("Contraseña") },
-        visualTransformation = if (mostrarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (mostrarpassword) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
-            IconButton(onClick = { mostrarContrasena = !mostrarContrasena }) {
+            IconButton(onClick = {
+            loginViewModel.onMostrarPasswod()
+
+            }) {
                 Icon(
-                    painter = painterResource(id = if (mostrarContrasena) R.drawable.mostrar_password else R.drawable.ocultar_password),
-                    contentDescription = if (mostrarContrasena) "Ocultar contraseña" else "Mostrar contraseña"
+                    painter = painterResource(id = if (mostrarpassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
+                    contentDescription = if (mostrarpassword) "Ocultar contraseña" else "Mostrar contraseña"
                 )
             }
         }
@@ -211,25 +215,7 @@ fun TextoRegistro(navController: NavController){
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold)
 }
-//Funcion para comprobar el inicio de sesion
-private fun comprobarInicioSesion(
-    email: String,
-    password: String,
-    context: android.content.Context,
-    navController: NavController
-) {
-    firebaseAuth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener() { task ->
-            if (task.isSuccessful) {
-                //Mostramos un mensaje y llamamos al menu
-                Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
-                navController.navigate("home")
-            } else {
-                //Si no se ha podido iniciar sesion mostramos un mensaje
-                Toast.makeText(context, "Error al iniciar sesion, comprueba los datos", Toast.LENGTH_SHORT).show()
-            }
-        }
-}
+
 
 //Funcion para iniciar sesion con google
 fun iniciarSesionGoogle(
@@ -272,14 +258,5 @@ fun manejarResultado(
         }
     } catch (e: ApiException) {
         Toast.makeText(context, "Error al iniciar sesion", Toast.LENGTH_SHORT).show()
-    }
-}
-
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewLogin() {
-    NutricionYDeporteFRTheme {
-        Login(navController = NavController(LocalContext.current))
     }
 }
