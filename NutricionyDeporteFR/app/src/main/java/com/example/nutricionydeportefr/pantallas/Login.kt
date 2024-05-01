@@ -2,6 +2,8 @@ package com.example.nutricionydeportefr.pantallas
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCaller
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.nutricionydeportefr.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,11 +22,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.navegacion.Escenas
 import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+
 private lateinit var firebaseAuth: FirebaseAuth
+private const val RC_SIGN_IN = 123
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavController) {
@@ -33,6 +49,12 @@ fun Login(navController: NavController) {
     var contrasena by remember { mutableStateOf("") }
     var mostrarContrasena by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(context.getString(R.string.default_web_client_id))
+        .requestEmail()
+        .build()
+    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
 
     //LazyColumn es un composable que permite desplazarse verticalmente
     LazyColumn(
@@ -101,9 +123,10 @@ fun Login(navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { /*TODO*/ },
-                //Poner el fondo del boton en blanco
-                // colors = ButtonDefaults.buttonColors(MaterialTheme)
+                onClick = {
+                    iniciarSesionGoogle(googleSignInClient, firebaseAuth, navController, context)
+                },
+
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
@@ -119,7 +142,10 @@ fun Login(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+
+
+                },
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -180,5 +206,43 @@ private fun comprobarInicioSesion(
             }
         }
 }
+//Funcion para iniciar sesion con google
+fun iniciarSesionGoogle(
+    googleSignInClient: GoogleSignInClient,
+    firebaseAuth: FirebaseAuth,
+    navController: NavController,
+    context: android.content.Context
+) {
+    val signInIntent = googleSignInClient.signInIntent
+    val launcher = context as ActivityResultCaller
+    val resultLauncher = launcher.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            manejarResultado(task, firebaseAuth, navController, context)
+        }
+    }
+    resultLauncher.launch(signInIntent)
+}
+
+fun manejarResultado(task: Task<GoogleSignInAccount>, firebaseAuth: FirebaseAuth, navController: NavController, context: android.content.Context) {
+    try {
+        val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
+        if (account != null) {
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        navController.navigate("home")
+                        Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Error al iniciar sesion", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    } catch (e: ApiException) {
+        Toast.makeText(context, "Error al iniciar sesion", Toast.LENGTH_SHORT).show()
+    }
+}
+
 
 
