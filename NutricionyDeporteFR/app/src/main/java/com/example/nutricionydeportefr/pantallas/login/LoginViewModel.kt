@@ -1,14 +1,18 @@
 package com.example.nutricionydeportefr.pantallas.login
 
+
+
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.google.android.gms.auth.api.identity.SignInPassword
+
 import com.google.firebase.auth.FirebaseAuth
 
+
 lateinit var firebaseAuth: FirebaseAuth
+
 const val RC_SIGN_IN = 123
 class LoginViewModel: ViewModel() {
     //Variable para el email, aqui se modifica
@@ -20,7 +24,7 @@ class LoginViewModel: ViewModel() {
     val password : LiveData<String> = _password
 
     private val _mostrarpassword = MutableLiveData<Boolean>(false)
-    val mostrartpassword : LiveData<Boolean> = _mostrarpassword
+    val mostrarpassword : LiveData<Boolean> = _mostrarpassword
    //Funciones para obtener el valor de los campos y actualizarlos
     fun onEmailChanged(email: String){
         _email.value = email
@@ -33,7 +37,6 @@ class LoginViewModel: ViewModel() {
     }
 
     //Funcion para iniciar sesion, comprobando los campos
-    //Funcion para comprobar el inicio de sesion
      fun comprobarInicioSesion(
         email: String,
         password: String,
@@ -52,4 +55,6 @@ class LoginViewModel: ViewModel() {
                 }
             }
     }
+
+
 }

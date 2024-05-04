@@ -1,8 +1,9 @@
 package com.example.nutricionydeportefr.pantallas.login
 
+import android.content.Context
+import android.content.Intent
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.ActivityResultLauncher
 import com.example.nutricionydeportefr.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,7 +37,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 
 
-
+lateinit var resultLauncher: ActivityResultLauncher<Intent>
 @Composable
 fun Login(navController: NavController, loginViewModel: LoginViewModel) {
     val email:String by loginViewModel.email.observeAsState(initial = "")
@@ -60,6 +60,9 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
 
             //Instanciamos firebase
             firebaseAuth = FirebaseAuth.getInstance()
+            //Inicializamos resultLauncher
+
+
             Titulo()
             Spacer(modifier = Modifier.height(10.dp))
             Fotologin()
@@ -69,6 +72,8 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
             Recuperarcontraseña(navController)
             Spacer(modifier = Modifier.height(30.dp))
+
+
             Botonlogin(correo = email, contrasena = password , context = context, navController = navController, loginViewModel )
             Spacer(modifier = Modifier.height(30.dp))
             //Linea Divisora
@@ -86,7 +91,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
                 Divider(thickness = 1.dp, modifier = Modifier.weight(1f))
             }
             Spacer(modifier = Modifier.height(30.dp))
-            BotonesLogin()
+            BotonesLoginRedes(loginViewModel, googleSignInClient, firebaseAuth, navController, context)
             Spacer(modifier = Modifier.height(160.dp))
             TextoRegistro(navController = navController)
 
@@ -124,7 +129,7 @@ fun Fotologin() {
 fun Camposlogin(loginViewModel: LoginViewModel) {
     val email:String by loginViewModel.email.observeAsState(initial = "")
     val password:String by loginViewModel.password.observeAsState(initial = "")
-    val mostrarpassword by loginViewModel.mostrartpassword.observeAsState(initial = false)
+    val mostrarpassword by loginViewModel.mostrarpassword.observeAsState(initial = false)
 
     OutlinedTextField(value = email,
         onValueChange = {
@@ -191,11 +196,16 @@ fun Botonlogin(correo: String,
     }
 }
 @Composable
-fun BotonesLogin(){
+fun BotonesLoginRedes(
+    loginViewModel: LoginViewModel,
+    googleSignInClient: GoogleSignInClient,
+    firebaseAuth: FirebaseAuth,
+    navController: NavController,
+    context: Context,
+    ){
     Button(
         onClick = {
-        },
-
+        }
         ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -220,46 +230,4 @@ fun TextoRegistro(navController: NavController){
 }
 
 
-//Funcion para iniciar sesion con google
-fun iniciarSesionGoogle(
-    googleSignInClient: GoogleSignInClient,
-    firebaseAuth: FirebaseAuth,
-    navController: NavController,
-    context: android.content.Context
-) {
-    val signInIntent = googleSignInClient.signInIntent
-    val launcher = context as ActivityResultCaller
-    val resultLauncher =
-        launcher.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RC_SIGN_IN) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                manejarResultado(task, firebaseAuth, navController, context)
-            }
-        }
-    resultLauncher.launch(signInIntent)
-}
 
-fun manejarResultado(
-    task: Task<GoogleSignInAccount>,
-    firebaseAuth: FirebaseAuth,
-    navController: NavController,
-    context: android.content.Context
-) {
-    try {
-        val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
-        if (account != null) {
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        navController.navigate("home")
-                        Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Error al iniciar sesion", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
-    } catch (e: ApiException) {
-        Toast.makeText(context, "Error al iniciar sesion", Toast.LENGTH_SHORT).show()
-    }
-}
