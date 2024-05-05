@@ -25,6 +25,15 @@ class LoginViewModel: ViewModel() {
 
     private val _mostrarpassword = MutableLiveData<Boolean>(false)
     val mostrarpassword : LiveData<Boolean> = _mostrarpassword
+
+    //Variables para mostrar errores en los campos
+    private val _emailError = MutableLiveData<String?>()
+    val emailError : LiveData<String?> = _emailError
+
+    private val _passwordError = MutableLiveData<String?>()
+    val passwordError : LiveData<String?> = _passwordError
+
+
    //Funciones para obtener el valor de los campos y actualizarlos
     fun onEmailChanged(email: String){
         _email.value = email
@@ -51,16 +60,12 @@ class LoginViewModel: ViewModel() {
                     navController.navigate("home")
                 } else {
                     //Si no se ha podido iniciar sesion mostramos un mensaje
-                    Toast.makeText(context, "Datos erroneos, comprueba los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Datos erroneos, compr", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
-    //Variables para mostrar errores en los campos
-    private val _emailError = MutableLiveData<String?>()
-    val emailError : LiveData<String?> = _emailError
-    private val _passwordError = MutableLiveData<String?>()
-    val passwordError : LiveData<String?> = _passwordError
+
 
     //En caso de que escriba en el campo, se quita el erro del campo
     init {
@@ -80,9 +85,9 @@ class LoginViewModel: ViewModel() {
     ) {
         //Comprobamos que los campos no esten vacios
         if (correo.isEmpty()) {
-            _emailError.value = "El campo no puede estar vacio"
+            _emailError.value = "Correo no puede estar vacio"
         } else if (password.isEmpty()) {
-            _passwordError.value = "El campo no puede estar vacio"
+            _passwordError.value = "Contraseña no puede estar vacio"
 
         } else {
             //Comprobamos el inicio de sesion

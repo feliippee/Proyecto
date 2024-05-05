@@ -66,8 +66,6 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
             Recuperarcontraseña(navController)
             Spacer(modifier = Modifier.height(30.dp))
-
-
             Botonlogin(
                 correo = email,
                 contrasena = password,
@@ -101,7 +99,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             }
             Spacer(modifier = Modifier.height(30.dp))
             BotonesLoginRedes(loginViewModel, firebaseAuth, navController, context)
-            Spacer(modifier = Modifier.height(160.dp))
+            Spacer(modifier = Modifier.height(175.dp))
             TextoRegistro(navController = navController)
 
         }
@@ -162,7 +160,7 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
         }
 
     )
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(20.dp))
 
     OutlinedTextField(
         value = password,

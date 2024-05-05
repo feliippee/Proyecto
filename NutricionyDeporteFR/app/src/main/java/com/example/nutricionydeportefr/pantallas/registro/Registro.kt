@@ -2,6 +2,7 @@ package com.example.nutricionydeportefr.pantallas.registro
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -12,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -38,9 +40,9 @@ fun Registro(navController: NavController, registroViewModel: RegistroViewModel)
     ) {
         Textotitulo()
         Spacer(modifier = Modifier.height(50.dp))
-        CamposTextos(registroViewModel)
+        Body(registroViewModel, navController)
         Spacer(modifier = Modifier.height(50.dp))
-        BotonRegistro( navController)
+
     }
 }
 
@@ -60,25 +62,43 @@ fun Textotitulo() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CamposTextos(registroViewModel: RegistroViewModel) {
+fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
+
     val context = LocalContext.current
-    //Variables
     val usuario:String by registroViewModel.usuario.observeAsState(initial = "")
     val password by registroViewModel.password.observeAsState(initial = "")
-    val mostrarPassword by registroViewModel.mostrarpassword.observeAsState(initial = false)
     val confirmarPassword by registroViewModel.confirmarPassword.observeAsState(initial = "")
-    val errorConfirmarPassword by registroViewModel.errorConfirmarPassword.observeAsState(initial = false)
+    val mostrarPassword by registroViewModel.mostrarpassword.observeAsState(initial = false)
     val correo by registroViewModel.correo.observeAsState(initial = "")
-    val correovalido by registroViewModel.correoValido.observeAsState(initial = false)
     val fechaNacimiento by registroViewModel.fechaNacimiento.observeAsState(initial = "")
-    val fechaNacimientoDialog by registroViewModel.fechaNacimientoDialog.observeAsState(initial = false)
+
+    val usuarioError: String? by registroViewModel.usuarioError.observeAsState(initial = null)
+    val passwordError: String? by registroViewModel.passwordError.observeAsState(initial = null)
+    val correoError: String? by registroViewModel.emailError.observeAsState(initial = null)
+    val confirmarPasswordError: String? by registroViewModel.confirmarPasswordError.observeAsState(initial = null)
+    val fechaNacimientoError: String? by registroViewModel.fechaError.observeAsState(initial = null)
+
+
 
     // OutlinedTextfield para registrar el nombre del usuario
     OutlinedTextField(value = usuario,
         onValueChange = {
             registroViewModel.onUsuarioChanged(it)
         },
-        label = { Text("Nombre de usuario") })
+        label = { Text("Nombre de usuario") },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        isError = usuarioError != null,
+        supportingText = {
+            usuarioError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        }
+        )
 
     Spacer(modifier = Modifier.height(20.dp))
 
@@ -89,6 +109,18 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
         //Cuando el usuario introduce la contraseña, se guarda en la variable contrasena
         onValueChange = { registroViewModel.onPasswordChanged(it) },
         label = { Text("Contraseña") },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        isError = passwordError != null,
+        supportingText = {
+            passwordError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        },
         //Si mostrarContrasenas es true, se muestra la contraseña, si no, se oculta
         visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation()
 
@@ -97,20 +129,23 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
 
     // OutlinedTextfield para confirmar la contraseña del usuario
     OutlinedTextField(
-
         value = confirmarPassword,
         onValueChange = { registroViewModel.onConfirmarPasswordChanged(it) },
         label = { Text("Confirmar Contraseña") },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        //Si las contraseñas no coinciden, se muestra un mensaje de error
-        isError = errorConfirmarPassword,
+        isError = confirmarPasswordError != null,
+        supportingText = {
+            confirmarPasswordError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        }
     )
-    if (errorConfirmarPassword) {
-        Text(
-            text = "Las contraseñas no coinciden",
-            color = Color.Red
-        )
-    }
     Spacer(modifier = Modifier.height(20.dp))
 
     // Checkbox para mostrar/ocultar contraseñas
@@ -122,15 +157,29 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
         Text("Mostrar contraseña")
     }
     Spacer(modifier = Modifier.height(20.dp))
+
+    // OutlinedTextfield para registrar el correo del usuario
     OutlinedTextField(
         value = correo,
         onValueChange = {
            registroViewModel.onCorreoChanged(it)
-            registroViewModel.updateCorreoValido(!registroViewModel.validarCorreo(correo))
+
 
         },
         label = { Text("Correo") },
-        isError = correovalido
+        maxLines = 1,
+        singleLine = true,
+        isError = correoError != null,
+        supportingText = {
+            correoError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+
     )
 
 
@@ -140,7 +189,17 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
         value = fechaNacimiento,
         onValueChange = { registroViewModel.onFechaNacimientoChanged(it) },
         label = { Text("Fecha de nacimiento") },
+        maxLines = 1,
         readOnly = true,
+        isError = fechaNacimientoError != null,
+        supportingText = {
+            fechaNacimientoError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        },
         trailingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.calendario),
@@ -153,20 +212,25 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
             )
         }
     )
-
-}
-
-@Composable
-fun BotonRegistro(
-    navController: NavController,
-) { //Boton de registro
+    Spacer(modifier = Modifier.height(35.dp))
+    //Boton de registro
     Button(onClick = {
-        
+        registroViewModel.compobarCampos(
+            usuario,
+            password,
+            confirmarPassword,
+            correo,
+            fechaNacimiento,
+            context,
+            navController
+            )
     },
 
-    ) {
+        ) {
         Text(text = "Registrarse")
     }
+
 }
+
 
 

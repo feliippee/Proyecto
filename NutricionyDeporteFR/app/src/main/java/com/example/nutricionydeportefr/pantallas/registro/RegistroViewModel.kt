@@ -4,8 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,10 +11,7 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,10 +21,10 @@ val calendar = Calendar.getInstance()
 lateinit var firebaseAuth: FirebaseAuth
 
 class RegistroViewModel : ViewModel() {
-    //Variable para el usuario, aqui se modifica
-    private val _usuario = MutableLiveData<String>()
 
-    //Variable para usuario, esta no modifica el valor, sino que accede a la variale Mutable y la modifica
+    //Variable para modificar los campos
+
+    private val _usuario = MutableLiveData<String>()
     val usuario: LiveData<String> = _usuario
 
     private val _password = MutableLiveData<String>()
@@ -41,20 +36,28 @@ class RegistroViewModel : ViewModel() {
     private val _confirmarPassword = MutableLiveData<String>()
     val confirmarPassword: LiveData<String> = _confirmarPassword
 
-    private val _errorConfirmarPassword = MutableLiveData<Boolean>(false)
-    val errorConfirmarPassword: LiveData<Boolean> = _errorConfirmarPassword
-
     private val _correo = MutableLiveData<String>()
     val correo: LiveData<String> = _correo
-
-    private val _correoValido = MutableLiveData<Boolean>(false)
-    val correoValido: LiveData<Boolean> = _correoValido
 
     private val _fechaNacimiento = MutableLiveData<String>()
     val fechaNacimiento: LiveData<String> = _fechaNacimiento
 
-    private val _fechaNacimientoDialog = MutableLiveData<Boolean>(false)
-    val fechaNacimientoDialog: LiveData<Boolean> = _fechaNacimientoDialog
+    //Variables para mostrar errores en los campos
+
+    private val _usuarioError = MutableLiveData<String?>()
+    val usuarioError: LiveData<String?> = _usuarioError
+
+    private val _passwordError = MutableLiveData<String?>()
+    val passwordError: LiveData<String?> = _passwordError
+
+    private val _emailError = MutableLiveData<String?>()
+    val emailError: LiveData<String?> = _emailError
+
+    private val _fechaError = MutableLiveData<String?>()
+    val fechaError: LiveData<String?> = _fechaError
+
+    private val _confirmarPasswordError = MutableLiveData<String?>()
+    val confirmarPasswordError: LiveData<String?> = _confirmarPasswordError
 
     //Funciones para modificar campos
     fun onUsuarioChanged(usuario: String) {
@@ -75,20 +78,65 @@ class RegistroViewModel : ViewModel() {
 
     fun onCorreoChanged(correo: String) {
         _correo.value = correo
-        _correoValido.value = android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }
-    fun updateCorreoValido(newValue: Boolean) {
-        _correoValido.value = newValue
-    }
-    fun updateErrorConfirmarPassword(newValue: Boolean) {
-        _errorConfirmarPassword.value = newValue
-    }
+
     fun onFechaNacimientoChanged(fechaNacimiento: String) {
         _fechaNacimiento.value = fechaNacimiento
     }
 
+
+    //En caso de que escriba en el campo, se quita el erro del campo
+    init {
+        usuario.observeForever {
+            _usuarioError.value = null
+        }
+
+        password.observeForever {
+            _passwordError.value = null
+        }
+        confirmarPassword.observeForever {
+            _confirmarPasswordError.value = null
+        }
+
+        correo.observeForever {
+            _emailError.value = null
+        }
+        fechaNacimiento.observeForever {
+            _fechaError.value = null
+        }
+    }
+
+    fun compobarCampos(
+        usuario: String,
+        password: String,
+        confirmarPassword: String,
+        correo: String,
+        fechaNacimiento: String,
+        context: Context,
+        navController: NavController,
+        ) {
+        if (usuario.isEmpty()) {
+            _usuarioError.value = "Usuario no puede estar vacio"
+        } else if (password.isEmpty()) {
+            _passwordError.value = "Contraseña no puede estar vacio"
+        } else if (password.length < 8) {
+            _passwordError.value = "La contraseña debe de contener al menos 8 caracteres"
+        } else if (confirmarPassword.isEmpty() || confirmarPassword != password) {
+            _confirmarPasswordError.value = "Las contraseñas no coinciden"
+        } else if (correo.isEmpty()) {
+            _emailError.value = "Correo no puede estar vacio"
+        } else if (fechaNacimiento.isEmpty()) {
+            _fechaError.value = "Fecha de nacimiento no puede estar vacio"
+        } else if (!validarCorreo(correo)) {
+            _emailError.value = "El correo introducido no es válido"
+        } else {
+            registrarUsuario(usuario, password, correo, fechaNacimiento, context, navController)
+        }
+    }
+
     //Funcion para registrar usuario en firebase
-    fun registrarUsuario(
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun registrarUsuario(
         usuario: String,
         contrasena: String,
         correo: String,

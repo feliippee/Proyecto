@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +29,7 @@ fun RecuperarPassword(navController: NavController, recuperarPasswordViewModel: 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordViewModel, navController: NavController) {
+    val emailError: String? by recuperarPasswordViewModel.errorEmail.observeAsState(initial = null)
     Column(modifier = modifier) {
         //Titulo
         Text(
@@ -45,6 +48,15 @@ fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordView
                 recuperarPasswordViewModel.onEmailChanged(it)
             },
             label = { Text("Email de recuperacion") },
+            isError = emailError != null,
+            supportingText = {
+                emailError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
             modifier = modifier
         )
         Spacer(modifier = Modifier.height(32.dp))
@@ -55,7 +67,7 @@ fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordView
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = "Recuperar Contraseña")
+            Text(text = "Enviar Email")
         }
 
 
