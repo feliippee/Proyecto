@@ -87,10 +87,6 @@ class RegistroViewModel : ViewModel() {
         _fechaNacimiento.value = fechaNacimiento
     }
 
-    fun onFechaNacimientoDialog() {
-        _fechaNacimientoDialog.value = _fechaNacimientoDialog.value?.not()
-    }
-
     //Funcion para registrar usuario en firebase
     fun registrarUsuario(
         usuario: String,
@@ -182,7 +178,6 @@ class RegistroViewModel : ViewModel() {
     }
 
     //Funcion DaterPickerDialog
-
     fun FechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fecha = DatePickerDialog(
             context,
@@ -206,4 +201,5 @@ class RegistroViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
+
 }

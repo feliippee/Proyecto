@@ -6,4 +6,5 @@ sealed class Escenas(val ruta: String) {
     object  Login : Escenas("login")
     object Registro : Escenas("registro")
     object Home : Escenas("home")
+    object RecuperarPassword : Escenas("recuperarPassword")
 }

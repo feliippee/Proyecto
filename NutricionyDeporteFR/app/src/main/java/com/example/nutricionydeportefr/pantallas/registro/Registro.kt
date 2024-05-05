@@ -1,16 +1,11 @@
 package com.example.nutricionydeportefr.pantallas.registro
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,23 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.R
-import com.google.firebase.Firebase
 import com.google.firebase.auth.*
-import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
-
-
 
 
 @Composable
 fun Registro(navController: NavController, registroViewModel: RegistroViewModel) {
 
     val context = LocalContext.current
+
     //Instanciamos firebase
     firebaseAuth = FirebaseAuth.getInstance()
     Column(
@@ -54,7 +40,7 @@ fun Registro(navController: NavController, registroViewModel: RegistroViewModel)
         Spacer(modifier = Modifier.height(50.dp))
         CamposTextos(registroViewModel)
         Spacer(modifier = Modifier.height(50.dp))
-        BotonRegistro(context, navController, registroViewModel)
+        BotonRegistro( navController)
     }
 }
 
@@ -83,7 +69,7 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
     val confirmarPassword by registroViewModel.confirmarPassword.observeAsState(initial = "")
     val errorConfirmarPassword by registroViewModel.errorConfirmarPassword.observeAsState(initial = false)
     val correo by registroViewModel.correo.observeAsState(initial = "")
-    val correvalido by registroViewModel.correoValido.observeAsState(initial = false)
+    val correovalido by registroViewModel.correoValido.observeAsState(initial = false)
     val fechaNacimiento by registroViewModel.fechaNacimiento.observeAsState(initial = "")
     val fechaNacimientoDialog by registroViewModel.fechaNacimientoDialog.observeAsState(initial = false)
 
@@ -144,14 +130,9 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
 
         },
         label = { Text("Correo") },
-        isError = correvalido
+        isError = correovalido
     )
-    if (correvalido) {
-        Text(
-            text = "Correo no valido",
-            color = Color.Red
-        )
-    }
+
 
     Spacer(modifier = Modifier.height(20.dp))
     // OutlinedTextfield para registrar la fecha de nacimiento del usuario
@@ -176,31 +157,14 @@ fun CamposTextos(registroViewModel: RegistroViewModel) {
 }
 
 @Composable
-fun BotonRegistro(context: android.content.Context, navController: NavController, registroViewModel: RegistroViewModel) {
-    //Variables
-    val usuario:String by registroViewModel.usuario.observeAsState(initial = "")
-    val password by registroViewModel.password.observeAsState(initial = "")
-    val confirmarPassword by registroViewModel.confirmarPassword.observeAsState(initial = "")
-    val correo by registroViewModel.correo.observeAsState(initial = "")
-    val correvalido by registroViewModel.correoValido.observeAsState(initial = false)
-    val fechaNacimiento by registroViewModel.fechaNacimiento.observeAsState(initial = "")
-
-    //Boton de registro
+fun BotonRegistro(
+    navController: NavController,
+) { //Boton de registro
     Button(onClick = {
-        //Comprobamos si los campos estan vacios
-        if (usuario.isEmpty() || password.isEmpty() || confirmarPassword.isEmpty() || correo.isEmpty() || fechaNacimiento.isEmpty()) {
-            //Muestro error en los campos
-            Toast.makeText(context, "Los campos no pueden estar vacios", Toast.LENGTH_SHORT).show()
-        } else {
-            //Comprobamos si las contraseñas coinciden y si el email es valido.
-            if (password == confirmarPassword && !correvalido) {
-                registroViewModel.registrarUsuario(usuario, password, correo, fechaNacimiento, context, navController)
+        
+    },
 
-            } else {
-                registroViewModel.updateErrorConfirmarPassword(true)
-            }
-        }
-    }) {
+    ) {
         Text(text = "Registrarse")
     }
 }

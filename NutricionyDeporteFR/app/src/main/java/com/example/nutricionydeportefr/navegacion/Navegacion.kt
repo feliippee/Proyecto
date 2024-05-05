@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nutricionydeportefr.pantallas.login.*
 import com.example.nutricionydeportefr.pantallas.registro.*
+import com.example.nutricionydeportefr.pantallas.recuperar.*
 import com.example.nutricionydeportefr.pantallas.home.Home
 
 
@@ -24,6 +25,9 @@ fun Navegacion() {
         }
         composable( route = Escenas.Home.ruta) {
             Home(navController)
+        }
+        composable( route = Escenas.RecuperarPassword.ruta) {
+            RecuperarPassword(navController, RecuperarPasswordViewModel())
         }
     }
 
