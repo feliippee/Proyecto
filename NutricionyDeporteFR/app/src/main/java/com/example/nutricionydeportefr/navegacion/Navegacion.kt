@@ -7,7 +7,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nutricionydeportefr.pantallas.login.*
 import com.example.nutricionydeportefr.pantallas.registro.*
 import com.example.nutricionydeportefr.pantallas.recuperar.*
-import com.example.nutricionydeportefr.pantallas.home.Home
+import com.example.nutricionydeportefr.pantallas.home.*
+import com.example.nutricionydeportefr.pantallas.perfil.*
+import com.example.nutricionydeportefr.pantallas.sport.*
+import com.example.nutricionydeportefr.pantallas.alimentacion.*
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -29,10 +32,19 @@ fun Navegacion() {
             Registro(navController, RegistroViewModel())
         }
         composable( route = Escenas.Home.ruta) {
-            Home(navController)
+            Home(navController, HomeViewModel())
         }
         composable( route = Escenas.RecuperarPassword.ruta) {
             RecuperarPassword(navController, RecuperarPasswordViewModel())
+        }
+        composable (route = Escenas.Perfil.ruta) {
+            Perfil(navController, PerfilViewModel())
+        }
+        composable (route = Escenas.Alimentacion.ruta) {
+            Alimentacion(navController, AlimentacionViewModel())
+        }
+        composable (route = Escenas.Ejercicios.ruta) {
+            Sport(navController, SportViewModel())
         }
     }
 

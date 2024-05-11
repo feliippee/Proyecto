@@ -1,44 +1,40 @@
-package com.example.nutricionydeportefr.pantallas.home
+package com.example.nutricionydeportefr.pantallas.alimentacion
 
 import android.annotation.SuppressLint
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.FoodBank
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.nutricionydeportefr.pantallas.home.*
-import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
-
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Home(navController: NavController, homeViewModel: HomeViewModel) {
+fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel) {
     Scaffold(
         topBar = { Toolbar() },
-        bottomBar = { BottomMenu(navController,homeViewModel) }
+        bottomBar = { BottomMenu(navController,alimentacionViewModel) }
     ){
-        Cuerpo()
+
     }
 }
 
 @Composable
 fun Toolbar() {
     TopAppBar(
-        title = { Text(text = "NutriSport") },
+        title = { androidx.compose.material.Text(text = "Alimentacion") },
         backgroundColor = Color(0xFF46B62D),
 
         )
 }
 @Composable
-fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
-    val opcionBottonMenu: Int by homeViewModel.opcionBottonMenu.observeAsState(initial = 0)
+fun BottomMenu(navController: NavController, alimentacionViewModel: AlimentacionViewModel){
+   val opcionBottonMenu: Int by alimentacionViewModel.opcionBottonMenu.observeAsState(initial = 2)
 
     BottomNavigation(
         backgroundColor = Color(0xFF46B62D),
@@ -46,48 +42,39 @@ fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
     ){
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            label = { androidx.compose.material.Text("Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(0)
+                alimentacionViewModel.setOpcionBottonMenu(0)
+                navController.navigate("home")
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
-            label = { Text("Ejercicios") },
+            label = { androidx.compose.material.Text("Ejercicios") },
             selected = opcionBottonMenu == 1,
-            onClick = { homeViewModel.setOpcionBottonMenu(1)
-                        navController.navigate("ejercicios")
+            onClick = {
+                alimentacionViewModel.setOpcionBottonMenu(1)
+                navController.navigate("ejercicios")
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Alimentacion") },
-            label = { Text("Alimentacion") },
+            label = { androidx.compose.material.Text("Alimentacion") },
             selected = opcionBottonMenu == 2,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(2)
+                alimentacionViewModel.setOpcionBottonMenu(2)
                 navController.navigate("alimentacion")
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
-            label = { Text("Perfil") },
+            label = { androidx.compose.material.Text("Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(3)
+                alimentacionViewModel.setOpcionBottonMenu(3)
                 navController.navigate("perfil")
             }
         )
     }
-}
-
-@Composable
-fun Cuerpo(){
-    val context = LocalContext.current
-    Text(
-        text = "Bienvenido a NutriSport",
-        textAlign = TextAlign.Center,
-        fontSize = 30.sp,
-        color = Color(0xFF46B62D)
-    )
 }
