@@ -8,15 +8,20 @@ import com.example.nutricionydeportefr.pantallas.login.*
 import com.example.nutricionydeportefr.pantallas.registro.*
 import com.example.nutricionydeportefr.pantallas.recuperar.*
 import com.example.nutricionydeportefr.pantallas.home.Home
+import com.google.firebase.auth.FirebaseAuth
 
 
-//Aqui es donde vamos a pasar las pantallas y gestiona la navegacion entre estas
 @Composable
 fun Navegacion() {
+    val auth = FirebaseAuth.getInstance()
+    val usuario = auth.currentUser
+
+    //Si tenemos usuario loguado nos vamos al home y sino al login
+    val startDestination = if (usuario == null)  Escenas.Login.ruta  else  Escenas.Home.ruta
 
     //Esta variable gestiona el estado de navegacion para poder desplazarnos
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Escenas.Login.ruta) {
+    NavHost(navController = navController, startDestination = startDestination) {
         composable( route = Escenas.Login.ruta) {
             Login(navController, LoginViewModel())
         }

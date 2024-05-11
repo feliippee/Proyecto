@@ -2,18 +2,22 @@ package com.example.nutricionydeportefr.pantallas.login
 
 
 
+import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.R
 import com.google.firebase.auth.FirebaseAuth
-
+import kotlinx.coroutines.*
 
 
 lateinit var firebaseAuth: FirebaseAuth
 
-const val RC_SIGN_IN = 123
+
 class LoginViewModel: ViewModel() {
     //Variable para el email, aqui se modifica
     private val _email = MutableLiveData<String>()
@@ -46,26 +50,32 @@ class LoginViewModel: ViewModel() {
     }
 
     //Funcion para iniciar sesion, comprobando los campos
-     fun comprobarInicioSesion(
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun comprobarInicioSesion(
         email: String,
         password: String,
         context: android.content.Context,
         navController: NavController
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener() { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //Mostramos un mensaje y llamamos al menu
-                    Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
-                    navController.navigate("home")
+                    GlobalScope.launch(Dispatchers.Main) {
+                        //Mostramos un mensaje y llamamos al menu
+                        Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
+                        delay(1000)
+                        navController.navigate("home")
+                    }
+
                 } else {
                     //Si no se ha podido iniciar sesion mostramos un mensaje
-                    Toast.makeText(context, "Datos erroneos, compr", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Datos de acceso erroneos", Toast.LENGTH_SHORT).show()
                 }
             }
     }
-
-
+    private fun validarCorreo(correo: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
+    }
 
     //En caso de que escriba en el campo, se quita el erro del campo
     init {
@@ -77,15 +87,15 @@ class LoginViewModel: ViewModel() {
         }
     }
     //Funcion para iniciar sesion
-    fun InicioSesion(
+    fun inicioSesion(
         correo:String,
         password: String,
         context: android.content.Context,
         navController: NavController
     ) {
         //Comprobamos que los campos no esten vacios
-        if (correo.isEmpty()) {
-            _emailError.value = "Correo no puede estar vacio"
+        if (correo.isEmpty() || !validarCorreo(correo)) {
+            _emailError.value = "Correo no valido"
         } else if (password.isEmpty()) {
             _passwordError.value = "Contraseña no puede estar vacio"
 

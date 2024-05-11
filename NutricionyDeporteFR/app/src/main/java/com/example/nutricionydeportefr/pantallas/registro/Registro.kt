@@ -204,6 +204,7 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
             Icon(
                 painter = painterResource(id = R.drawable.calendario),
                 contentDescription = "Fecha de nacimiento",
+                tint = Color.Black,
                 modifier = Modifier.clickable {
                     registroViewModel.FechaDialog(context, calendar) { fechaSeleccionada ->
                         registroViewModel.onFechaNacimientoChanged(fechaSeleccionada)

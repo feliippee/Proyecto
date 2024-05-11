@@ -120,7 +120,7 @@ class RegistroViewModel : ViewModel() {
         } else if (password.isEmpty()) {
             _passwordError.value = "Contraseña no puede estar vacio"
         } else if (password.length < 8) {
-            _passwordError.value = "La contraseña debe de contener al menos 8 caracteres"
+            _passwordError.value = "La contraseña debe de tener\n al menos 8 caracteres"
         } else if (confirmarPassword.isEmpty() || confirmarPassword != password) {
             _confirmarPasswordError.value = "Las contraseñas no coinciden"
         } else if (correo.isEmpty()) {
@@ -158,12 +158,19 @@ class RegistroViewModel : ViewModel() {
                     user?.updateProfile(profileUpdates)
                         ?.addOnCompleteListener { updateTask ->
                             if (updateTask.isSuccessful) {
-                                Toast.makeText(context, "Usuario registrado con exito", Toast.LENGTH_SHORT).show()
                                 registrarDatosUsuarios(usuario, correo, fechaNacimiento)
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    delay(1500)
+                                val sharedPref = context.getSharedPreferences("Nombre Usuario", Context.MODE_PRIVATE)
+                                with (sharedPref.edit()) {
+                                    putString("email", correo)
+                                    putString("password", contrasena)
+                                    apply()
                                 }
-                                navController.navigate("home")
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    Toast.makeText(context, "Usuario registrado con exito", Toast.LENGTH_SHORT).show()
+                                    delay(2000)
+                                    navController.navigate("home")
+                                }
+
                             }
                         }
                 } else {

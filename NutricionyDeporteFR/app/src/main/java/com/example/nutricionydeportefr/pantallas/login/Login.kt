@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.navegacion.Escenas
-import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -45,6 +44,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
     val googleSignInClient = GoogleSignIn.getClient(context, gso)*/
     Box(
         Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -110,7 +110,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
 @Composable
 fun Titulo() {
     Text(
-        text = "Nutricion y Deporte FR",
+        text = "NutriSport FR",
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary),
@@ -124,11 +124,11 @@ fun Titulo() {
 fun Fotologin() {
     //Imagen
     Image(
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        painter = painterResource(id = R.drawable.nutrisport),
         contentDescription = "Logo",
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
+            .height(200.dp)
     )
 }
 
@@ -178,10 +178,13 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
             }) {
                 Icon(
                     painter = painterResource(id = if (mostrarpassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
-                    contentDescription = if (mostrarpassword) "Ocultar contraseña" else "Mostrar contraseña"
+                    contentDescription = if (mostrarpassword) "Ocultar contraseña" else "Mostrar contraseña",
+                    tint = Color.Black
+
                 )
             }
         },
+
         isError = passwordError != null,
         supportingText = {
             passwordError?.let {
@@ -223,7 +226,7 @@ fun Botonlogin(
 ) {
     Button(
         onClick = {
-            loginViewModel.InicioSesion(correo, contrasena, context, navController)
+            loginViewModel.inicioSesion(correo, contrasena, context, navController)
 
         }, modifier = Modifier
             .padding(8.dp)

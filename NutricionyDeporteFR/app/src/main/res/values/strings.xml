@@ -5,6 +5,6 @@
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">2b7db8a775a516cffec04d5f54d4e9ce</string> -->
     <string name="default_web_client_id">911309946399-8obn3pn0ctlvijarvfdsrnv08e4ug00h.apps.googleusercontent.com</string>
-
+    <string name="preference_file_key"> Nombre Usuario</string>
 
 </resources>
