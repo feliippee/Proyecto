@@ -21,21 +21,14 @@ import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 @Composable
 fun Home(navController: NavController, homeViewModel: HomeViewModel) {
     Scaffold(
-        topBar = { Toolbar() },
+
         bottomBar = { BottomMenu(navController,homeViewModel) }
     ){
         Cuerpo()
     }
 }
 
-@Composable
-fun Toolbar() {
-    TopAppBar(
-        title = { Text(text = "NutriSport") },
-        backgroundColor = Color(0xFF46B62D),
 
-        )
-}
 @Composable
 fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
     val opcionBottonMenu: Int by homeViewModel.opcionBottonMenu.observeAsState(initial = 0)
@@ -50,19 +43,21 @@ fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
             selected = opcionBottonMenu == 0,
             onClick = {
                 homeViewModel.setOpcionBottonMenu(0)
+               // navController.navigate("home")
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { Text("Ejercicios") },
             selected = opcionBottonMenu == 1,
-            onClick = { homeViewModel.setOpcionBottonMenu(1)
-                        navController.navigate("ejercicios")
+            onClick = {
+                homeViewModel.setOpcionBottonMenu(1)
+               navController.navigate("ejercicios")
             }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Alimentacion") },
-            label = { Text("Alimentacion") },
+            icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Dietas") },
+            label = { Text("Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
                 homeViewModel.setOpcionBottonMenu(2)

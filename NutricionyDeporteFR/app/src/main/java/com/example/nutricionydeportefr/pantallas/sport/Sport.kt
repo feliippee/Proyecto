@@ -18,21 +18,12 @@ import androidx.navigation.NavController
 @Composable
 fun Sport(navController: NavController, sportViewModel: SportViewModel) {
     Scaffold(
-        topBar = { Toolbar() },
         bottomBar = { BottomMenu(navController, sportViewModel) }
     ) {
 
     }
 }
 
-@Composable
-fun Toolbar() {
-    TopAppBar(
-        title = { androidx.compose.material.Text(text = "Sport") },
-        backgroundColor = Color(0xFF46B62D),
-
-        )
-}
 
 @Composable
 fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
@@ -44,7 +35,7 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
     ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            label = { androidx.compose.material.Text("Home") },
+            label = { androidx.compose.material.Text(text = "Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
                 sportViewModel.setOpcionBottonMenu(0)
@@ -61,8 +52,8 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
             }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Alimentacion") },
-            label = { androidx.compose.material.Text("Alimentacion") },
+            icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Dietas") },
+            label = { androidx.compose.material.Text("Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
                 sportViewModel.setOpcionBottonMenu(2)

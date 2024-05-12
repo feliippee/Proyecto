@@ -14,6 +14,4 @@ class HomeViewModel: ViewModel() {
         _opcionBottonMenu.value = opcion
     }
 
-
-
 }

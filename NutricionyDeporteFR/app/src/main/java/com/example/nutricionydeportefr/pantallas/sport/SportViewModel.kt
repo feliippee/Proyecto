@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class SportViewModel: ViewModel() {
 
     //Variable para la seleccion de las opciones del bottom menu
-    private var _opcionBottonMenu = MutableLiveData(3)
+    private var _opcionBottonMenu = MutableLiveData(1)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
