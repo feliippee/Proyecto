@@ -71,7 +71,13 @@ fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) 
             confirmButton = {
                 TextButton(onClick = {
                     perfilViewModel.setMostrarDialog()
-                    navController.navigate("login")
+
+                    navController.navigate("login") {
+                        popUpTo("home") {
+                            inclusive = true
+                        }
+                    }
+
                 }) {
                     Text("Aceptar")
                 }

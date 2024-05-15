@@ -21,11 +21,19 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController, SplashScreenViewModel: SplashScreenViewModel){
     LaunchedEffect(key1 = true) {
         delay(2000)
-        navController.popBackStack()
+
         if (SplashScreenViewModel.usuarioLogueado()){
-            navController.navigate("home")
+            navController.navigate("home") {
+                popUpTo("splashscreen") {
+                    inclusive = true
+                }
+            }
         }else{
-            navController.navigate("login")
+            navController.navigate("login") {
+                popUpTo("splashscreen") {
+                    inclusive = true
+                }
+            }
         }
     }
     Splash()

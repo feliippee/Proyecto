@@ -51,8 +51,6 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             //Instanciamos firebase
             firebaseAuth = FirebaseAuth.getInstance()
             //Inicializamos resultLauncher
-
-
             Titulo()
             Spacer(modifier = Modifier.height(10.dp))
             Fotologin()
@@ -73,8 +71,8 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             lineaDivisora()
             Spacer(modifier = Modifier.height(30.dp))
             BotonesLoginRedes(loginViewModel, firebaseAuth, navController, context)
-            Spacer(modifier = Modifier.height(175.dp))
-            TextoRegistro(navController = navController)
+            Spacer(modifier = Modifier.height(125.dp))
+            TextoRegistro(navController)
 
         }
     }
