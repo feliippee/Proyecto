@@ -11,6 +11,7 @@ import com.example.nutricionydeportefr.pantallas.home.*
 import com.example.nutricionydeportefr.pantallas.perfil.*
 import com.example.nutricionydeportefr.pantallas.sport.*
 import com.example.nutricionydeportefr.pantallas.alimentacion.*
+import com.example.nutricionydeportefr.pantallas.splashscreen.*
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -21,6 +22,7 @@ fun Navegacion() {
 
     //Si tenemos usuario loguado nos vamos al home y sino al login
     val startDestination = if (usuario == null)  Escenas.Login.ruta  else  Escenas.Home.ruta
+
 
     //Esta variable gestiona el estado de navegacion para poder desplazarnos
     val navController = rememberNavController()
@@ -46,6 +48,7 @@ fun Navegacion() {
         composable (route = Escenas.Ejercicios.ruta) {
             Sport(navController, SportViewModel())
         }
+
     }
 
 }

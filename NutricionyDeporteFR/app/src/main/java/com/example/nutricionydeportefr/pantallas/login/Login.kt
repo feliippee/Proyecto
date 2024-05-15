@@ -30,18 +30,14 @@ import com.example.nutricionydeportefr.navegacion.Escenas
 import com.google.firebase.auth.FirebaseAuth
 
 
-lateinit var resultLauncher: ActivityResultLauncher<Intent>
-
 @Composable
 fun Login(navController: NavController, loginViewModel: LoginViewModel) {
+
+
     val email: String by loginViewModel.email.observeAsState(initial = "")
     val password: String by loginViewModel.password.observeAsState(initial = "")
     val context = LocalContext.current
-    /*val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(context.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)*/
+
     Box(
         Modifier.fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
@@ -74,29 +70,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
                 loginViewModel
             )
             Spacer(modifier = Modifier.height(30.dp))
-            //Linea Divisora
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Divider(
-                    thickness = 1.dp, modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 16.dp)
-                )
-                Text(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    text = "OR",
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-                Divider(
-                    thickness = 1.dp, modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 16.dp)
-                )
-            }
+            lineaDivisora()
             Spacer(modifier = Modifier.height(30.dp))
             BotonesLoginRedes(loginViewModel, firebaseAuth, navController, context)
             Spacer(modifier = Modifier.height(175.dp))
@@ -144,7 +118,7 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
 
     OutlinedTextField(
         value = email,
-        onValueChange = {loginViewModel.onEmailChanged(it) },
+        onValueChange = { loginViewModel.onEmailChanged(it) },
         placeholder = { Text("Correo") },
         maxLines = 1,
         singleLine = true,
@@ -207,7 +181,7 @@ fun Recuperarcontraseña(navController: NavController) {
             text = "Recuperar Contraseña",
             modifier = Modifier
                 .padding(end = 55.dp)
-                .clickable { navController.navigate(route = Escenas.RecuperarPassword.ruta) },
+                .clickable { navController.navigate("recuperarPassword") },
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
 
@@ -271,6 +245,32 @@ fun TextoRegistro(navController: NavController) {
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold
     )
+}
+@Composable
+fun lineaDivisora(){
+    //Linea Divisora
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Divider(
+            thickness = 1.dp, modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            text = "OR",
+            fontSize = 12.sp,
+            color = Color.Gray
+        )
+        Divider(
+            thickness = 1.dp, modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp)
+        )
+    }
 }
 
 

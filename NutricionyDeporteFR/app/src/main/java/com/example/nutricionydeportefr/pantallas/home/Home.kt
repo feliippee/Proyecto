@@ -20,8 +20,9 @@ import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Home(navController: NavController, homeViewModel: HomeViewModel) {
-    Scaffold(
 
+
+    Scaffold(
         bottomBar = { BottomMenu(navController,homeViewModel) }
     ){
         Cuerpo()
@@ -78,7 +79,7 @@ fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
 
 @Composable
 fun Cuerpo(){
-    val context = LocalContext.current
+    
     Text(
         text = "Bienvenido a NutriSport",
         textAlign = TextAlign.Center,

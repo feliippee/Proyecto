@@ -15,11 +15,11 @@ import androidx.navigation.NavController
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Perfil(navController: NavController,perfilViewModel: PerfilViewModel) {
+fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel) {
     Scaffold(
         topBar = { Toolbar(perfilViewModel, navController) },
-        bottomBar = { BottomMenu(navController,perfilViewModel) }
-    ){
+        bottomBar = { BottomMenu(navController, perfilViewModel) }
+    ) {
 
     }
 }
@@ -36,14 +36,15 @@ fun Toolbar(perfilViewModel: PerfilViewModel, navController: NavController) {
             }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "Cerrar sesion")
             }
-           CerrarSesion(perfilViewModel,navController )
+            CerrarSesion(perfilViewModel, navController)
 
         }
 
-        )
+    )
 }
+
 @Composable
-fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController){
+fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController) {
     val expandir by perfilViewModel.expandir.observeAsState(initial = false)
     val context = LocalContext.current
     DropdownMenu(
@@ -59,40 +60,40 @@ fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController)
     }
     AlertDialog(perfilViewModel, navController)
 }
+
 @Composable
-fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController){
+fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) {
     val mostrarDialog by perfilViewModel.mostrarDialog.observeAsState(initial = false)
-    if(mostrarDialog){
+    if (mostrarDialog) {
         AlertDialog(
             onDismissRequest = { perfilViewModel.setMostrarDialog() },
-            title = { androidx.compose.material3.Text("Cerrar sesion") },
-            text = { androidx.compose.material3.Text("¿Estas seguro que deseas cerrar sesion?") },
+            text = { Text("¿Estas seguro que deseas cerrar sesion?") },
             confirmButton = {
                 TextButton(onClick = {
                     perfilViewModel.setMostrarDialog()
                     navController.navigate("login")
                 }) {
-                    androidx.compose.material3.Text("Aceptar")
+                    Text("Aceptar")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { perfilViewModel.setMostrarDialog() }) {
-                    androidx.compose.material3.Text("Cancelar")
+                    Text("Cancelar")
                 }
             }
         )
     }
-
 }
 
+
 @Composable
-fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel){
-   val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
+fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
+    val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
 
     BottomNavigation(
         backgroundColor = Color(0xFF46B62D),
         contentColor = Color.Black
-    ){
+    ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { androidx.compose.material.Text("Home") },
@@ -117,7 +118,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel){
             selected = opcionBottonMenu == 2,
             onClick = {
                 perfilViewModel.setOpcionBottonMenu(2)
-                 navController.navigate("alimentacion")
+                navController.navigate("alimentacion")
             }
         )
         BottomNavigationItem(
