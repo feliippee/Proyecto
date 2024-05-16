@@ -11,4 +11,5 @@ sealed class Escenas(val ruta: String) {
     object Alimentacion : Escenas("alimentacion")
     object Ejercicios : Escenas("ejercicios")
     object SplashScreen : Escenas("splashScreen")
+    object RegistroSport : Escenas("registroSport")
 }

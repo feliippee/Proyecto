@@ -12,6 +12,7 @@ import com.example.nutricionydeportefr.pantallas.perfil.*
 import com.example.nutricionydeportefr.pantallas.sport.*
 import com.example.nutricionydeportefr.pantallas.alimentacion.*
 import com.example.nutricionydeportefr.pantallas.splashscreen.*
+import com.example.nutricionydeportefr.pantallas.registrosport.*
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -44,6 +45,9 @@ fun Navegacion() {
         }
         composable(route = Escenas.SplashScreen.ruta) {
             SplashScreen(navController, SplashScreenViewModel())
+        }
+        composable(route = Escenas.RegistroSport.ruta) {
+            RegistroSport()
         }
 
     }

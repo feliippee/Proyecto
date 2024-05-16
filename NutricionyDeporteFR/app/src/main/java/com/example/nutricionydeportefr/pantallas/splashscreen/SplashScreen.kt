@@ -18,34 +18,22 @@ import com.example.nutricionydeportefr.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController, SplashScreenViewModel: SplashScreenViewModel){
+fun SplashScreen(navController: NavController, SplashScreenViewModel: SplashScreenViewModel) {
     LaunchedEffect(key1 = true) {
         delay(2000)
-
-        if (SplashScreenViewModel.usuarioLogueado()){
-            navController.navigate("home") {
-                popUpTo("splashscreen") {
-                    inclusive = true
-                }
-            }
-        }else{
-            navController.navigate("login") {
-                popUpTo("splashscreen") {
-                    inclusive = true
-                }
-            }
-        }
+        navController.popBackStack()
+        if (SplashScreenViewModel.usuarioLogueado()) navController.navigate("home") else navController.navigate("login")
     }
     Splash()
 }
 
 @Composable
-fun Splash(){
+fun Splash() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
 
-    )  {
+    ) {
         Image(
             painter = painterResource(id = R.drawable.nutrisport),
             contentDescription = "Logo",
@@ -56,8 +44,9 @@ fun Splash(){
     }
 
 }
+
 @Preview(showBackground = true)
 @Composable
-fun SplashScreenPreview(){
+fun SplashScreenPreview() {
     Splash()
 }

@@ -64,6 +64,7 @@ class LoginViewModel: ViewModel() {
                         //Mostramos un mensaje y llamamos al menu
                         Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
                         delay(1000)
+                        navController.popBackStack()
                         navController.navigate("home")
                     }
 

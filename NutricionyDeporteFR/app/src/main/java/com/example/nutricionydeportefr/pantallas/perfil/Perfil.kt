@@ -2,6 +2,7 @@ package com.example.nutricionydeportefr.pantallas.perfil
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -21,6 +22,7 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel) {
         bottomBar = { BottomMenu(navController, perfilViewModel) }
     ) {
 
+
     }
 }
 
@@ -34,7 +36,7 @@ fun Toolbar(perfilViewModel: PerfilViewModel, navController: NavController) {
             IconButton(onClick = {
                 perfilViewModel.setDesplegable()
             }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Cerrar sesion")
+                Icon(Icons.Filled.Settings , contentDescription = "Cerrar sesion")
             }
             CerrarSesion(perfilViewModel, navController)
 
@@ -46,7 +48,6 @@ fun Toolbar(perfilViewModel: PerfilViewModel, navController: NavController) {
 @Composable
 fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController) {
     val expandir by perfilViewModel.expandir.observeAsState(initial = false)
-    val context = LocalContext.current
     DropdownMenu(
         expanded = expandir,
         onDismissRequest = { perfilViewModel.setDesplegable() }
@@ -60,7 +61,6 @@ fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController)
     }
     AlertDialog(perfilViewModel, navController)
 }
-
 @Composable
 fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) {
     val mostrarDialog by perfilViewModel.mostrarDialog.observeAsState(initial = false)
@@ -90,8 +90,6 @@ fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) 
         )
     }
 }
-
-
 @Composable
 fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
     val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
