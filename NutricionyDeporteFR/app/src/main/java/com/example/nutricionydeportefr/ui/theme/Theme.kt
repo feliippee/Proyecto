@@ -40,8 +40,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = AzulFacebook,
     //Color de textos secundarios
     onSecondary = Black,
-    background = Color.White
-    ,
+    background = Color.White,
     onBackground = Color.White
 
 )

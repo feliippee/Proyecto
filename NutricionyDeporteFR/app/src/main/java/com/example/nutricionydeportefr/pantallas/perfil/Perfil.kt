@@ -71,7 +71,7 @@ fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) 
             confirmButton = {
                 TextButton(onClick = {
                     perfilViewModel.setMostrarDialog()
-
+                    perfilViewModel.cerrarSesion()
                     navController.navigate("login") {
                         popUpTo("home") {
                             inclusive = true

@@ -1,25 +1,23 @@
 package com.example.nutricionydeportefr.pantallas.sport
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
 import kotlinx.coroutines.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -28,25 +26,30 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel) {
 
     Scaffold(
         bottomBar = { BottomMenu(navController, sportViewModel) },
-        floatingActionButton = { ActionFloatingButton(navController) }
+        floatingActionButton = {
+            ActionFloatingButton(navController)
+        }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-            Body()
+            Header()
+
         }
     }
 }
 
 @Composable
-fun Body() {
+fun Header() {
     Box(
-        modifier = Modifier.padding(16.dp).fillMaxSize(),
+        modifier = Modifier.padding(4.dp).fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
     ) {
         Text(
             text = "Entrenamientos Realizados",
+            fontSize = 20.sp,
         )
     }
 }
@@ -105,11 +108,15 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
 fun ActionFloatingButton(navController: NavController) {
     FloatingActionButton(
         onClick = {
-            navController.navigate("registroSport")
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(500)
+                navController.navigate("registrosport")
+            }
         },
-        backgroundColor = Color(0xFF46B62D)
-
+        backgroundColor = Color(0xFF46B62D),
     ) {
         Icon(Icons.Filled.Add, contentDescription = "Add")
     }
+
 }
+

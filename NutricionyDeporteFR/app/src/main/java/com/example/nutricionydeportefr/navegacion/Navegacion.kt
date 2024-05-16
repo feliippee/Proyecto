@@ -13,7 +13,7 @@ import com.example.nutricionydeportefr.pantallas.sport.*
 import com.example.nutricionydeportefr.pantallas.alimentacion.*
 import com.example.nutricionydeportefr.pantallas.splashscreen.*
 import com.example.nutricionydeportefr.pantallas.registrosport.*
-import com.google.firebase.auth.FirebaseAuth
+import com.example.nutricionydeportefr.pantallas.progressbar.*
 
 
 @Composable
@@ -48,6 +48,9 @@ fun Navegacion() {
         }
         composable(route = Escenas.RegistroSport.ruta) {
             RegistroSport()
+        }
+        composable(route = Escenas.Carga.ruta) {
+            ProgressBar()
         }
 
     }

@@ -3,6 +3,7 @@ package com.example.nutricionydeportefr.pantallas.perfil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class PerfilViewModel: ViewModel() {
 
@@ -25,6 +26,10 @@ class PerfilViewModel: ViewModel() {
     }
     fun setMostrarDialog(){
         _mostrarDialog.value = !(_mostrarDialog.value ?: false)
+    }
+    fun cerrarSesion() {
+        val auth = FirebaseAuth.getInstance()
+        auth.signOut()
     }
 
 }
