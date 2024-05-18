@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,28 +31,29 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel) {
             ActionFloatingButton(navController)
         }
     ) {
-        Column(
-            modifier = Modifier
+        Box(
+            Modifier
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-            Header()
+            Header(Modifier.align(Alignment.TopCenter))
 
         }
     }
 }
 
 @Composable
-fun Header() {
-    Box(
-        modifier = Modifier.padding(4.dp).fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
-    ) {
+fun Header(modifier: Modifier) {
         Text(
+            modifier = modifier,
             text = "Entrenamientos Realizados",
+            fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
         )
-    }
+}
+
+fun Body(modifier: Modifier) {
+    //Obtenemos los datos del entrenamiento de firebase y lo mostramos
 }
 
 @Composable

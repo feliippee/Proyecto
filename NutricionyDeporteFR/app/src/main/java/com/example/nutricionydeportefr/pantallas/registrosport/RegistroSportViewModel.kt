@@ -35,6 +35,8 @@ class RegistroSportViewModel: ViewModel() {
     private val _peso = MutableLiveData<String>()
     val peso: LiveData<String> = _peso
 
+    //Progresbar
+    val loading = MutableLiveData<Boolean>(false)
 
     //Variables para mostrar errores en los campos
     private val _fechaError = MutableLiveData<String?>()
@@ -155,9 +157,11 @@ class RegistroSportViewModel: ViewModel() {
             _repeticiones.value = repeticionesNumber.toString()
             _peso.value = pesoNumber.toString()
             GlobalScope.launch(Dispatchers.Main) {
+                navController.navigate("progressBar")
                 registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoNumber, fechaEntrenamiento)
+                delay(2000)  // Espera un segundo y medio
                 Toast.makeText(context, "Entrenamiento registrado correctamente", Toast.LENGTH_SHORT).show()
-                navController.navigate("sport")
+                navController.navigate("ejercicios")
             }
 
         }

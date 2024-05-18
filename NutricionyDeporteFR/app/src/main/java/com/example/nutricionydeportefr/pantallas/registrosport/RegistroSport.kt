@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.R
 import com.example.nutricionydeportefr.pantallas.registro.calendar
+import com.example.nutricionydeportefr.pantallas.progressbar.*
 
 
 @Composable
@@ -31,22 +32,13 @@ fun RegistroSport( navController: NavController, registroSportViewModel: Registr
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        //Header(Modifier.align(Alignment.TopCenter))
+
         Body(Modifier.align(Alignment.Center),navController ,registroSportViewModel)
 
     }
 
 }
-/*@Composable
-fun Header(modifier: Modifier) {
-    Text(
-        modifier = modifier,
-        text = "Registrar Entrenamiento",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold
-    )
 
-}*/
 
 @Composable
 fun Body(modifier: Modifier, navController: NavController, registroSportViewModel: RegistroSportViewModel) {
@@ -249,6 +241,7 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
     val series by registroSportViewModel.series.observeAsState(initial = "")
     val repeticiones by registroSportViewModel.repeticiones.observeAsState(initial = "")
     val peso by registroSportViewModel.peso.observeAsState(initial = "")
+
     val context = LocalContext.current
     Button(
         onClick = {
@@ -262,6 +255,7 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
                 context,
                 navController
             )
+
         },
         modifier = Modifier
             .padding(16.dp)
@@ -270,4 +264,5 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
             text = "Registrar Entrenamiento",
             )
     }
+
 }
