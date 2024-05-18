@@ -2,7 +2,11 @@ package com.example.nutricionydeportefr.pantallas.sport
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -17,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
 import kotlinx.coroutines.*
 
@@ -36,24 +41,65 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel) {
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-            Header(Modifier.align(Alignment.TopCenter))
+
+            Body(Modifier.align(Alignment.TopStart))
 
         }
     }
 }
 
 @Composable
-fun Header(modifier: Modifier) {
+fun Body(modifier: Modifier) {
+    Column(modifier = modifier) {
         Text(
-            modifier = modifier,
-            text = "Entrenamientos Realizados",
+            text = "Entrenamientos",
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
         )
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            items(getEntrenamientos()) { itemEntrenamiento ->
+                Itementreno(itemEntrenamiento = itemEntrenamiento)
+            }
+        }
+    }
 }
 
-fun Body(modifier: Modifier) {
-    //Obtenemos los datos del entrenamiento de firebase y lo mostramos
+@Composable
+fun Itementreno(itemEntrenamiento: ItemEntrenamiento) {
+    Card(
+        border = BorderStroke(2.dp, Color(0xFF46B62D)),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Fecha: " + itemEntrenamiento.fecha,
+                fontSize = 15.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(text = "Parte del Cuerpo: " + itemEntrenamiento.parteCuerpo)
+            Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
+            Text(text = "Series: " + itemEntrenamiento.series)
+            Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
+            Text(text = "Peso: " + itemEntrenamiento.peso)
+        }
+    }
+}
+
+fun getEntrenamientos(): List<ItemEntrenamiento> {
+    //Obtenemos los datos del entrenamiento de firebase
+    return listOf(
+        ItemEntrenamiento("Hoy", "Press Banca", "4", "10", "25", "50"),
+        ItemEntrenamiento("Ayer", "Dominadas", "4", "10", "20", "80"),
+    )
 }
 
 @Composable

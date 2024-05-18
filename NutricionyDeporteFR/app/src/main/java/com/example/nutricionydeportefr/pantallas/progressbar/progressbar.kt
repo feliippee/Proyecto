@@ -1,5 +1,6 @@
 package com.example.nutricionydeportefr.pantallas.progressbar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.material.*
@@ -14,7 +15,8 @@ fun ProgressBar() {
     Column(
         Modifier
             .padding(24.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
