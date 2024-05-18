@@ -215,9 +215,9 @@ class RegistroViewModel : ViewModel() {
         val usuario = hashMapOf(
             "nombre" to usuario,
             "correo" to correo,
-            "fecha" to fechaNacimiento
+            "fecha nacimiento" to fechaNacimiento
         )
-        db.collection("usuarios")
+        db.collection("usuario")
             .add(usuario)
             .addOnSuccessListener { documentReference ->
                 println("DocumentSnapshot added with ID: ${documentReference.id}")

@@ -95,9 +95,12 @@ class LoginViewModel: ViewModel() {
         navController: NavController
     ) {
         //Comprobamos que los campos no esten vacios
-        if (correo.isEmpty() || !validarCorreo(correo)) {
+        if (correo.isEmpty() ) {
+            _emailError.value = "Correo no puede estar vacio"
+        } else if (!validarCorreo(correo)) {
             _emailError.value = "Correo no valido"
-        } else if (password.isEmpty()) {
+        }
+        else if (password.isEmpty()) {
             _passwordError.value = "Contraseña no puede estar vacio"
 
         } else {

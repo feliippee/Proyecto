@@ -47,7 +47,7 @@ fun Navegacion() {
             SplashScreen(navController, SplashScreenViewModel())
         }
         composable(route = Escenas.RegistroSport.ruta) {
-            RegistroSport()
+            RegistroSport(navController, RegistroSportViewModel())
         }
         composable(route = Escenas.Carga.ruta) {
             ProgressBar()
