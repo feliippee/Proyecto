@@ -18,6 +18,7 @@ class PerfilViewModel: ViewModel() {
     //Variable para el alertDialog
     private val _mostrarDialog = MutableLiveData<Boolean>(false)
     val mostrarDialog: LiveData<Boolean> = _mostrarDialog
+
     fun setDesplegable(){
         _expandir.value = !(_expandir.value ?: false)
     }

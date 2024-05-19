@@ -23,39 +23,52 @@ class SportViewModel : ViewModel() {
     private var _opcionBottonMenu = MutableLiveData(1)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
 
-    //Variable para la expansion de la lista de entrenamientos
-    val expandir = MutableLiveData<Boolean>()
 
-    //Variable para coger los datos de firebase
-    val entrenamientos = MutableLiveData<List<ItemEntrenamiento>>()
+    // Variable para coger los datos de Firebase
+    private val _entrenamientos = MutableLiveData<List<ItemEntrenamiento>>()
+    val entrenamientos: LiveData<List<ItemEntrenamiento>> = _entrenamientos
+
+    //Variable para el alertDialog
+    private val _mostrarDialog = MutableLiveData<Boolean>(false)
+    val mostrarDialog: LiveData<Boolean> = _mostrarDialog
+
+
+
+    init {
+        getEntrenamientos()
+    }
+    fun setMostrarDialog(){
+        _mostrarDialog.value = !(_mostrarDialog.value ?: false)
+    }
+
 
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
-    init {
-        getEntrenamientos()
-    }
 
-    fun getEntrenamientos() {
+    private fun getEntrenamientos() {
         viewModelScope.launch {
             try {
                 val db = Firebase.firestore
                 val result = db.collection("entrenamientos").get().await()
                 val entrenamientosList = result.map { document ->
                     ItemEntrenamiento(
-                        document.getString("Fecha Entrenamiento") ?: "",
-                        document.getString("Parte del cuerpo") ?: "",
-                        document.getLong("Series")?.toString() ?: "",
-                        document.getLong("Repeticiones")?.toString() ?: "",
-                        document.getDouble("Peso")?.toString() ?: "",
-                        document.getString("Ejercicios") ?: ""
+                        id = document.id,
+                        fecha = document.getString("Fecha Entrenamiento") ?: "",
+                        parteCuerpo = document.getString("Parte del cuerpo") ?: "",
+                        series = document.getLong("Series")?.toString() ?: "",
+                        repeticiones = document.getLong("Repeticiones")?.toString() ?: "",
+                        peso = document.getDouble("Peso")?.toString() ?: "",
+                        ejercicios = document.getString("Ejercicios") ?: ""
                     )
                 }
-                entrenamientos.value = entrenamientosList
+                _entrenamientos.value = entrenamientosList
             } catch (exception: Exception) {
-                Log.w(TAG, "Error getting documents.", exception)
+                Log.w("SportViewModel", "Error getting documents.", exception)
             }
         }
     }
-
 }
+
+
+

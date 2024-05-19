@@ -1,6 +1,7 @@
 package com.example.nutricionydeportefr.itemsRecycler
 
 data class ItemEntrenamiento(
+    var id: String,
     var fecha: String,
     var parteCuerpo: String,
     var ejercicios: String,

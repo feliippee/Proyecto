@@ -1,6 +1,7 @@
 package com.example.nutricionydeportefr.pantallas.sport
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
+import com.example.nutricionydeportefr.pantallas.perfil.*
 import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
 import com.example.nutricionydeportefr.pantallas.registrosport.RegistroSportViewModel
 import kotlinx.coroutines.*
@@ -32,21 +35,18 @@ import kotlinx.coroutines.*
 @Composable
 fun Sport(navController: NavController, sportViewModel: SportViewModel) {
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
+
     //val carga by sportViewModel.carga.observeAsState(initial = true)
     Scaffold(
         bottomBar = { BottomMenu(navController, sportViewModel) },
-        floatingActionButton = {
-            ActionFloatingButton(navController)
-        }
+        floatingActionButton = { ActionFloatingButton(navController) }
     ) {
         Box(
             Modifier
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-
-                Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
-
+            Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
         }
     }
 }
@@ -71,40 +71,85 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
         }
     }
 }
+
 @Composable
 fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewModel) {
-    val expandir by sportViewModel.expandir.observeAsState(initial = false)
+    var expandir by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { sportViewModel.expandir.value = !expandir },
+            .clickable { expandir = !expandir },
         border = BorderStroke(2.dp, Color(0xFF46B62D)),
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium,
+    ) {
+        Box {
+            Column(
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
 
-        ) {
-        Column(
-            Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Fecha: " + itemEntrenamiento.fecha,
-                fontSize = 15.sp,
-                modifier = Modifier.padding(bottom = 4.dp),
-                fontWeight = FontWeight.Bold,
-            )
-            Text(text = "Parte del Cuerpo: " + itemEntrenamiento.parteCuerpo)
-            if (expandir) {
-                Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
-                Text(text = "Series: " + itemEntrenamiento.series)
-                Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
-                Text(text = "Peso: " + itemEntrenamiento.peso)
+                Text(
+                    text = "Fecha: " + itemEntrenamiento.fecha,
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(text = "Parte del Cuerpo: " + itemEntrenamiento.parteCuerpo)
+                if (expandir) {
+                    Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
+                    Text(text = "Series: " + itemEntrenamiento.series)
+                    Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
+                    Text(text = "Peso: " + itemEntrenamiento.peso)
+                }
             }
+            IconButton(
+                onClick = {
+
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(Icons.Filled.Delete, contentDescription = "Eliminar")
+            }
+            AlertDialogEntreno(sportViewModel)
 
         }
     }
 }
+
+@Composable
+fun AlertDialogEntreno(sportViewModel: SportViewModel) {
+
+    val mostrarDialog by sportViewModel.mostrarDialog.observeAsState(initial = false)
+
+    if (mostrarDialog) {
+
+        AlertDialog(
+            onDismissRequest = {
+                sportViewModel.setMostrarDialog()
+            },
+            text = { Text("¿Estas seguro que deseas borrar este entreno?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    sportViewModel.setMostrarDialog()
+
+                }) {
+                    Text("Aceptar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    sportViewModel.setMostrarDialog()
+                }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+}
+
 @Composable
 fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
     val opcionBottonMenu: Int by sportViewModel.opcionBottonMenu.observeAsState(initial = 1)
@@ -154,14 +199,12 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
         )
     }
 }
+
 @Composable
 fun ActionFloatingButton(navController: NavController) {
     FloatingActionButton(
         onClick = {
-            GlobalScope.launch(Dispatchers.Main) {
-                delay(500)
-                navController.navigate("registrosport")
-            }
+            navController.navigate("registrosport")
         },
         backgroundColor = Color(0xFF46B62D),
     ) {
