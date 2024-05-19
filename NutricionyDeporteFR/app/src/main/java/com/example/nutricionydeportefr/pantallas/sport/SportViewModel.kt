@@ -28,19 +28,9 @@ class SportViewModel : ViewModel() {
     private val _entrenamientos = MutableLiveData<List<ItemEntrenamiento>>()
     val entrenamientos: LiveData<List<ItemEntrenamiento>> = _entrenamientos
 
-    //Variable para el alertDialog
-    private val _mostrarDialog = MutableLiveData<Boolean>(false)
-    val mostrarDialog: LiveData<Boolean> = _mostrarDialog
-
-
-
     init {
         getEntrenamientos()
     }
-    fun setMostrarDialog(){
-        _mostrarDialog.value = !(_mostrarDialog.value ?: false)
-    }
-
 
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
@@ -65,6 +55,18 @@ class SportViewModel : ViewModel() {
                 _entrenamientos.value = entrenamientosList
             } catch (exception: Exception) {
                 Log.w("SportViewModel", "Error getting documents.", exception)
+            }
+        }
+    }
+
+    fun deleteEntrenamiento(itemEntrenamiento: ItemEntrenamiento) {
+        viewModelScope.launch {
+            try {
+                val db = Firebase.firestore
+                db.collection("entrenamientos").document(itemEntrenamiento.id).delete().await()
+                getEntrenamientos() // Refresh the list after deletion
+            } catch (exception: Exception) {
+                Log.w("SportViewModel", "Error deleting document.", exception)
             }
         }
     }

@@ -66,7 +66,7 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
         ) {
 
             items(entrenamientos) { itemEntrenamiento ->
-                Itementreno(itemEntrenamiento = itemEntrenamiento, sportViewModel)
+                Itementreno(itemEntrenamiento = itemEntrenamiento , sportViewModel)
             }
         }
     }
@@ -74,8 +74,19 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
 
 @Composable
 fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewModel) {
-    var expandir by remember { mutableStateOf(false) }
 
+    var expandir by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+
+    if (mostrarDialog) {
+        AlertDialogEntreno(
+            onDismissRequest = { mostrarDialog = false },
+            onConfirm = {
+                sportViewModel.deleteEntrenamiento(itemEntrenamiento)
+                mostrarDialog = false },
+            onDismiss = { mostrarDialog = false }
+        )
+    }
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -92,62 +103,53 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
             ) {
 
                 Text(
-                    text = "Fecha: " + itemEntrenamiento.fecha,
+                    text = "Fecha: ${itemEntrenamiento.fecha}",
                     fontSize = 15.sp,
                     modifier = Modifier.padding(bottom = 4.dp),
                     fontWeight = FontWeight.Bold,
                 )
-                Text(text = "Parte del Cuerpo: " + itemEntrenamiento.parteCuerpo)
+                Text(text = "Parte del Cuerpo: ${itemEntrenamiento.parteCuerpo}")
                 if (expandir) {
-                    Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
-                    Text(text = "Series: " + itemEntrenamiento.series)
-                    Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
-                    Text(text = "Peso: " + itemEntrenamiento.peso)
+                    Text(text = "Ejercicios: ${itemEntrenamiento.ejercicios}")
+                    Text(text = "Series: ${itemEntrenamiento.series}")
+                    Text(text = "Repeticiones: ${itemEntrenamiento.repeticiones}")
+                    val pesoFormateado = String.format("%.2f", itemEntrenamiento.peso.toDouble())
+                    Text(text = "Peso: $pesoFormateado")
                 }
             }
             IconButton(
                 onClick = {
-
+                    mostrarDialog = true
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(Icons.Filled.Delete, contentDescription = "Eliminar")
             }
-            AlertDialogEntreno(sportViewModel)
+
 
         }
     }
 }
-
 @Composable
-fun AlertDialogEntreno(sportViewModel: SportViewModel) {
-
-    val mostrarDialog by sportViewModel.mostrarDialog.observeAsState(initial = false)
-
-    if (mostrarDialog) {
-
-        AlertDialog(
-            onDismissRequest = {
-                sportViewModel.setMostrarDialog()
-            },
-            text = { Text("¿Estas seguro que deseas borrar este entreno?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    sportViewModel.setMostrarDialog()
-
-                }) {
-                    Text("Aceptar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    sportViewModel.setMostrarDialog()
-                }) {
-                    Text("Cancelar")
-                }
+fun AlertDialogEntreno(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        text = { Text("¿Estás seguro que deseas borrar este entreno?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Aceptar")
             }
-        )
-    }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
 }
 
 @Composable

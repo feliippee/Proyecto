@@ -35,11 +35,6 @@ class RegistroSportViewModel: ViewModel() {
     private val _peso = MutableLiveData<String>()
     val peso: LiveData<String> = _peso
 
-
-
-    //Progresbar
-    val loading = MutableLiveData<Boolean>(false)
-
     //Variables para mostrar errores en los campos
     private val _fechaError = MutableLiveData<String?>()
     val fechaError: LiveData<String?> = _fechaError

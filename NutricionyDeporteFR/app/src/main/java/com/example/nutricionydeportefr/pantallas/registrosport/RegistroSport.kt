@@ -215,7 +215,7 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
             onValueChange = { registroSportViewModel.onPesoChanged(it) },
             label = { Text(text = "Peso") },
             maxLines = 1,
-            modifier = Modifier.width(75.dp),
+            modifier = Modifier.width(100.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = pesoError != null,
             supportingText = {
