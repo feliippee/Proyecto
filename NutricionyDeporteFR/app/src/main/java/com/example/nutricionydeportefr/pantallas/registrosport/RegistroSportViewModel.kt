@@ -35,6 +35,8 @@ class RegistroSportViewModel: ViewModel() {
     private val _peso = MutableLiveData<String>()
     val peso: LiveData<String> = _peso
 
+
+
     //Progresbar
     val loading = MutableLiveData<Boolean>(false)
 

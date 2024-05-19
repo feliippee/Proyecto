@@ -3,6 +3,7 @@ package com.example.nutricionydeportefr.pantallas.sport
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,13 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
+import com.example.nutricionydeportefr.pantallas.registrosport.RegistroSportViewModel
 import kotlinx.coroutines.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Sport(navController: NavController, sportViewModel: SportViewModel) {
-
+    val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
+    //val carga by sportViewModel.carga.observeAsState(initial = true)
     Scaffold(
         bottomBar = { BottomMenu(navController, sportViewModel) },
         floatingActionButton = {
@@ -42,14 +45,14 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel) {
                 .padding(16.dp),
         ) {
 
-            Body(Modifier.align(Alignment.TopStart))
+                Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
 
         }
     }
 }
 
 @Composable
-fun Body(modifier: Modifier) {
+fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewModel: SportViewModel) {
     Column(modifier = modifier) {
         Text(
             text = "Entrenamientos",
@@ -62,19 +65,24 @@ fun Body(modifier: Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            items(getEntrenamientos()) { itemEntrenamiento ->
-                Itementreno(itemEntrenamiento = itemEntrenamiento)
+            items(entrenamientos) { itemEntrenamiento ->
+                Itementreno(itemEntrenamiento = itemEntrenamiento, sportViewModel)
             }
         }
     }
 }
-
 @Composable
-fun Itementreno(itemEntrenamiento: ItemEntrenamiento) {
+fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewModel) {
+    val expandir by sportViewModel.expandir.observeAsState(initial = false)
     Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { sportViewModel.expandir.value = !expandir },
         border = BorderStroke(2.dp, Color(0xFF46B62D)),
-        modifier = Modifier.fillMaxSize()
-    ) {
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
+
+        ) {
         Column(
             Modifier
                 .padding(16.dp)
@@ -83,25 +91,20 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento) {
             Text(
                 text = "Fecha: " + itemEntrenamiento.fecha,
                 fontSize = 15.sp,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
+                fontWeight = FontWeight.Bold,
             )
             Text(text = "Parte del Cuerpo: " + itemEntrenamiento.parteCuerpo)
-            Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
-            Text(text = "Series: " + itemEntrenamiento.series)
-            Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
-            Text(text = "Peso: " + itemEntrenamiento.peso)
+            if (expandir) {
+                Text(text = "Ejercicios: " + itemEntrenamiento.ejercicios)
+                Text(text = "Series: " + itemEntrenamiento.series)
+                Text(text = "Repeticiones: " + itemEntrenamiento.repeticiones)
+                Text(text = "Peso: " + itemEntrenamiento.peso)
+            }
+
         }
     }
 }
-
-fun getEntrenamientos(): List<ItemEntrenamiento> {
-    //Obtenemos los datos del entrenamiento de firebase
-    return listOf(
-        ItemEntrenamiento("Hoy", "Press Banca", "4", "10", "25", "50"),
-        ItemEntrenamiento("Ayer", "Dominadas", "4", "10", "20", "80"),
-    )
-}
-
 @Composable
 fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
     val opcionBottonMenu: Int by sportViewModel.opcionBottonMenu.observeAsState(initial = 1)
@@ -151,7 +154,6 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
         )
     }
 }
-
 @Composable
 fun ActionFloatingButton(navController: NavController) {
     FloatingActionButton(

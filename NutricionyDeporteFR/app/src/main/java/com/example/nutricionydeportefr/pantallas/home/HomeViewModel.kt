@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nutricionydeportefr.pantallas.sport.*
 
 class HomeViewModel: ViewModel() {
     //Variable para la seleccion de las opciones del bottom menu
