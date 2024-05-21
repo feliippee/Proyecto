@@ -26,14 +26,14 @@ import com.example.nutricionydeportefr.pantallas.progressbar.*
 
 
 @Composable
-fun RegistroSport( navController: NavController, registroSportViewModel: RegistroSportViewModel) {
+fun RegistroSport(navController: NavController, registroSportViewModel: RegistroSportViewModel) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
 
-        Body(Modifier.align(Alignment.Center),navController ,registroSportViewModel)
+        Body(Modifier.align(Alignment.Center), navController, registroSportViewModel)
 
     }
 
@@ -53,14 +53,17 @@ fun Body(modifier: Modifier, navController: NavController, registroSportViewMode
         Spacer(modifier = Modifier.size(8.dp))
         SeriesRepeticiones(registroSportViewModel)
         Spacer(modifier = Modifier.size(8.dp))
+        Pesos(registroSportViewModel)
+        Spacer(modifier = Modifier.size(8.dp))
         BtnRegistrarEntreno(navController, registroSportViewModel)
 
 
     }
 }
+
 //Fun titulo
 @Composable
-fun Titulo(){
+fun Titulo() {
     Text(
         text = "Registrar Entrenamiento",
         fontSize = 20.sp,
@@ -68,6 +71,7 @@ fun Titulo(){
         textAlign = TextAlign.Center
     )
 }
+
 //Fun para registrar dia de entrenamiento
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -165,11 +169,11 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
     //Variables para registrar series y repeticiones
     val series by registroSportViewModel.series.observeAsState(initial = "")
     val repeticiones by registroSportViewModel.repeticiones.observeAsState(initial = "")
-    val peso by registroSportViewModel.peso.observeAsState(initial = "")
+
 
     val seriesError: String? by registroSportViewModel.seriesError.observeAsState(initial = null)
     val repeticionesError: String? by registroSportViewModel.repeticionesError.observeAsState(initial = null)
-    val pesoError: String? by registroSportViewModel.pesoError.observeAsState(initial = null)
+
 
     Row {
         // Textfield para registrar las series del entrenamiento
@@ -178,7 +182,7 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
             onValueChange = { registroSportViewModel.onSeriesChanged(it) },
             label = { Text(text = "Series") },
             maxLines = 1,
-            modifier = Modifier.width(80.dp),
+            modifier = Modifier.width(100.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = seriesError != null,
             supportingText = {
@@ -197,7 +201,7 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
             onValueChange = { registroSportViewModel.onRepeticionesChanged(it) },
             label = { Text(text = "Reps") },
             maxLines = 1,
-            modifier = Modifier.width(75.dp),
+            modifier = Modifier.width(100.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = repeticionesError != null,
             supportingText = {
@@ -209,17 +213,30 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
                 }
             },
         )
-        Spacer(modifier = Modifier.size(15.dp))
+    }
+}
+
+//Fun para pesos
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Pesos(registroSportViewModel: RegistroSportViewModel) {
+
+    val pesoInicial by registroSportViewModel.pesoInicial.observeAsState(initial = "")
+    val pesoInicialError: String? by registroSportViewModel.pesoInicialError.observeAsState(initial = null)
+
+    val pesoFinal by registroSportViewModel.pesoFinal.observeAsState(initial = "")
+    val pesoFinalError: String? by registroSportViewModel.pesoFinalError.observeAsState(initial = null)
+    Row {
         TextField(
-            value = peso,
-            onValueChange = { registroSportViewModel.onPesoChanged(it) },
-            label = { Text(text = "Peso") },
+            value = pesoInicial,
+            onValueChange = { registroSportViewModel.onPesoInicialChanged(it) },
+            label = { Text(text = "Peso Inicial") },
             maxLines = 1,
             modifier = Modifier.width(100.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = pesoError != null,
+            isError = pesoInicialError != null,
             supportingText = {
-                pesoError?.let {
+                pesoInicialError?.let {
                     Text(
                         text = it,
                         style = TextStyle(color = Color.Red),
@@ -227,21 +244,39 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
                 }
             },
         )
-    }
+        Spacer(modifier = Modifier.size(15.dp))
+        TextField(
+            value = pesoFinal,
+            onValueChange = { registroSportViewModel.onPesoFinalChanged(it) },
+            label = { Text(text = "Peso Final") },
+            maxLines = 1,
+            modifier = Modifier.width(100.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = pesoFinalError != null,
+            supportingText = {
+                pesoFinalError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
 
+    }
 }
 
 //Boton para registrar en firebase.
 @Composable
-fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: RegistroSportViewModel){
+fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: RegistroSportViewModel) {
 
     val fechEntrenamiento by registroSportViewModel.fechaEntrenamiento.observeAsState(initial = "")
     val parteCuerpo by registroSportViewModel.parteCuerpo.observeAsState(initial = "")
     val ejercicios by registroSportViewModel.ejercicios.observeAsState(initial = "")
     val series by registroSportViewModel.series.observeAsState(initial = "")
     val repeticiones by registroSportViewModel.repeticiones.observeAsState(initial = "")
-    val peso by registroSportViewModel.peso.observeAsState(initial = "")
-
+    val pesoInicial by registroSportViewModel.pesoInicial.observeAsState(initial = "")
+    val pesoFinal by registroSportViewModel.pesoFinal.observeAsState(initial = "")
     val context = LocalContext.current
     Button(
         onClick = {
@@ -251,7 +286,8 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
                 ejercicios,
                 series,
                 repeticiones,
-                peso,
+                pesoInicial,
+                pesoFinal,
                 context,
                 navController
             )
@@ -262,7 +298,7 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
     ) {
         Text(
             text = "Registrar Entrenamiento",
-            )
+        )
     }
 
 }

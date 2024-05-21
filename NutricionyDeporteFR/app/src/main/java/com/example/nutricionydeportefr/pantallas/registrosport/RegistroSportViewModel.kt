@@ -32,8 +32,11 @@ class RegistroSportViewModel: ViewModel() {
     private val _repeticiones = MutableLiveData<String>()
     val repeticiones: LiveData<String> = _repeticiones
 
-    private val _peso = MutableLiveData<String>()
-    val peso: LiveData<String> = _peso
+    private val _pesoInicial = MutableLiveData<String>()
+    val pesoInicial: LiveData<String> = _pesoInicial
+
+    private val _pesoFinal = MutableLiveData<String>()
+    val pesoFinal: LiveData<String> = _pesoFinal
 
     //Variables para mostrar errores en los campos
     private val _fechaError = MutableLiveData<String?>()
@@ -51,9 +54,11 @@ class RegistroSportViewModel: ViewModel() {
     private val _repeticionesError = MutableLiveData<String?>()
     val repeticionesError: LiveData<String?> = _repeticionesError
 
-    private val _pesoError = MutableLiveData<String?>()
-    val pesoError: LiveData<String?> = _pesoError
+    private val _pesoInicialError = MutableLiveData<String?>()
+    val pesoInicialError: LiveData<String?> = _pesoInicialError
 
+    private val _pesoFinalError = MutableLiveData<String?>()
+    val pesoFinalError: LiveData<String?> = _pesoFinalError
     fun onfechaEntrenamientoChanged(fechaNacimiento: String) {
         _fechaEntrenamiento.value = fechaNacimiento
     }
@@ -70,8 +75,11 @@ class RegistroSportViewModel: ViewModel() {
 
        _repeticiones.value = repeticiones
     }
-    fun onPesoChanged(peso: String) {
-        _peso.value = peso
+    fun onPesoInicialChanged(pesoinicial: String) {
+        _pesoInicial.value = pesoinicial
+    }
+    fun onPesoFinalChanged(pesofinal: String) {
+        _pesoFinal.value = pesofinal
     }
     init {
 
@@ -90,8 +98,11 @@ class RegistroSportViewModel: ViewModel() {
         repeticiones.observeForever {
             _repeticionesError.value = null
         }
-        peso.observeForever {
-            _pesoError.value = null
+        pesoInicial.observeForever {
+            _pesoInicialError.value = null
+        }
+        pesoFinal.observeForever {
+            _pesoFinalError.value = null
         }
     }
 
@@ -127,7 +138,8 @@ class RegistroSportViewModel: ViewModel() {
         ejercicios: String,
         series: String,
         repeticiones: String,
-        peso: String,
+        pesoInicial: String,
+        pesoFinal: String,
         context: Context,
         navController: NavController
 
@@ -135,8 +147,8 @@ class RegistroSportViewModel: ViewModel() {
 
         val seriesNumber = series.toIntOrNull()
         val repeticionesNumber = repeticiones.toIntOrNull()
-        val pesoNumber = peso.toFloatOrNull()
-
+        val pesoInicialNumber = pesoInicial.toFloatOrNull()
+        val pesoFinalNumber = pesoFinal.toFloatOrNull()
         if (fechaEntrenamiento.isEmpty()) {
             _fechaError.value = "Fecha de nacimiento no puede estar vacio"
         } else if (partecuerpo.isEmpty()) {
@@ -147,15 +159,18 @@ class RegistroSportViewModel: ViewModel() {
             _seriesError.value = "Las series deben ser un número mayor que 0"
         } else if (repeticionesNumber == null || repeticionesNumber <= 0) {
             _repeticionesError.value = "Las repeticiones deben ser un número mayor que 0"
-        } else if (pesoNumber == null || pesoNumber <= 0f) {
-            _pesoError.value = "El peso debe ser un número mayor que 0"
+        } else if (pesoInicialNumber == null || pesoInicialNumber <= 0f) {
+            _pesoInicialError.value = "El peso debe ser un número mayor que 0"
+        } else if (pesoFinalNumber == null || pesoFinalNumber <= 0f) {
+            _pesoFinalError.value = "El peso debe ser un número mayor que 0"
         } else {
             _series.value = seriesNumber.toString()
             _repeticiones.value = repeticionesNumber.toString()
-            _peso.value = pesoNumber.toString()
+            _pesoInicial.value = pesoInicialNumber.toString()
+            _pesoFinal.value = pesoFinalNumber.toString()
             GlobalScope.launch(Dispatchers.Main) {
                 navController.navigate("progressBar")
-                registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoNumber, fechaEntrenamiento)
+                registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoInicialNumber, pesoFinalNumber, fechaEntrenamiento)
                 delay(2000)  // Espera un segundo y medio
                 Toast.makeText(context, "Entrenamiento registrado correctamente", Toast.LENGTH_SHORT).show()
                 navController.navigate("ejercicios")
@@ -170,7 +185,8 @@ class RegistroSportViewModel: ViewModel() {
         ejercicios: String,
         series: Int,
         repeticiones: Int,
-        peso: Float,
+        pesoInicial: Float,
+        pesoFinal: Float,
         fechaEntrenamiento: String
     ) {
         val db = Firebase.firestore
@@ -179,7 +195,8 @@ class RegistroSportViewModel: ViewModel() {
             "Ejercicios" to ejercicios,
             "Series" to series,
             "Repeticiones" to repeticiones,
-            "Peso" to peso,
+            "Peso Inicial" to pesoInicial,
+            "Peso Final" to pesoFinal,
             "Fecha Entrenamiento" to fechaEntrenamiento
         )
         db.collection("entrenamientos")

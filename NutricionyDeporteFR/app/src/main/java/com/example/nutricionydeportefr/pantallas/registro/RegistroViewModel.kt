@@ -33,6 +33,9 @@ class RegistroViewModel : ViewModel() {
     private val _mostrarpassword = MutableLiveData<Boolean>(false)
     val mostrarpassword: LiveData<Boolean> = _mostrarpassword
 
+    private val _mostrarConfirmarpassword = MutableLiveData<Boolean>(false)
+    val mostrarConfirmarpassword : LiveData<Boolean> = _mostrarConfirmarpassword
+
     private val _confirmarPassword = MutableLiveData<String>()
     val confirmarPassword: LiveData<String> = _confirmarPassword
 
@@ -71,7 +74,9 @@ class RegistroViewModel : ViewModel() {
     fun onMostrarPasswod() {
         _mostrarpassword.value = _mostrarpassword.value?.not()
     }
-
+    fun onMostrarConfirmarPasswod() {
+        _mostrarConfirmarpassword.value = _mostrarConfirmarpassword.value?.not()
+    }
     fun onConfirmarPasswordChanged(confirmarPassword: String) {
         _confirmarPassword.value = confirmarPassword
     }

@@ -69,6 +69,7 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
     val password by registroViewModel.password.observeAsState(initial = "")
     val confirmarPassword by registroViewModel.confirmarPassword.observeAsState(initial = "")
     val mostrarPassword by registroViewModel.mostrarpassword.observeAsState(initial = false)
+    val mostrarConfirmarPassword by registroViewModel.mostrarConfirmarpassword.observeAsState(initial = false)
     val correo by registroViewModel.correo.observeAsState(initial = "")
     val fechaNacimiento by registroViewModel.fechaNacimiento.observeAsState(initial = "")
 
@@ -112,6 +113,19 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
         maxLines = 1,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = {
+                registroViewModel.onMostrarPasswod()
+            }) {
+                Icon(
+                    painter = painterResource(id = if (mostrarPassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
+                    contentDescription = if (mostrarPassword) "Ocultar contraseña" else "Mostrar contraseña",
+                    tint = Color.Black
+
+                )
+            }
+        },
         isError = passwordError != null,
         supportingText = {
             passwordError?.let {
@@ -121,8 +135,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
                 )
             }
         },
-        //Si mostrarContrasenas es true, se muestra la contraseña, si no, se oculta
-        visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation()
 
     )
     Spacer(modifier = Modifier.height(20.dp))
@@ -135,7 +147,20 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
         maxLines = 1,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (mostrarConfirmarPassword) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = {
+                registroViewModel.onMostrarConfirmarPasswod()
+
+            }) {
+                Icon(
+                    painter = painterResource(id = if (mostrarConfirmarPassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
+                    contentDescription = if (mostrarConfirmarPassword) "Ocultar contraseña" else "Mostrar contraseña",
+                    tint = Color.Black
+
+                )
+            }
+        },
         isError = confirmarPasswordError != null,
         supportingText = {
             confirmarPasswordError?.let {
@@ -146,16 +171,7 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
             }
         }
     )
-    Spacer(modifier = Modifier.height(20.dp))
 
-    // Checkbox para mostrar/ocultar contraseñas
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(
-            checked = mostrarPassword,
-            onCheckedChange = { registroViewModel.onMostrarPasswod() }
-        )
-        Text("Mostrar contraseña")
-    }
     Spacer(modifier = Modifier.height(20.dp))
 
     // OutlinedTextfield para registrar el correo del usuario

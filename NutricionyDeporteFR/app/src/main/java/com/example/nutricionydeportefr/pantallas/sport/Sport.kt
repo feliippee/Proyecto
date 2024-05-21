@@ -60,13 +60,25 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(16.dp)
         )
-        LazyColumn(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-
-            items(entrenamientos) { itemEntrenamiento ->
-                Itementreno(itemEntrenamiento = itemEntrenamiento , sportViewModel)
+        if (entrenamientos.isEmpty()) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = "No hay entrenamientos registrados",
+                    color = Color.LightGray,
+                    fontSize = 20.sp
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = modifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(entrenamientos) { itemEntrenamiento ->
+                    Itementreno(itemEntrenamiento = itemEntrenamiento , sportViewModel)
+                }
             }
         }
     }
@@ -113,8 +125,10 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
                     Text(text = "Ejercicios: ${itemEntrenamiento.ejercicios}")
                     Text(text = "Series: ${itemEntrenamiento.series}")
                     Text(text = "Repeticiones: ${itemEntrenamiento.repeticiones}")
-                    val pesoFormateado = String.format("%.2f", itemEntrenamiento.peso.toDouble())
-                    Text(text = "Peso: $pesoFormateado")
+                    val pesoInicialFormateado = String.format("%.2f", itemEntrenamiento.pesoInicial.toDouble())
+                    Text(text = "Peso Inicial: $pesoInicialFormateado")
+                    val pesoFinalFormateado = String.format("%.2f", itemEntrenamiento.pesoFinal.toDouble())
+                    Text(text = "Peso Inicial: $pesoFinalFormateado")
                 }
             }
             IconButton(

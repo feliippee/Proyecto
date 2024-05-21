@@ -7,6 +7,8 @@ data class ItemEntrenamiento(
     var ejercicios: String,
     var series: String,
     var repeticiones: String,
-    var peso: String
+    var pesoInicial: String,
+    var pesoFinal: String,
+
 
 )

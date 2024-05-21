@@ -2,6 +2,7 @@ package com.example.nutricionydeportefr.pantallas.sport
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,10 +11,7 @@ import androidx.navigation.NavController
 import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
 
@@ -29,14 +27,16 @@ class SportViewModel : ViewModel() {
     val entrenamientos: LiveData<List<ItemEntrenamiento>> = _entrenamientos
 
     init {
-        getEntrenamientos()
+
+           getEntrenamientos()
+
     }
 
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
 
-    private fun getEntrenamientos() {
+    private  fun getEntrenamientos() {
         viewModelScope.launch {
             try {
                 val db = Firebase.firestore
@@ -48,7 +48,8 @@ class SportViewModel : ViewModel() {
                         parteCuerpo = document.getString("Parte del cuerpo") ?: "",
                         series = document.getLong("Series")?.toString() ?: "",
                         repeticiones = document.getLong("Repeticiones")?.toString() ?: "",
-                        peso = document.getDouble("Peso")?.toString() ?: "",
+                        pesoInicial = document.getDouble("Peso Inicial")?.toString() ?: "",
+                        pesoFinal = document.getDouble("Peso Final")?.toString() ?: "",
                         ejercicios = document.getString("Ejercicios") ?: ""
                     )
                 }

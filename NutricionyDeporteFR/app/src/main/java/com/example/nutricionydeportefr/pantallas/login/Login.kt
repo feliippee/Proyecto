@@ -2,7 +2,10 @@ package com.example.nutricionydeportefr.pantallas.login
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.nutricionydeportefr.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.navegacion.Escenas
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 
 @Composable
@@ -70,7 +77,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             Spacer(modifier = Modifier.height(30.dp))
             lineaDivisora()
             Spacer(modifier = Modifier.height(30.dp))
-            BotonesLoginRedes(loginViewModel, firebaseAuth, navController, context)
+            BotonesLoginRedes(loginViewModel,navController)
             Spacer(modifier = Modifier.height(125.dp))
             TextoRegistro(navController)
 
@@ -156,7 +163,6 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
                 )
             }
         },
-
         isError = passwordError != null,
         supportingText = {
             passwordError?.let {
@@ -209,15 +215,35 @@ fun Botonlogin(
 }
 
 @Composable
-fun BotonesLoginRedes(
-    loginViewModel: LoginViewModel,
-    //googleSignInClient: GoogleSignInClient,
-    firebaseAuth: FirebaseAuth,
-    navController: NavController,
-    context: Context,
-) {
+fun BotonesLoginRedes(loginViewModel: LoginViewModel, navController: NavController) {
+    val context = LocalContext.current
+
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                loginViewModel.iniciarSesionGoogle(credential) {
+                    navController.navigate("home")
+                }
+            } catch (ex: Exception) {
+                Log.d("google", "excepcion al iniciar con google " + ex.localizedMessage)
+            }
+
+        }
+
     Button(
         onClick = {
+            val opciones = GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("911309946399-8obn3pn0ctlvijarvfdsrnv08e4ug00h.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+
+            val googleSignInCliente= GoogleSignIn.getClient(context,opciones)
+            launcher.launch(googleSignInCliente.signInIntent)
+
         }
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
