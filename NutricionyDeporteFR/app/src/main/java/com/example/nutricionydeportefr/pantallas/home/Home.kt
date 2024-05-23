@@ -14,21 +14,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.pantallas.home.*
-import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
-
+import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Home(navController: NavController, homeViewModel: HomeViewModel) {
+fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
 
     Scaffold(
+        topBar = { Toolbar(scaffoldViewModel, navController) },
         bottomBar = { BottomMenu(navController,homeViewModel) }
     ){
         Cuerpo()
     }
 }
-
 
 @Composable
 fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){

@@ -3,21 +3,21 @@ package com.example.nutricionydeportefr.pantallas.alimentacion
 import android.annotation.SuppressLint
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.FoodBank
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel) {
+fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel, scaffoldViewModel: ScaffoldViewModel) {
     Scaffold(
-        bottomBar = { BottomMenu(navController,alimentacionViewModel) }
+        topBar = { Toolbar(scaffoldViewModel, navController) },
+        bottomBar = { BottomMenu(navController,alimentacionViewModel) },
+        floatingActionButton = { ActionFloatingButton(navController)}
     ){
 
     }
@@ -69,4 +69,17 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
             }
         )
     }
+}
+
+@Composable
+fun ActionFloatingButton(navController: NavController) {
+    FloatingActionButton(
+        onClick = {
+            navController.navigate("registroDieta")
+        },
+        backgroundColor = Color(0xFF46B62D),
+    ) {
+        Icon(Icons.Filled.Add, contentDescription = "Add")
+    }
+
 }

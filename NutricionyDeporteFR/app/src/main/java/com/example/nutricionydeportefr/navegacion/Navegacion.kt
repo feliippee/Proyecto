@@ -14,7 +14,9 @@ import com.example.nutricionydeportefr.pantallas.sport.*
 import com.example.nutricionydeportefr.pantallas.alimentacion.*
 import com.example.nutricionydeportefr.pantallas.splashscreen.*
 import com.example.nutricionydeportefr.pantallas.registrosport.*
+import com.example.nutricionydeportefr.pantallas.registroDieta.*
 import com.example.nutricionydeportefr.pantallas.progressbar.*
+import com.example.nutricionydeportefr.scaffold.*
 
 
 @Composable
@@ -30,19 +32,19 @@ fun Navegacion() {
             Registro(navController, RegistroViewModel())
         }
         composable( route = Escenas.Home.ruta) {
-            Home(navController, HomeViewModel())
+            Home(navController, HomeViewModel(), ScaffoldViewModel())
         }
         composable( route = Escenas.RecuperarPassword.ruta) {
             RecuperarPassword(navController, RecuperarPasswordViewModel())
         }
         composable (route = Escenas.Perfil.ruta) {
-            Perfil(navController, PerfilViewModel())
+            Perfil(navController, PerfilViewModel(), ScaffoldViewModel())
         }
         composable (route = Escenas.Alimentacion.ruta) {
-            Alimentacion(navController, AlimentacionViewModel())
+            Alimentacion(navController, AlimentacionViewModel(), ScaffoldViewModel())
         }
         composable (route = Escenas.Ejercicios.ruta) {
-            Sport(navController, SportViewModel())
+            Sport(navController, SportViewModel(), ScaffoldViewModel())
         }
         composable(route = Escenas.SplashScreen.ruta) {
             SplashScreen(navController, SplashScreenViewModel())
@@ -52,6 +54,9 @@ fun Navegacion() {
         }
         composable(route = Escenas.Carga.ruta) {
             ProgressBar()
+        }
+        composable(route = Escenas.RegistroDieta.ruta){
+            RegistroDieta(navController, RegistroDietaViewModel())
         }
 
     }

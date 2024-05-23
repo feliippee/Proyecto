@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.nutricionydeportefr.pantallas.registrosport
 
 import androidx.compose.foundation.background
@@ -73,7 +74,6 @@ fun Titulo() {
 }
 
 //Fun para registrar dia de entrenamiento
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CampoFecha(registroSportViewModel: RegistroSportViewModel) {
     val context = LocalContext.current
@@ -111,7 +111,6 @@ fun CampoFecha(registroSportViewModel: RegistroSportViewModel) {
 }
 
 //Fun para registrar la parte del cuerpo
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParteCuerpo(registroSportViewModel: RegistroSportViewModel) {
 
@@ -136,7 +135,6 @@ fun ParteCuerpo(registroSportViewModel: RegistroSportViewModel) {
 }
 
 //Registro el nombre de los ejercicios
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Ejercicios(registroSportViewModel: RegistroSportViewModel) {
 
@@ -162,7 +160,6 @@ fun Ejercicios(registroSportViewModel: RegistroSportViewModel) {
 }
 
 //Registro de series y repeticiones
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
 
@@ -217,7 +214,6 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
 }
 
 //Fun para pesos
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Pesos(registroSportViewModel: RegistroSportViewModel) {
 

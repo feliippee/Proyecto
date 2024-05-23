@@ -7,7 +7,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -28,25 +27,32 @@ import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.example.nutricionydeportefr.pantallas.perfil.*
 import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
 import com.example.nutricionydeportefr.pantallas.registrosport.RegistroSportViewModel
+import com.example.nutricionydeportefr.scaffold.*
 import kotlinx.coroutines.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Sport(navController: NavController, sportViewModel: SportViewModel) {
+fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffoldViewModel: ScaffoldViewModel) {
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
+    val cargaDatos by sportViewModel.cargaDatos.observeAsState(initial = true)
 
-    //val carga by sportViewModel.carga.observeAsState(initial = true)
+
     Scaffold(
+        topBar = { Toolbar(scaffoldViewModel, navController) },
         bottomBar = { BottomMenu(navController, sportViewModel) },
         floatingActionButton = { ActionFloatingButton(navController) }
     ) {
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(8.dp),
         ) {
-            Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
+            if (cargaDatos) {
+                ProgressBar()
+            } else {
+                Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
+            }
         }
     }
 }
@@ -77,7 +83,7 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(entrenamientos) { itemEntrenamiento ->
-                    Itementreno(itemEntrenamiento = itemEntrenamiento , sportViewModel)
+                    Itementreno(itemEntrenamiento = itemEntrenamiento, sportViewModel)
                 }
             }
         }
@@ -95,7 +101,8 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
             onDismissRequest = { mostrarDialog = false },
             onConfirm = {
                 sportViewModel.deleteEntrenamiento(itemEntrenamiento)
-                mostrarDialog = false },
+                mostrarDialog = false
+            },
             onDismiss = { mostrarDialog = false }
         )
     }
@@ -144,6 +151,7 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
         }
     }
 }
+
 @Composable
 fun AlertDialogEntreno(
     onDismissRequest: () -> Unit,

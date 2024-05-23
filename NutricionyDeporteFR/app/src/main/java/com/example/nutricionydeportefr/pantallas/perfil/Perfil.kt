@@ -1,24 +1,21 @@
 package com.example.nutricionydeportefr.pantallas.perfil
 
 import android.annotation.SuppressLint
-import android.widget.Toast
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import com.example.nutricionydeportefr.scaffold.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel) {
+fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
     Scaffold(
-        topBar = { Toolbar(perfilViewModel, navController) },
+        topBar = { Toolbar(scaffoldViewModel, navController) },
         bottomBar = { BottomMenu(navController, perfilViewModel) }
     ) {
 
@@ -26,72 +23,11 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel) {
     }
 }
 
-@Composable
-fun Toolbar(perfilViewModel: PerfilViewModel, navController: NavController) {
-    TopAppBar(
-        title = { androidx.compose.material.Text(text = "NutriSport") },
-        backgroundColor = Color(0xFF46B62D),
-        actions = {
-            //Desplegable para que el usuario pueda cerrar sesion
-            IconButton(onClick = {
-                perfilViewModel.setDesplegable()
-            }) {
-                Icon(Icons.Filled.Settings , contentDescription = "Cerrar sesion")
-            }
-            CerrarSesion(perfilViewModel, navController)
 
-        }
 
-    )
-}
-
-@Composable
-fun CerrarSesion(perfilViewModel: PerfilViewModel, navController: NavController) {
-    val expandir by perfilViewModel.expandir.observeAsState(initial = false)
-    DropdownMenu(
-        expanded = expandir,
-        onDismissRequest = { perfilViewModel.setDesplegable() }
-    ) {
-        DropdownMenuItem(onClick = {
-            perfilViewModel.setDesplegable()
-            perfilViewModel.setMostrarDialog()
-        }) {
-            Text("Cerrar sesion")
-        }
-    }
-    AlertDialog(perfilViewModel, navController)
-}
-@Composable
-fun AlertDialog(perfilViewModel: PerfilViewModel, navController: NavController) {
-    val mostrarDialog by perfilViewModel.mostrarDialog.observeAsState(initial = false)
-    if (mostrarDialog) {
-        AlertDialog(
-            onDismissRequest = { perfilViewModel.setMostrarDialog() },
-            text = { Text("¿Estas seguro que deseas cerrar sesion?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    perfilViewModel.setMostrarDialog()
-                    perfilViewModel.cerrarSesion()
-                    navController.navigate("login") {
-                        popUpTo("home") {
-                            inclusive = true
-                        }
-                    }
-
-                }) {
-                    Text("Aceptar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { perfilViewModel.setMostrarDialog() }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-}
 @Composable
 fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
+
     val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
 
     BottomNavigation(

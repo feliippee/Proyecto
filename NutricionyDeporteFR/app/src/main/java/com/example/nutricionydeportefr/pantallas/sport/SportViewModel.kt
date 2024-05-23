@@ -26,6 +26,9 @@ class SportViewModel : ViewModel() {
     private val _entrenamientos = MutableLiveData<List<ItemEntrenamiento>>()
     val entrenamientos: LiveData<List<ItemEntrenamiento>> = _entrenamientos
 
+    private val _cargaDatos = MutableLiveData(true)
+    val cargaDatos: LiveData<Boolean> = _cargaDatos
+
     init {
 
            getEntrenamientos()
@@ -38,6 +41,7 @@ class SportViewModel : ViewModel() {
 
     private  fun getEntrenamientos() {
         viewModelScope.launch {
+            _cargaDatos.value = true
             try {
                 val db = Firebase.firestore
                 val result = db.collection("entrenamientos").get().await()
@@ -55,19 +59,25 @@ class SportViewModel : ViewModel() {
                 }
                 _entrenamientos.value = entrenamientosList
             } catch (exception: Exception) {
-                Log.w("SportViewModel", "Error getting documents.", exception)
+                Log.w("SportViewModel", "Error al obtener los datos.", exception)
+            } finally {
+                _cargaDatos.value = false
+
             }
         }
     }
 
     fun deleteEntrenamiento(itemEntrenamiento: ItemEntrenamiento) {
         viewModelScope.launch {
+            _cargaDatos.value = true
             try {
                 val db = Firebase.firestore
                 db.collection("entrenamientos").document(itemEntrenamiento.id).delete().await()
                 getEntrenamientos() // Refresh the list after deletion
             } catch (exception: Exception) {
-                Log.w("SportViewModel", "Error deleting document.", exception)
+                Log.w("SportViewModel", "Error al borrar el documento", exception)
+            } finally {
+                _cargaDatos.value = false
             }
         }
     }
