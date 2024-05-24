@@ -132,7 +132,7 @@ class RegistroSportViewModel: ViewModel() {
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun compobarCampos(
+    fun compobarCamposEntreno(
         fechaEntrenamiento: String,
         partecuerpo: String,
         ejercicios: String,
@@ -151,18 +151,25 @@ class RegistroSportViewModel: ViewModel() {
         val pesoFinalNumber = pesoFinal.toFloatOrNull()
         if (fechaEntrenamiento.isEmpty()) {
             _fechaError.value = "Fecha de nacimiento no puede estar vacio"
+            Log.d("Registro Entreno", "Campo Fecha Vacio")
         } else if (partecuerpo.isEmpty()) {
             _parteCuerpoError.value = "Campo Obligatorio"
+            Log.d("Registro Entreno", "Campo Parte del Cuerpo Vacio")
         } else if (ejercicios.isEmpty()) {
             _ejerciciosError.value = "Campo Obligatorio"
+            Log.d("Registro Entreno", "Campo Ejercicios Vacio")
         } else if (seriesNumber == null || seriesNumber <= 0) {
             _seriesError.value = "Las series deben ser un número mayor que 0"
+            Log.d("Registro Entreno", "Campo Series Invalido")
         } else if (repeticionesNumber == null || repeticionesNumber <= 0) {
             _repeticionesError.value = "Las repeticiones deben ser un número mayor que 0"
+            Log.d("Registro Entreno", "Campo Repeticiones Invalido")
         } else if (pesoInicialNumber == null || pesoInicialNumber <= 0f) {
             _pesoInicialError.value = "El peso debe ser un número mayor que 0"
+            Log.d("Registro Entreno", "Campo Peso Inicial Invalido")
         } else if (pesoFinalNumber == null || pesoFinalNumber <= 0f) {
             _pesoFinalError.value = "El peso debe ser un número mayor que 0"
+            Log.d("Registro Entreno", "Campo Peso Final Invalido")
         } else {
             _series.value = seriesNumber.toString()
             _repeticiones.value = repeticionesNumber.toString()
@@ -173,6 +180,7 @@ class RegistroSportViewModel: ViewModel() {
                 registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoInicialNumber, pesoFinalNumber, fechaEntrenamiento)
                 delay(2000)  // Espera un segundo y medio
                 Toast.makeText(context, "Entrenamiento registrado correctamente", Toast.LENGTH_SHORT).show()
+                Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
                 navController.navigate("ejercicios")
             }
 

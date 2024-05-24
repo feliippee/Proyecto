@@ -10,6 +10,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RegistroDietaViewModel: ViewModel(){
+
+    //Variable para el DropdownMenu
+    private val _expandir = MutableLiveData<Boolean>(false)
+    val expandir: LiveData<Boolean> = _expandir
+
     //Variable para modificar los campos
     private val _fechaDieta = MutableLiveData<String>()
     val fechaDieta: LiveData<String> = _fechaDieta
@@ -17,9 +22,17 @@ class RegistroDietaViewModel: ViewModel(){
     private val _comidaseleccionada = MutableLiveData<String>()
     val comidaseleccionada: LiveData<String> = _comidaseleccionada
 
-    //Variable para el DropdownMenu
-    private val _expandir = MutableLiveData<Boolean>(false)
-    val expandir: LiveData<Boolean> = _expandir
+    private val _menu = MutableLiveData<String>()
+    val menu: LiveData<String> = _menu
+
+    private val _calorias = MutableLiveData<String>()
+    val calorias: LiveData<String> = _calorias
+
+    private val _cantidad = MutableLiveData<String>()
+    val cantidad: LiveData<String> = _cantidad
+
+    private val _suplementacion = MutableLiveData<String>()
+    val suplementacion: LiveData<String> = _suplementacion
 
     //Variables para mostrar errores en los campos
     private val _fechaError = MutableLiveData<String?>()
@@ -28,22 +41,53 @@ class RegistroDietaViewModel: ViewModel(){
     private val _comidaSeleccionadaError = MutableLiveData<String?>()
     val comidaSeleccionadaError: LiveData<String?> = _comidaSeleccionadaError
 
+    private val _menuError = MutableLiveData<String?>()
+    val menuError: LiveData<String?> = _menuError
+
+    private val _caloriasError = MutableLiveData<String?>()
+    val caloriasError: LiveData<String?> = _caloriasError
+
+    private val _cantidadError = MutableLiveData<String?>()
+    val cantidadError: LiveData<String?> = _cantidadError
+
+    private val _suplementacionError = MutableLiveData<String?>()
+    val suplementacionError: LiveData<String?> = _suplementacionError
+
+    //Funciones para modificar los campos
     fun onfechaDietaChanged(fechaDieta: String) {
         _fechaDieta.value = fechaDieta
     }
-
     fun onComidaChange(comidaseleccionada:String) {
         _comidaseleccionada.value = comidaseleccionada
+    }
+    fun onMenuChange(cantidadPlatos:String) {
+        _menu.value = cantidadPlatos
+    }
+    fun onCaloriasChange(calorias:String) {
+        _calorias.value = calorias
+    }
+    fun onCantidadChange(cantidad:String) {
+        _cantidad.value = cantidad
+    }
+    fun onSuplementacionChange(suplementacion:String) {
+        _suplementacion.value = suplementacion
     }
     fun setDesplegable(){
         _expandir.value = !(_expandir.value ?: false)
     }
+
     init{
         fechaDieta.observeForever {
             _fechaError.value = null
         }
         comidaseleccionada.observeForever {
             _comidaSeleccionadaError.value = null
+        }
+        menu.observeForever {
+            _menuError.value = null
+        }
+        calorias.observeForever {
+            _caloriasError.value = null
         }
     }
 

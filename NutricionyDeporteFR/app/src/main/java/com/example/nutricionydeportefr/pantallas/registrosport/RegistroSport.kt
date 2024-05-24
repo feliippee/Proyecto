@@ -276,7 +276,7 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
     val context = LocalContext.current
     Button(
         onClick = {
-            registroSportViewModel.compobarCampos(
+            registroSportViewModel.compobarCamposEntreno(
                 fechEntrenamiento,
                 parteCuerpo,
                 ejercicios,
