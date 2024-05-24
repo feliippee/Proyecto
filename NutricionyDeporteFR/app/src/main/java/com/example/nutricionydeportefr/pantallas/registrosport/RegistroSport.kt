@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.nutricionydeportefr.pantallas.registrosport
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,8 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.R
 import com.example.nutricionydeportefr.pantallas.registro.calendar
-import com.example.nutricionydeportefr.pantallas.progressbar.*
-
 
 @Composable
 fun RegistroSport(navController: NavController, registroSportViewModel: RegistroSportViewModel) {
@@ -273,7 +270,7 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
     val repeticiones by registroSportViewModel.repeticiones.observeAsState(initial = "")
     val pesoInicial by registroSportViewModel.pesoInicial.observeAsState(initial = "")
     val pesoFinal by registroSportViewModel.pesoFinal.observeAsState(initial = "")
-    val context = LocalContext.current
+
     Button(
         onClick = {
             registroSportViewModel.compobarCamposEntreno(
@@ -284,7 +281,6 @@ fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: Re
                 repeticiones,
                 pesoInicial,
                 pesoFinal,
-                context,
                 navController
             )
 

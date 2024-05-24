@@ -2,14 +2,19 @@ package com.example.nutricionydeportefr.pantallas.registroDieta
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.util.Log
 import android.widget.DatePicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RegistroDietaViewModel: ViewModel(){
+class RegistroDietaViewModel : ViewModel() {
 
     //Variable para el DropdownMenu
     private val _expandir = MutableLiveData<Boolean>(false)
@@ -57,26 +62,32 @@ class RegistroDietaViewModel: ViewModel(){
     fun onfechaDietaChanged(fechaDieta: String) {
         _fechaDieta.value = fechaDieta
     }
-    fun onComidaChange(comidaseleccionada:String) {
+
+    fun onComidaChange(comidaseleccionada: String) {
         _comidaseleccionada.value = comidaseleccionada
     }
-    fun onMenuChange(cantidadPlatos:String) {
+
+    fun onMenuChange(cantidadPlatos: String) {
         _menu.value = cantidadPlatos
     }
-    fun onCaloriasChange(calorias:String) {
+
+    fun onCaloriasChange(calorias: String) {
         _calorias.value = calorias
     }
-    fun onCantidadChange(cantidad:String) {
+
+    fun onCantidadChange(cantidad: String) {
         _cantidad.value = cantidad
     }
-    fun onSuplementacionChange(suplementacion:String) {
+
+    fun onSuplementacionChange(suplementacion: String) {
         _suplementacion.value = suplementacion
     }
-    fun setDesplegable(){
+
+    fun setDesplegable() {
         _expandir.value = !(_expandir.value ?: false)
     }
 
-    init{
+    init {
         fechaDieta.observeForever {
             _fechaError.value = null
         }
@@ -114,5 +125,81 @@ class RegistroDietaViewModel: ViewModel(){
         val fechaformato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
+    }
+
+
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun comprobarCamposDieta(
+        fechaDieta: String,
+        comidaseleccionada: String,
+        menu: String,
+        calorias: String,
+        cantidad: String,
+        suplementacion: String,
+        navController: NavController
+    ) {
+
+        val caloriasNumber = calorias.toIntOrNull()
+
+        if (fechaDieta.isEmpty()) {
+            _fechaError.value = "Fecha no puede estar vacio"
+            Log.d("Registro Entreno", "Campo Fecha Vacio")
+        } else if (comidaseleccionada.isEmpty()) {
+            _comidaSeleccionadaError.value = "Comida no puede estar vacio"
+            Log.d("Registro Entreno", "Campo Comida Vacio")
+        } else if(menu.isEmpty()){
+            _menuError.value = "Menu no puede estar vacio"
+            Log.d("Registro Entreno", "Campo Menu Vacio")
+        } else if (caloriasNumber == null || caloriasNumber <= 0) {
+            _caloriasError.value = "Calorias no puede estar vacio"
+            Log.d("Registro Entreno", "Campo Calorias Vacio")
+        } else {
+            _calorias.value = caloriasNumber.toString()
+            GlobalScope.launch(Dispatchers.Main) {
+                navController.navigate("progressBar")
+                registrarDatosAlimentacion(
+                    comidaseleccionada,
+                    menu,
+                    caloriasNumber,
+                    cantidad,
+                    suplementacion,
+                    fechaDieta
+                )
+                Log.d("Registro Alimentacion", "Datos Guardados en Firebase")
+                delay(2000)
+                navController.navigate("alimentacion")
+            }
+
+        }
+    }
+
+
+    //Funcion para guardar los datos de la alimentacion en Firebase
+    fun registrarDatosAlimentacion(
+        comidaseleccionada: String,
+        menu: String,
+        calorias: Int,
+        cantidad: String,
+        suplementacion: String,
+        fechaDieta: String
+    ) {
+        val db = Firebase.firestore
+        val usuario = hashMapOf(
+            "Comida Seleccionada" to comidaseleccionada,
+            "Menu" to menu,
+            "Calorias" to calorias,
+            "Cantidad" to cantidad,
+            "Suplementacion" to suplementacion,
+            "Fecha Alimentacion" to fechaDieta
+        )
+        db.collection("alimentacion")
+            .add(usuario)
+            .addOnSuccessListener { documentReference ->
+                println("DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                println("Error adding document $e")
+            }
     }
 }

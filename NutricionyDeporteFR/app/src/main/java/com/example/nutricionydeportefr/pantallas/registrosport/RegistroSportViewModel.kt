@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.nutricionydeportefr.pantallas.registrosport
 
 import android.app.DatePickerDialog
@@ -5,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -131,6 +133,7 @@ class RegistroSportViewModel: ViewModel() {
         onDateSelected(fecha)
     }
 
+
     @OptIn(DelicateCoroutinesApi::class)
     fun compobarCamposEntreno(
         fechaEntrenamiento: String,
@@ -140,7 +143,6 @@ class RegistroSportViewModel: ViewModel() {
         repeticiones: String,
         pesoInicial: String,
         pesoFinal: String,
-        context: Context,
         navController: NavController
 
     ) {
@@ -150,7 +152,7 @@ class RegistroSportViewModel: ViewModel() {
         val pesoInicialNumber = pesoInicial.toFloatOrNull()
         val pesoFinalNumber = pesoFinal.toFloatOrNull()
         if (fechaEntrenamiento.isEmpty()) {
-            _fechaError.value = "Fecha de nacimiento no puede estar vacio"
+            _fechaError.value = "Fecha de entreno no puede estar vacio"
             Log.d("Registro Entreno", "Campo Fecha Vacio")
         } else if (partecuerpo.isEmpty()) {
             _parteCuerpoError.value = "Campo Obligatorio"
@@ -179,7 +181,6 @@ class RegistroSportViewModel: ViewModel() {
                 navController.navigate("progressBar")
                 registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoInicialNumber, pesoFinalNumber, fechaEntrenamiento)
                 delay(2000)  // Espera un segundo y medio
-                Toast.makeText(context, "Entrenamiento registrado correctamente", Toast.LENGTH_SHORT).show()
                 Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
                 navController.navigate("ejercicios")
             }
@@ -187,7 +188,7 @@ class RegistroSportViewModel: ViewModel() {
         }
     }
 
-    //Funcion para guardar los datos de los usuarios en Firebase
+    //Funcion para guardar los datos del entrenamiento en Firebase
     fun registrarDatosEntrenamientos(
         partecuerpo: String,
         ejercicios: String,

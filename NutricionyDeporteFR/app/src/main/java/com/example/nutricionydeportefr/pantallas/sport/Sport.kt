@@ -1,8 +1,6 @@
 package com.example.nutricionydeportefr.pantallas.sport
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,18 +22,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
-import com.example.nutricionydeportefr.pantallas.perfil.*
 import com.example.nutricionydeportefr.pantallas.progressbar.ProgressBar
-import com.example.nutricionydeportefr.pantallas.registrosport.RegistroSportViewModel
 import com.example.nutricionydeportefr.scaffold.*
-import kotlinx.coroutines.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffoldViewModel: ScaffoldViewModel) {
+
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
-    val cargaDatos by sportViewModel.cargaDatos.observeAsState(initial = true)
+    val cargaDatosEntrenamiento by sportViewModel.cargaDatos.observeAsState(initial = true)
 
 
     Scaffold(
@@ -48,7 +44,7 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffold
                 .fillMaxSize()
                 .padding(8.dp),
         ) {
-            if (cargaDatos) {
+            if (cargaDatosEntrenamiento) {
                 ProgressBar()
             } else {
                 Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)

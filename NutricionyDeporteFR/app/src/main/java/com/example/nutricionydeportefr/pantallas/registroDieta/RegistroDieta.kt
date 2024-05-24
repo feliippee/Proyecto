@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.R
 import com.example.nutricionydeportefr.pantallas.registro.calendar
-import com.example.nutricionydeportefr.pantallas.registrosport.RegistroSportViewModel
 
 @Composable
 fun RegistroDieta(navController: NavController, registroDietaViewModel: RegistroDietaViewModel) {
@@ -82,7 +81,7 @@ fun CampoFecha(registroDietaViewModel: RegistroDietaViewModel) {
     TextField(
         value = fechaDieta,
         onValueChange = { registroDietaViewModel.onfechaDietaChanged(it) },
-        label = { Text(text = "Fecha Entrenamiento") },
+        label = { Text(text = "Fecha Alimentacion") },
         maxLines = 1,
         readOnly = true,
         isError = fechaDietaError != null,
@@ -97,7 +96,7 @@ fun CampoFecha(registroDietaViewModel: RegistroDietaViewModel) {
         trailingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.calendario),
-                contentDescription = "Fecha de nacimiento",
+                contentDescription = "Fecha Alimentacion",
                 tint = Color.Black,
                 modifier = Modifier.clickable {
                     registroDietaViewModel.FechaDialog(context, calendar) { fechaSeleccionada ->
@@ -121,7 +120,7 @@ fun CampoComida(registroDietaViewModel: RegistroDietaViewModel) {
         TextField(
             value = comidaSeleccionada,
             onValueChange = { registroDietaViewModel.onComidaChange(it) },
-            label = { Text(text = "Elige una Opcion") },
+            label = { Text(text = "Tipo de Alimentacion") },
             maxLines = 1,
             readOnly = true,
             enabled = false,
@@ -161,7 +160,7 @@ fun CampoComida(registroDietaViewModel: RegistroDietaViewModel) {
 }
 
 @Composable
-fun Menu(registroDietaViewModel: RegistroDietaViewModel){
+fun Menu(registroDietaViewModel: RegistroDietaViewModel) {
 
     val menu by registroDietaViewModel.menu.observeAsState(initial = "")
     val menuError: String? by registroDietaViewModel.menuError.observeAsState(initial = null)
@@ -170,7 +169,7 @@ fun Menu(registroDietaViewModel: RegistroDietaViewModel){
     TextField(
         value = menu,
         onValueChange = { registroDietaViewModel.onMenuChange(it) },
-        label = { Text(text = "Menu") },
+        label = { Text(text = "Platos") },
         maxLines = 6,
         isError = menuError != null,
         supportingText = {
@@ -196,7 +195,6 @@ fun Cantidad(registroDietaViewModel: RegistroDietaViewModel) {
         onValueChange = { registroDietaViewModel.onCantidadChange(it) },
         label = { Text(text = "Cantidad de Alimentos") },
         maxLines = 1,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         isError = cantidadError != null,
         supportingText = {
             cantidadError?.let {
@@ -211,58 +209,57 @@ fun Cantidad(registroDietaViewModel: RegistroDietaViewModel) {
 }
 
 @Composable
-fun Calorias(registroDietaViewModel: RegistroDietaViewModel){
+fun Calorias(registroDietaViewModel: RegistroDietaViewModel) {
 
-        val calorias by registroDietaViewModel.calorias.observeAsState(initial = "")
-        val caloriasError: String? by registroDietaViewModel.caloriasError.observeAsState(initial = null)
+    val calorias by registroDietaViewModel.calorias.observeAsState(initial = "")
+    val caloriasError: String? by registroDietaViewModel.caloriasError.observeAsState(initial = null)
 
-        // Textfield para registrar la cantidad de platos del usuario
-        TextField(
-            value = calorias,
-            onValueChange = { registroDietaViewModel.onCaloriasChange(it) },
-            label = { Text(text = "Calorias") },
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = caloriasError != null,
-            supportingText = {
-                caloriasError?.let {
-                    Text(
-                        text = it,
-                        style = TextStyle(color = Color.Red),
-                    )
-                }
-            },
-        )
+    // Textfield para registrar la cantidad de platos del usuario
+    TextField(
+        value = calorias,
+        onValueChange = { registroDietaViewModel.onCaloriasChange(it) },
+        label = { Text(text = "Calorias") },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        isError = caloriasError != null,
+        supportingText = {
+            caloriasError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        },
+    )
 }
 
 @Composable
 fun Suplementacion(registroDietaViewModel: RegistroDietaViewModel) {
 
-        val suplementacion by registroDietaViewModel.suplementacion.observeAsState(initial = "")
-        val suplementacionError: String? by registroDietaViewModel.suplementacionError.observeAsState(initial = null)
+    val suplementacion by registroDietaViewModel.suplementacion.observeAsState(initial = "")
+    val suplementacionError: String? by registroDietaViewModel.suplementacionError.observeAsState(initial = null)
 
-        // Textfield para registrar la cantidad de platos del usuario
-        TextField(
-            value = suplementacion,
-            onValueChange = { registroDietaViewModel.onSuplementacionChange(it) },
-            label = { Text(text = "Suplementacion") },
-            maxLines = 1,
-            isError = suplementacionError != null,
-            supportingText = {
-                suplementacionError?.let {
-                    Text(
-                        text = it,
-                        style = TextStyle(color = Color.Red),
-                    )
-                }
-            },
-        )
+    // Textfield para registrar la cantidad de platos del usuario
+    TextField(
+        value = suplementacion,
+        onValueChange = { registroDietaViewModel.onSuplementacionChange(it) },
+        label = { Text(text = "Suplementacion") },
+        maxLines = 1,
+        isError = suplementacionError != null,
+        supportingText = {
+            suplementacionError?.let {
+                Text(
+                    text = it,
+                    style = TextStyle(color = Color.Red),
+                )
+            }
+        },
+    )
 }
 
 @Composable
-fun BtnRegistrarAlimentacion(navController: NavController, registroDietaViewModel: RegistroDietaViewModel){
+fun BtnRegistrarAlimentacion(navController: NavController, registroDietaViewModel: RegistroDietaViewModel) {
 
-    val context = LocalContext.current
     val fechaDieta by registroDietaViewModel.fechaDieta.observeAsState(initial = "")
     val comidaSeleccionada by registroDietaViewModel.comidaseleccionada.observeAsState(initial = "")
     val menu by registroDietaViewModel.menu.observeAsState(initial = "")
@@ -270,22 +267,24 @@ fun BtnRegistrarAlimentacion(navController: NavController, registroDietaViewMode
     val cantidad by registroDietaViewModel.cantidad.observeAsState(initial = "")
     val suplementacion by registroDietaViewModel.suplementacion.observeAsState(initial = "")
 
-    //Boton para registrar la alimentacion
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Button(
-            onClick = {
+    Button(
+        onClick = {
+            registroDietaViewModel.comprobarCamposDieta(
+                fechaDieta,
+                comidaSeleccionada,
+                menu,
+                calorias,
+                cantidad,
+                suplementacion,
+                navController
+            )
 
-            },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.Center)
-        ) {
-            Text(text = "Registrar")
-        }
+        },
+        modifier = Modifier
+            .padding(16.dp)
+
+    ) {
+        Text(text = "Registrar Alimentacion")
     }
 
 }
