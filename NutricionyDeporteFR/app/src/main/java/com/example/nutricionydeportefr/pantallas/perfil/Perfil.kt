@@ -34,8 +34,10 @@ import com.example.nutricionydeportefr.R
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerNombreUsuario()
+        perfilViewModel.cargarImagenPerfil(context)
     }
 
     Scaffold(
@@ -88,8 +90,10 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
 @Composable
 fun FotoUsuario(perfilViewModel: PerfilViewModel) {
 
+
     val context = LocalContext.current
     val imagenPerfilUrl by perfilViewModel.imagenPerfilUrl.observeAsState()
+
 
     val galeria = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -110,9 +114,6 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
             }
 
         } )
-
-
-
 
     Column {
         Box(

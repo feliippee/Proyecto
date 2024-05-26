@@ -1,6 +1,7 @@
 package com.example.nutricionydeportefr.pantallas.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.pantallas.home.*
+import com.example.nutricionydeportefr.pantallas.registro.documentoId
 import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -26,6 +28,7 @@ fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldVie
         bottomBar = { BottomMenu(navController,homeViewModel) }
     ){
         Cuerpo()
+
     }
 }
 

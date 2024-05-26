@@ -151,9 +151,11 @@ class LoginViewModel : ViewModel() {
         val datosUsuario = hashMapOf(
             "email" to email,
             "usuario" to displayName,
-            "fechaDeNacimiento" to null
+            "fecha De Nacimiento" to null,
         )
-        db.collection("usuarios").document(uid).set(datosUsuario)
+        db.collection("usuario")
+            .document(displayName ?: uid)
+            .set(datosUsuario)
             .addOnSuccessListener {
                 Log.d("GoFit", "Datos del usuario guardados correctamente")
             }

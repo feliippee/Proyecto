@@ -2,6 +2,7 @@ package com.example.nutricionydeportefr.pantallas.registro
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -16,11 +17,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val calendar = Calendar.getInstance()
+var documentoId: String? = null
 
 //Variables de Firebase
 lateinit var firebaseAuth: FirebaseAuth
 
 class RegistroViewModel : ViewModel() {
+
+    private val PREFS_NAME = "Documento ID"
+    private val PREF_DOCUMENTO_ID = "documento_id"
+
 
     //Variable para modificar los campos
 
@@ -163,7 +169,7 @@ class RegistroViewModel : ViewModel() {
                     user?.updateProfile(profileUpdates)
                         ?.addOnCompleteListener { updateTask ->
                             if (updateTask.isSuccessful) {
-                                registrarDatosUsuarios(usuario, correo, fechaNacimiento)
+                                registrarDatosUsuarios(usuario, correo, fechaNacimiento, context)
                                 val sharedPref = context.getSharedPreferences("Nombre Usuario", Context.MODE_PRIVATE)
                                 with (sharedPref.edit()) {
                                     putString("email", correo)
@@ -214,17 +220,20 @@ class RegistroViewModel : ViewModel() {
     fun registrarDatosUsuarios(
         usuario: String,
         correo: String,
-        fechaNacimiento: String
+        fechaNacimiento: String,
+        context: Context
     ) {
         val db = Firebase.firestore
         val usuario = hashMapOf(
             "nombre" to usuario,
             "correo" to correo,
-            "fecha nacimiento" to fechaNacimiento
+            "fecha nacimiento" to fechaNacimiento,
         )
         db.collection("usuario")
             .add(usuario)
             .addOnSuccessListener { documentReference ->
+                documentoId = documentReference.id
+                guardarDocumentoIdEnPreferencias(context, documentoId!!)
                 println("DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
@@ -261,5 +270,29 @@ class RegistroViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
+
+    private fun getSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    private fun guardarDocumentoIdEnPreferencias(context: Context, id: String) {
+        val editor = getSharedPreferences(context).edit()
+        editor.putString(PREF_DOCUMENTO_ID, id)
+        editor.apply()
+    }
+
+    private fun cargarDocumentoIdDesdePreferencias(context: Context): String? {
+        return getSharedPreferences(context).getString(PREF_DOCUMENTO_ID, null)
+    }
+    fun cargarDocumentoId(context: Context) {
+        val id = cargarDocumentoIdDesdePreferencias(context) // Cargar el documentoId desde SharedPreferences
+        if (id != null) {
+            documentoId = id
+        }
+    }
+
+
+
+
 
 }
