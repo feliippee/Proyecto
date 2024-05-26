@@ -75,7 +75,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
                 loginViewModel
             )
             Spacer(modifier = Modifier.height(30.dp))
-            lineaDivisora()
+            LineaDivisora()
             Spacer(modifier = Modifier.height(30.dp))
             BotonesLoginRedes(loginViewModel,navController)
             Spacer(modifier = Modifier.height(125.dp))
@@ -271,7 +271,7 @@ fun TextoRegistro(navController: NavController) {
     )
 }
 @Composable
-fun lineaDivisora(){
+fun LineaDivisora(){
     //Linea Divisora
     Row(
         modifier = Modifier.fillMaxWidth(),
