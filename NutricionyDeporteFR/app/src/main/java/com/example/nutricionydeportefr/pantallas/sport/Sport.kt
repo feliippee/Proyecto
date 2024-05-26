@@ -47,7 +47,12 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffold
             if (cargaDatosEntrenamiento) {
                 ProgressBar()
             } else {
-                Body(Modifier.align(Alignment.TopStart), entrenamientos, sportViewModel)
+                Body(
+                    Modifier
+                        .align(Alignment.TopStart),
+                    entrenamientos,
+                    sportViewModel
+                )
             }
         }
     }
@@ -74,14 +79,15 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
                 )
             }
         } else {
-            LazyColumn(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(entrenamientos) { itemEntrenamiento ->
-                    Itementreno(itemEntrenamiento = itemEntrenamiento, sportViewModel)
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(entrenamientos) { itemEntrenamiento ->
+                        Itementreno(itemEntrenamiento = itemEntrenamiento, sportViewModel)
+                    }
+                    item { Spacer(modifier = Modifier.height(56.dp)) }
                 }
-            }
+
         }
     }
 }
@@ -105,6 +111,7 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
     Card(
         modifier = Modifier
             .fillMaxSize()
+            .padding(start = 10.dp, end = 10.dp)
             .clickable { expandir = !expandir },
         border = BorderStroke(2.dp, Color(0xFF46B62D)),
         elevation = 8.dp,

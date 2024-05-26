@@ -11,9 +11,16 @@ class PerfilViewModel: ViewModel() {
     private var _opcionBottonMenu = MutableLiveData(3)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
 
+    private val _nombreUsuario = MutableLiveData<String>()
+    val nombreUsuario: LiveData<String> = _nombreUsuario
+
+
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
-
+    fun obtenerNombreUsuario() {
+        val usuario = FirebaseAuth.getInstance().currentUser
+        _nombreUsuario.value = usuario?.displayName
+    }
 
 }

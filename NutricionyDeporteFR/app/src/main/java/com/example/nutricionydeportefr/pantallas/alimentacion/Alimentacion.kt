@@ -83,6 +83,7 @@ fun Body(modifier: Modifier, alimentacion: List<ItemAlimentacion>, alimentacionV
                 items(alimentacion) { itemAlimentacion ->
                     Itemalimentacion(itemAlimentacion = itemAlimentacion, alimentacionViewModel)
                 }
+                item { Spacer(modifier = Modifier.height(56.dp)) }
             }
         }
     }
