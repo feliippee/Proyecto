@@ -293,7 +293,6 @@ fun RacionPGV(registroDietaViewModel: RegistroDietaViewModel) {
     val racionProteinaError by registroDietaViewModel.racionProteinaError.observeAsState(initial = null)
     val racionGrasaError by registroDietaViewModel.racionGrasasError.observeAsState(initial = null)
     val racionVerduraError by registroDietaViewModel.racionVerduraError.observeAsState(initial = null)
-
     //Campos de textfield
     Row {
         //Racion de proteina
