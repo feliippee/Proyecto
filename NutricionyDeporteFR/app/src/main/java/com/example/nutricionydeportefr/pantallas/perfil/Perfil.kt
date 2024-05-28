@@ -30,7 +30,10 @@ import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.nutricionydeportefr.R
-
+/*
+Recoger Datos sexo, edad, peso, altura, objetivo
+ 
+ */
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {

@@ -30,11 +30,23 @@ class RegistroDietaViewModel : ViewModel() {
     private val _menu = MutableLiveData<String>()
     val menu: LiveData<String> = _menu
 
-    private val _calorias = MutableLiveData<String>()
-    val calorias: LiveData<String> = _calorias
+    private val _racionVerduras = MutableLiveData<String>()
+    val racionVerduras: LiveData<String> = _racionVerduras
 
-    private val _cantidad = MutableLiveData<String>()
-    val cantidad: LiveData<String> = _cantidad
+    private val _racionLacteo = MutableLiveData<String>()
+    val racionLacteo: LiveData<String> = _racionLacteo
+
+    private val _racionProteina = MutableLiveData<String>()
+    val racionProteina: LiveData<String> = _racionProteina
+
+    private val _racionFruta = MutableLiveData<String>()
+    val racionFruta: LiveData<String> = _racionFruta
+
+    private val _racionHidratos = MutableLiveData<String>()
+    val racionHidratos: LiveData<String> = _racionHidratos
+
+    private val _racionGrasas = MutableLiveData<String>()
+    val racionGrasas: LiveData<String> = _racionGrasas
 
     private val _suplementacion = MutableLiveData<String>()
     val suplementacion: LiveData<String> = _suplementacion
@@ -49,11 +61,23 @@ class RegistroDietaViewModel : ViewModel() {
     private val _menuError = MutableLiveData<String?>()
     val menuError: LiveData<String?> = _menuError
 
-    private val _caloriasError = MutableLiveData<String?>()
-    val caloriasError: LiveData<String?> = _caloriasError
+    private val _racionLacteoError = MutableLiveData<String?>()
+    val racionLacteoError: LiveData<String?> = _racionLacteoError
 
-    private val _cantidadError = MutableLiveData<String?>()
-    val cantidadError: LiveData<String?> = _cantidadError
+    private val _racionFrutaError = MutableLiveData<String?>()
+    val racionFrutaError: LiveData<String?> = _racionFrutaError
+
+    private val _racionHidratosError = MutableLiveData<String?>()
+    val racionHidratosError: LiveData<String?> = _racionHidratosError
+
+    private val _racionGrasasError = MutableLiveData<String?>()
+    val racionGrasasError: LiveData<String?> = _racionGrasasError
+
+    private val _racionProteinaError = MutableLiveData<String?>()
+    val racionProteinaError: LiveData<String?> = _racionProteinaError
+
+    private val _racionVerduraError = MutableLiveData<String?>()
+    val racionVerduraError: LiveData<String?> = _racionVerduraError
 
     private val _suplementacionError = MutableLiveData<String?>()
     val suplementacionError: LiveData<String?> = _suplementacionError
@@ -71,12 +95,28 @@ class RegistroDietaViewModel : ViewModel() {
         _menu.value = cantidadPlatos
     }
 
-    fun onCaloriasChange(calorias: String) {
-        _calorias.value = calorias
+    fun onVerduraChange(racionVerdura: String) {
+        _racionVerduras.value = racionVerdura
     }
 
-    fun onCantidadChange(cantidad: String) {
-        _cantidad.value = cantidad
+    fun onLacteoChange(racionLacteo: String) {
+        _racionLacteo.value = racionLacteo
+    }
+
+    fun onFrutaChange(racionFruta: String) {
+        _racionFruta.value = racionFruta
+    }
+
+    fun onHidratosChange(racionHidratos: String) {
+        _racionHidratos.value = racionHidratos
+    }
+
+    fun onGrasasChange(racionGrasas: String) {
+        _racionGrasas.value = racionGrasas
+    }
+
+    fun onProteinaChange(racionProteina: String) {
+        _racionProteina.value = racionProteina
     }
 
     fun onSuplementacionChange(suplementacion: String) {
@@ -97,8 +137,26 @@ class RegistroDietaViewModel : ViewModel() {
         menu.observeForever {
             _menuError.value = null
         }
-        calorias.observeForever {
-            _caloriasError.value = null
+        racionVerduras.observeForever {
+            _racionLacteoError.value = null
+        }
+        racionLacteo.observeForever {
+            _racionLacteoError.value = null
+        }
+        racionFruta.observeForever {
+            _racionFrutaError.value = null
+        }
+        racionHidratos.observeForever {
+            _racionHidratosError.value = null
+        }
+        racionGrasas.observeForever {
+            _racionGrasasError.value = null
+        }
+        racionProteina.observeForever {
+            _racionProteinaError.value = null
+        }
+        suplementacion.observeForever {
+            _suplementacionError.value = null
         }
     }
 
@@ -134,13 +192,22 @@ class RegistroDietaViewModel : ViewModel() {
         fechaDieta: String,
         comidaseleccionada: String,
         menu: String,
-        calorias: String,
-        cantidad: String,
+        racionLacteo: String,
+        racionVerduras: String,
+        racionFruta: String,
+        racionHidratos: String,
+        racionGrasas: String,
+        racionProteina: String,
         suplementacion: String,
         navController: NavController
     ) {
 
-        val caloriasNumber = calorias.toIntOrNull()
+        val LacteoNumber = racionLacteo.toFloatOrNull()
+        val VerdurasNumber = racionVerduras.toFloatOrNull()
+        val FrutaNumber = racionFruta.toFloatOrNull()
+        val HidratosNumber = racionHidratos.toFloatOrNull()
+        val GrasasNumber = racionGrasas.toFloatOrNull()
+        val ProteinaNumber = racionProteina.toFloatOrNull()
 
         if (fechaDieta.isEmpty()) {
             _fechaError.value = "Fecha no puede estar vacio"
@@ -151,18 +218,45 @@ class RegistroDietaViewModel : ViewModel() {
         } else if(menu.isEmpty()){
             _menuError.value = "Menu no puede estar vacio"
             Log.d("Registro Entreno", "Campo Menu Vacio")
-        } else if (caloriasNumber == null || caloriasNumber <= 0) {
-            _caloriasError.value = "Calorias no puede estar vacio"
-            Log.d("Registro Entreno", "Campo Calorias Vacio")
+        } else if (LacteoNumber == null || LacteoNumber < 0) {
+            _racionLacteoError.value = "La racion de lacteo no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Lacteo Calorias Vacio")
+        } else if (VerdurasNumber == null || VerdurasNumber < 0) {
+            _racionVerduraError.value = "La racion de verduras no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Verduras Calorias Vacio")
+        } else if (FrutaNumber == null || FrutaNumber < 0) {
+            _racionFrutaError.value = "La racion de fruta no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Fruta Calorias Vacio")
+        } else if (HidratosNumber == null || HidratosNumber < 0) {
+            _racionHidratosError.value = "La racion de hidratos no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Hidratos Calorias Vacio")
+        } else if (GrasasNumber == null || GrasasNumber < 0) {
+            _racionGrasasError.value = "La racion de grasas no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Grasas Calorias Vacio")
+        } else if (ProteinaNumber == null || ProteinaNumber < 0) {
+            _racionProteinaError.value = "La racion de proteina no puede estar vacio o ser positivo"
+            Log.d("Registro Entreno", "Proteina Calorias Vacio")
+        } else if (suplementacion.isEmpty()) {
+            _suplementacionError.value = "Suplementacion no puede estar vacio"
+            Log.d("Registro Entreno", "Suplementacion Vacio")
         } else {
-            _calorias.value = caloriasNumber.toString()
+            _racionVerduras.value = VerdurasNumber.toString()
+            _racionLacteo.value = LacteoNumber.toString()
+            _racionFruta.value = FrutaNumber.toString()
+            _racionHidratos.value = HidratosNumber.toString()
+            _racionGrasas.value = GrasasNumber.toString()
+            _racionProteina.value = ProteinaNumber.toString()
             GlobalScope.launch(Dispatchers.Main) {
                 navController.navigate("progressBar")
                 registrarDatosAlimentacion(
                     comidaseleccionada,
                     menu,
-                    caloriasNumber,
-                    cantidad,
+                    VerdurasNumber,
+                    LacteoNumber,
+                    FrutaNumber,
+                    HidratosNumber,
+                    GrasasNumber,
+                    ProteinaNumber,
                     suplementacion,
                     fechaDieta
                 )
@@ -179,8 +273,12 @@ class RegistroDietaViewModel : ViewModel() {
     fun registrarDatosAlimentacion(
         comidaseleccionada: String,
         menu: String,
-        calorias: Int,
-        cantidad: String,
+        verdurasNumber: Float,
+        lacteoNumber: Float,
+        frutaNumber: Float,
+        hidratosNumber: Float,
+        grasasNumber: Float,
+        proteinaNumber: Float,
         suplementacion: String,
         fechaDieta: String
     ) {
@@ -188,8 +286,12 @@ class RegistroDietaViewModel : ViewModel() {
         val usuario = hashMapOf(
             "Comida Seleccionada" to comidaseleccionada,
             "Menu" to menu,
-            "Calorias" to calorias,
-            "Cantidad" to cantidad,
+            "Racion Verduras" to verdurasNumber,
+            "Racion Lacteo" to lacteoNumber,
+            "Racion Fruta" to frutaNumber,
+            "Racion Hidratos" to hidratosNumber,
+            "Racion Grasas" to grasasNumber,
+            "Racion Proteina" to proteinaNumber,
             "Suplementacion" to suplementacion,
             "Fecha Alimentacion" to fechaDieta
         )

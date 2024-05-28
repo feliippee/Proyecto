@@ -48,9 +48,9 @@ fun Body(modifier: Modifier, navController: NavController, registroDietaViewMode
         Spacer(modifier = Modifier.size(12.dp))
         Menu(registroDietaViewModel)
         Spacer(modifier = Modifier.size(12.dp))
-        Cantidad(registroDietaViewModel)
+        RacionLFH(registroDietaViewModel)
         Spacer(modifier = Modifier.size(12.dp))
-        Calorias(registroDietaViewModel)
+        RacionPGV(registroDietaViewModel)
         Spacer(modifier = Modifier.size(12.dp))
         Suplementacion(registroDietaViewModel)
         Spacer(modifier = Modifier.size(12.dp))
@@ -182,7 +182,7 @@ fun Menu(registroDietaViewModel: RegistroDietaViewModel) {
         },
     )
 }
-
+/*
 @Composable
 fun Cantidad(registroDietaViewModel: RegistroDietaViewModel) {
 
@@ -206,31 +206,154 @@ fun Cantidad(registroDietaViewModel: RegistroDietaViewModel) {
         },
     )
 
+}*/
+
+@Composable
+fun RacionLFH(registroDietaViewModel: RegistroDietaViewModel){
+
+    //variables
+    val racionLacteo by registroDietaViewModel.racionLacteo.observeAsState(initial = "")
+    val racionFruta by registroDietaViewModel.racionFruta.observeAsState(initial = "")
+    val racionHidratos by registroDietaViewModel.racionHidratos.observeAsState(initial = "")
+
+    val racionLacteoError by registroDietaViewModel.racionLacteoError.observeAsState(initial = null)
+    val racionFrutaError by registroDietaViewModel.racionFrutaError.observeAsState(initial = null)
+    val racionHidratosError by registroDietaViewModel.racionHidratosError.observeAsState(initial = null)
+
+    //Campos de textfield
+    Row{
+        //Racion de lacteos
+        TextField(
+            value = racionLacteo,
+            onValueChange = { registroDietaViewModel.onLacteoChange(it) },
+            label = { Text(text = "Racion Lacteos", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(85.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionLacteoError != null,
+            supportingText = {
+                racionLacteoError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        //Racion de frutas
+        TextField(
+            value = racionFruta,
+            onValueChange = { registroDietaViewModel.onFrutaChange(it) },
+            label = { Text(text = "Racion Fruta", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(80.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionFrutaError != null,
+            supportingText = {
+                racionFrutaError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+        Spacer(modifier = Modifier.size(15.dp))
+        //Racion de hidratos
+        TextField(
+            value = racionHidratos,
+            onValueChange = { registroDietaViewModel.onHidratosChange(it) },
+            label = { Text(text = "Racion Hidratos", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(90.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionHidratosError != null,
+            supportingText = {
+                racionHidratosError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+
+    }
 }
 
 @Composable
-fun Calorias(registroDietaViewModel: RegistroDietaViewModel) {
+fun RacionPGV(registroDietaViewModel: RegistroDietaViewModel) {
 
-    val calorias by registroDietaViewModel.calorias.observeAsState(initial = "")
-    val caloriasError: String? by registroDietaViewModel.caloriasError.observeAsState(initial = null)
+    //variables
+    val racionProteina by registroDietaViewModel.racionProteina.observeAsState(initial = "")
+    val racionGrasa by registroDietaViewModel.racionGrasas.observeAsState(initial = "")
+    val racionVerdura by registroDietaViewModel.racionVerduras.observeAsState(initial = "")
 
-    // Textfield para registrar la cantidad de platos del usuario
-    TextField(
-        value = calorias,
-        onValueChange = { registroDietaViewModel.onCaloriasChange(it) },
-        label = { Text(text = "Calorias") },
-        maxLines = 1,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        isError = caloriasError != null,
-        supportingText = {
-            caloriasError?.let {
-                Text(
-                    text = it,
-                    style = TextStyle(color = Color.Red),
-                )
-            }
-        },
-    )
+    val racionProteinaError by registroDietaViewModel.racionProteinaError.observeAsState(initial = null)
+    val racionGrasaError by registroDietaViewModel.racionGrasasError.observeAsState(initial = null)
+    val racionVerduraError by registroDietaViewModel.racionVerduraError.observeAsState(initial = null)
+
+    //Campos de textfield
+    Row {
+        //Racion de proteina
+        TextField(
+            value = racionProteina,
+            onValueChange = { registroDietaViewModel.onProteinaChange(it) },
+            label = { Text(text = "Racion Proteina", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(88.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionProteinaError != null,
+            supportingText = {
+                racionProteinaError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        //Racion de grasa
+        TextField(
+            value = racionGrasa,
+            onValueChange = { registroDietaViewModel.onGrasasChange(it) },
+            label = { Text(text = "Racion Grasa", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(80.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionGrasaError != null,
+            supportingText = {
+                racionGrasaError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        //Racion de verduras
+
+        TextField(
+            value = racionVerdura,
+            onValueChange = { registroDietaViewModel.onVerduraChange(it) },
+            label = { Text(text = "Racion Verduras", fontSize = 14.sp) },
+            maxLines = 1,
+            modifier = Modifier.width(93.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = racionVerduraError != null,
+            supportingText = {
+                racionVerduraError?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(color = Color.Red),
+                    )
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -263,8 +386,12 @@ fun BtnRegistrarAlimentacion(navController: NavController, registroDietaViewMode
     val fechaDieta by registroDietaViewModel.fechaDieta.observeAsState(initial = "")
     val comidaSeleccionada by registroDietaViewModel.comidaseleccionada.observeAsState(initial = "")
     val menu by registroDietaViewModel.menu.observeAsState(initial = "")
-    val calorias by registroDietaViewModel.calorias.observeAsState(initial = "")
-    val cantidad by registroDietaViewModel.cantidad.observeAsState(initial = "")
+    val racionLacteo by registroDietaViewModel.racionLacteo.observeAsState(initial = "")
+    val racionFruta by registroDietaViewModel.racionFruta.observeAsState(initial = "")
+    val racionHidratos by registroDietaViewModel.racionHidratos.observeAsState(initial = "")
+    val racionProteina by registroDietaViewModel.racionProteina.observeAsState(initial = "")
+    val racionGrasa by registroDietaViewModel.racionGrasas.observeAsState(initial = "")
+    val racionVerdura by registroDietaViewModel.racionVerduras.observeAsState(initial = "")
     val suplementacion by registroDietaViewModel.suplementacion.observeAsState(initial = "")
 
     Button(
@@ -273,8 +400,12 @@ fun BtnRegistrarAlimentacion(navController: NavController, registroDietaViewMode
                 fechaDieta,
                 comidaSeleccionada,
                 menu,
-                calorias,
-                cantidad,
+                racionLacteo,
+                racionVerdura,
+                racionFruta,
+                racionHidratos,
+                racionGrasa,
+                racionProteina,
                 suplementacion,
                 navController
             )

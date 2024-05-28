@@ -17,7 +17,10 @@ import androidx.navigation.NavController
 import com.example.nutricionydeportefr.pantallas.home.*
 import com.example.nutricionydeportefr.pantallas.registro.documentoId
 import com.example.nutricionydeportefr.scaffold.*
+/*
+Mostrar raciones diarias
 
+ */
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldViewModel: ScaffoldViewModel) {

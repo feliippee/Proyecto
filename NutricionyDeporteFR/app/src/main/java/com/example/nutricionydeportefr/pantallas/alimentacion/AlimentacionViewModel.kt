@@ -44,8 +44,12 @@ class AlimentacionViewModel : ViewModel() {
                         fecha = document.getString("Fecha Alimentacion") ?: "",
                         comida = document.getString("Comida Seleccionada") ?: "",
                         menu = document.getString("Menu") ?: "",
-                        cantidad = document.getString("Cantidad") ?: "",
-                        calorias = document.getLong("Calorias")?.toString() ?: "",
+                        verduras = document.getDouble("Racion Verduras")?.toString() ?: "",
+                        lacteos = document.getDouble("Racion Lacteo") ?.toString() ?: "",
+                        frutas = document.getDouble("Racion Fruta") ?.toString() ?: "",
+                        hidratos = document.getDouble("Racion Hidratos") ?.toString() ?: "",
+                        grasas = document.getDouble("Racion Grasas") ?.toString() ?: "",
+                        proteinas = document.getDouble("Racion Proteina") ?.toString() ?: "",
                         suplementacion = document.getString("Suplementacion") ?: "",
                     )
                 }

@@ -129,8 +129,12 @@ fun Itemalimentacion(itemAlimentacion: ItemAlimentacion, alimentacionViewModel: 
                 Text(text = "Tipo Comida: ${itemAlimentacion.comida}")
                 if (expandir) {
                     Text(text = "Platos: ${itemAlimentacion.menu}")
-                    Text(text = "Calorias: ${itemAlimentacion.calorias}")
-                    Text(text = "Cantidad: ${itemAlimentacion.cantidad}")
+                    Text(text = "Verdura: ${itemAlimentacion.verduras}")
+                    Text(text = "Lacteos: ${itemAlimentacion.lacteos}")
+                    Text(text = "Frutas: ${itemAlimentacion.frutas}")
+                    Text(text = "Hidratos: ${itemAlimentacion.hidratos}")
+                    Text(text = "Grasas: ${itemAlimentacion.grasas}")
+                    Text(text = "Proteinas: ${itemAlimentacion.proteinas}")
                     Text(text = "Suplementacion: ${itemAlimentacion.suplementacion}")
                 }
             }

@@ -95,6 +95,7 @@ fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewM
 @Composable
 fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewModel) {
 
+
     var expandir by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
 
