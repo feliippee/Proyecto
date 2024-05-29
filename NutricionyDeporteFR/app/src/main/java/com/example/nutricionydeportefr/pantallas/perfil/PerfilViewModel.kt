@@ -31,8 +31,22 @@ class PerfilViewModel : ViewModel() {
     private val _imagenPerfilUrl = MutableLiveData<String>()
     val imagenPerfilUrl: LiveData<String> = _imagenPerfilUrl
 
+    private val _sexo = MutableLiveData<String>()
+    val sexo: LiveData<String> = _sexo
+
+    private val _expandir = MutableLiveData(false)
+    val expandir: LiveData<Boolean> = _expandir
+
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
+    }
+
+    fun setSexo(sexo: String) {
+        _sexo.value = sexo
+    }
+
+    fun setDesplegable() {
+        _expandir.value = !(_expandir.value ?: false)
     }
 
     fun obtenerNombreUsuario() {

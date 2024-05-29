@@ -7,33 +7,44 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.FoodBank
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
-import com.example.nutricionydeportefr.scaffold.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import coil.compose.rememberAsyncImagePainter
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.nutricionydeportefr.R
+import com.example.nutricionydeportefr.scaffold.ScaffoldViewModel
+import com.example.nutricionydeportefr.scaffold.Toolbar
+
 /*
 Recoger Datos sexo, edad, peso, altura, objetivo
  
  */
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
@@ -52,7 +63,8 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
                 .fillMaxSize()
                 .padding(8.dp),
         ) {
-            Body(Modifier.align(Alignment.TopStart),perfilViewModel)
+            Header(Modifier.align(Alignment.TopStart), perfilViewModel)
+            Body(Modifier.align(Alignment.Center), perfilViewModel)
         }
 
 
@@ -60,15 +72,23 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
 }
 
 @Composable
-fun Body(modifier : Modifier, perfilViewModel: PerfilViewModel) {
-
+fun Header(modifier: Modifier, perfilViewModel: PerfilViewModel) {
     Column(
         modifier = modifier
     ) {
         NombreUsuario(perfilViewModel)
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
+@Composable
+fun Body(modifier: Modifier, perfilViewModel: PerfilViewModel) {
+    Column(
+        modifier = modifier
+    ) {
+        Sexo(perfilViewModel)
+    }
+}
 @Composable
 fun NombreUsuario(perfilViewModel: PerfilViewModel) {
     val nombreUsuario by perfilViewModel.nombreUsuario.observeAsState(initial = "")
@@ -79,7 +99,7 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
             .fillMaxSize(),
         horizontalArrangement = Arrangement.Center,
     ) {
-        FotoUsuario(perfilViewModel)
+       FotoUsuario(perfilViewModel)
         Spacer(modifier = Modifier.width(20.dp))
         Text(
             text = "Bienvenido $nombreUsuario",
@@ -89,18 +109,18 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
             modifier = Modifier.padding(top = 16.dp)
         )
     }
+
+
 }
+
 @Composable
 fun FotoUsuario(perfilViewModel: PerfilViewModel) {
-
-
     val context = LocalContext.current
     val imagenPerfilUrl by perfilViewModel.imagenPerfilUrl.observeAsState()
 
-
     val galeria = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = {uri: Uri? ->
+        onResult = { uri: Uri? ->
             uri?.let { perfilViewModel.subirImagen(context, it) }
         }
     )
@@ -116,63 +136,105 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
                 Log.d("PERMISO", "Denegado")
             }
 
-        } )
-
-    Column {
-        Box(
-            modifier = Modifier
-                .width(75.dp)
-                .height(75.dp)
-                .clickable {
-                    //En funcion de la version de androd se solicitaran unos permisos u otros
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES)
-                            == PackageManager.PERMISSION_GRANTED) {
-                            galeria.launch("image/*")
-                        } else {
-                            permisosGaleria.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
-                        }
+        })
+    Box(
+        modifier = Modifier
+            .width(75.dp)
+            .height(75.dp)
+            .clickable {
+                //En funcion de la version de androd se solicitaran unos permisos u otros
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES)
+                        == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        galeria.launch("image/*")
                     } else {
-                        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                            galeria.launch("image/*")
-                        } else {
-                            permisosGaleria.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                        }
+                        permisosGaleria.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                } else {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                        == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        galeria.launch("image/*")
+                    } else {
+                        permisosGaleria.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                     }
                 }
-                .border(2.dp, Color(0xFF46B62D), CircleShape)
-        ) {
-            if (imagenPerfilUrl != null) {
-                Image(
-                    painter = rememberImagePainter(imagenPerfilUrl),
-                    contentDescription = "Imagen de perfil",
-                    modifier = Modifier
-                        .width(75.dp)
-                        .height(75.dp)
-                        .clip(CircleShape)
-                        .padding(8.dp)
-                )
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.fotoperfil),
-                    contentDescription = "Imagen de perfil",
-                    modifier = Modifier
-                        .width(75.dp)
-                        .height(75.dp)
-                        .clip(CircleShape)
-                        .padding(8.dp)
-                )
             }
+            .border(2.dp, Color(0xFF46B62D), CircleShape)
+    ) {
+        if (imagenPerfilUrl != null) {
+            Image(
+                painter = rememberImagePainter(imagenPerfilUrl),
+                contentDescription = "Imagen de perfil",
+                modifier = Modifier
+                    .width(75.dp)
+                    .height(75.dp)
+                    .clip(CircleShape)
+                    .padding(8.dp)
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.fotoperfil),
+                contentDescription = "Imagen de perfil",
+                modifier = Modifier
+                    .width(75.dp)
+                    .height(75.dp)
+                    .clip(CircleShape)
+                    .padding(8.dp)
+            )
         }
-        Text(
-            text = "Cambiar",
-            style = MaterialTheme.typography.body2,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
     }
 }
 
+
+
+@Composable
+fun Sexo(perfilViewModel: PerfilViewModel) {
+
+    val sexo by perfilViewModel.sexo.observeAsState(initial = "")
+    val expandir by perfilViewModel.expandir.observeAsState(initial = false)
+    val eleccionSexo = listOf("Hombre", "Mujer", "Otro")
+
+    Box {
+        //OutlineTextfield con un dropdown para seleccionar el sexo
+        OutlinedTextField(
+            value = sexo,
+            onValueChange = { perfilViewModel.setSexo(it) },
+            label = { Text("Sexo") },
+            maxLines = 1,
+            readOnly = true,
+            enabled = false,
+            modifier = Modifier
+                .clickable { perfilViewModel.setDesplegable() },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF46B62D),
+                unfocusedBorderColor = Color(0xFF46B62D),
+                cursorColor = Color(0xFF46B62D),
+                textColor = Color.Black,
+                disabledTextColor = Color.Black
+            )
+        )
+        DropdownMenu(
+            expanded = expandir,
+            onDismissRequest = {
+                perfilViewModel.setDesplegable()
+            }
+        ) {
+            eleccionSexo.forEach { opcion ->
+                DropdownMenuItem(onClick = {
+                    perfilViewModel.setSexo(opcion)
+                    perfilViewModel.setDesplegable()
+                }) {
+                    Text(text = opcion)
+                }
+            }
+        }
+    }
+}
 
 
 @Composable

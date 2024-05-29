@@ -86,7 +86,7 @@ fun BottomMenu(navController: NavController,homeViewModel: HomeViewModel){
 fun Cuerpo(){
     
     Text(
-        text = "Bienvenido a NutriSport",
+        text = "Bienvenido ",
         textAlign = TextAlign.Center,
         fontSize = 30.sp,
         color = Color(0xFF46B62D)
