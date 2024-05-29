@@ -9,13 +9,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+lateinit var firebaseAuth: FirebaseAuth
+
 class RegistroDietaViewModel : ViewModel() {
 
+    init {
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+    }
     //Variable para el DropdownMenu
     private val _expandir = MutableLiveData<Boolean>(false)
     val expandir: LiveData<Boolean> = _expandir
@@ -186,7 +193,6 @@ class RegistroDietaViewModel : ViewModel() {
     }
 
 
-
     @OptIn(DelicateCoroutinesApi::class)
     fun comprobarCamposDieta(
         fechaDieta: String,
@@ -215,7 +221,7 @@ class RegistroDietaViewModel : ViewModel() {
         } else if (comidaseleccionada.isEmpty()) {
             _comidaSeleccionadaError.value = "Comida no puede estar vacio"
             Log.d("Registro Entreno", "Campo Comida Vacio")
-        } else if(menu.isEmpty()){
+        } else if (menu.isEmpty()) {
             _menuError.value = "Menu no puede estar vacio"
             Log.d("Registro Entreno", "Campo Menu Vacio")
         } else if (LacteoNumber == null || LacteoNumber < 0) {
@@ -282,8 +288,9 @@ class RegistroDietaViewModel : ViewModel() {
         suplementacion: String,
         fechaDieta: String
     ) {
+
         val db = Firebase.firestore
-        val usuario = hashMapOf(
+        val dietaDatos = hashMapOf(
             "Comida Seleccionada" to comidaseleccionada,
             "Menu" to menu,
             "Racion Verduras" to verdurasNumber,
@@ -295,13 +302,16 @@ class RegistroDietaViewModel : ViewModel() {
             "Suplementacion" to suplementacion,
             "Fecha Alimentacion" to fechaDieta
         )
-        db.collection("alimentacion")
-            .add(usuario)
-            .addOnSuccessListener { documentReference ->
-                println("DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                println("Error adding document $e")
-            }
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            db.collection("alimentacion").document(user.uid)
+                .set(dietaDatos)
+                .addOnSuccessListener { documentReference ->
+                    println("DocumentSnapshot added with ID")
+                }
+                .addOnFailureListener { e ->
+                    println("Error adding document $e")
+                }
+        }
     }
 }

@@ -1,23 +1,29 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.nutricionydeportefr.pantallas.registrosport
 
 import android.app.DatePickerDialog
 import android.content.Context
 import android.util.Log
 import android.widget.DatePicker
-import android.widget.Toast
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+lateinit var firebaseAuth: FirebaseAuth
 class RegistroSportViewModel: ViewModel() {
+
+    init {
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+    }
+
     //Variable para modificar los campos
     private val _fechaEntrenamiento = MutableLiveData<String>()
     val fechaEntrenamiento: LiveData<String> = _fechaEntrenamiento
@@ -199,7 +205,7 @@ class RegistroSportViewModel: ViewModel() {
         fechaEntrenamiento: String
     ) {
         val db = Firebase.firestore
-        val usuario = hashMapOf(
+        val entrenamientoData = hashMapOf(
             "Parte del cuerpo" to partecuerpo,
             "Ejercicios" to ejercicios,
             "Series" to series,
@@ -208,13 +214,18 @@ class RegistroSportViewModel: ViewModel() {
             "Peso Final" to pesoFinal,
             "Fecha Entrenamiento" to fechaEntrenamiento
         )
-        db.collection("entrenamientos")
-            .add(usuario)
-            .addOnSuccessListener { documentReference ->
-                println("DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                println("Error adding document $e")
-            }
+        val user = firebaseAuth.currentUser
+
+        if (user != null) {
+            db.collection("entrenamientos")
+                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
+                .set(entrenamientoData)
+                .addOnSuccessListener {
+                    println("DocumentSnapshot successfully written!")
+                }
+                .addOnFailureListener { e ->
+                    println("Error writing document $e")
+                }
+        }
     }
 }

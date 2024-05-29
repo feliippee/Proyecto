@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val calendar = Calendar.getInstance()
-var documentoId: String? = null
+
 
 //Variables de Firebase
 lateinit var firebaseAuth: FirebaseAuth
@@ -229,16 +229,19 @@ class RegistroViewModel : ViewModel() {
             "correo" to correo,
             "fecha nacimiento" to fechaNacimiento,
         )
-        db.collection("usuario")
-            .add(usuario)
-            .addOnSuccessListener { documentReference ->
-                documentoId = documentReference.id
-                guardarDocumentoIdEnPreferencias(context, documentoId!!)
-                println("DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                println("Error adding document $e")
-            }
+        val user = firebaseAuth.currentUser
+
+        if (user != null) {
+            db.collection("usuario")
+                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
+                .set(usuario)
+                .addOnSuccessListener {
+                    println("DocumentSnapshot successfully written!")
+                }
+                .addOnFailureListener { e ->
+                    println("Error writing document $e")
+                }
+        }
     }
 
     //Funcion para validar el correo
@@ -270,7 +273,7 @@ class RegistroViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
-
+/*
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -289,7 +292,7 @@ class RegistroViewModel : ViewModel() {
         if (id != null) {
             documentoId = id
         }
-    }
+    }*/
 
 
 

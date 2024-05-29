@@ -17,7 +17,7 @@ import com.example.nutricionydeportefr.ui.theme.NutricionYDeporteFRTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        RegistroViewModel().cargarDocumentoId(this)
+        //RegistroViewModel().cargarDocumentoId(this)
 
         setContent {
 

@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nutricionydeportefr.pantallas.registro.documentoId
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -94,7 +93,7 @@ class PerfilViewModel : ViewModel() {
         val user = auth.currentUser
         if (user != null) {
             val db = FirebaseFirestore.getInstance()
-            val usuario = db.collection("usuario").document(documentoId!!)
+            val usuario = db.collection("usuario").document(user.uid)
             usuario.get()
                 .addOnSuccessListener { document ->
                     usuario.update("fotodeperfil", downloadUri)
