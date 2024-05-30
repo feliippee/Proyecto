@@ -2,7 +2,7 @@ package com.example.nutricionydeportefr.pantallas.registro
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.SharedPreferences
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -24,12 +24,7 @@ lateinit var firebaseAuth: FirebaseAuth
 
 class RegistroViewModel : ViewModel() {
 
-    private val PREFS_NAME = "Documento ID"
-    private val PREF_DOCUMENTO_ID = "documento_id"
-
-
     //Variable para modificar los campos
-
     private val _usuario = MutableLiveData<String>()
     val usuario: LiveData<String> = _usuario
 
@@ -177,8 +172,9 @@ class RegistroViewModel : ViewModel() {
                                     apply()
                                 }
                                 GlobalScope.launch(Dispatchers.Main) {
-                                    Toast.makeText(context, "Usuario registrado con exito", Toast.LENGTH_SHORT).show()
-                                    delay(2000)
+                                    navController.navigate("progressBar")
+                                    delay(1000)
+                                    Log.d("Registro Usuario", "Usuario registrado correctamente")
                                     navController.navigate("home")
                                 }
 
@@ -273,29 +269,6 @@ class RegistroViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
-/*
-    private fun getSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
-
-    private fun guardarDocumentoIdEnPreferencias(context: Context, id: String) {
-        val editor = getSharedPreferences(context).edit()
-        editor.putString(PREF_DOCUMENTO_ID, id)
-        editor.apply()
-    }
-
-    private fun cargarDocumentoIdDesdePreferencias(context: Context): String? {
-        return getSharedPreferences(context).getString(PREF_DOCUMENTO_ID, null)
-    }
-    fun cargarDocumentoId(context: Context) {
-        val id = cargarDocumentoIdDesdePreferencias(context) // Cargar el documentoId desde SharedPreferences
-        if (id != null) {
-            documentoId = id
-        }
-    }*/
-
-
-
 
 
 }

@@ -1,8 +1,10 @@
 package com.example.nutricionydeportefr.scaffold
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nutricionydeportefr.pantallas.sport.SportViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ScaffoldViewModel: ViewModel() {
@@ -25,5 +27,6 @@ class ScaffoldViewModel: ViewModel() {
     fun cerrarSesion() {
         val auth = FirebaseAuth.getInstance()
         auth.signOut()
+
     }
 }

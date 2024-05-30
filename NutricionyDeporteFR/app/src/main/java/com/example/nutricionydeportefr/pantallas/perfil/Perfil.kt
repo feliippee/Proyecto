@@ -12,6 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,7 +21,9 @@ import androidx.compose.material.icons.filled.FoodBank
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -40,17 +44,20 @@ import com.example.nutricionydeportefr.R
 import com.example.nutricionydeportefr.scaffold.ScaffoldViewModel
 import com.example.nutricionydeportefr.scaffold.Toolbar
 
-/*
-Recoger Datos sexo, edad, peso, altura, objetivo
- 
- */
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
+
+    DisposableEffect(Unit) {
+        onDispose {
+            perfilViewModel.registrarDatos()
+        }
+    }
+
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        perfilViewModel.obtenerNombreUsuario()
+        perfilViewModel.obtenerDatosUsuario()
         perfilViewModel.cargarImagenPerfil(context)
     }
 
@@ -87,10 +94,21 @@ fun Body(modifier: Modifier, perfilViewModel: PerfilViewModel) {
         modifier = modifier
     ) {
         Sexo(perfilViewModel)
+        Spacer(modifier = Modifier.height(20.dp))
+        Edad(perfilViewModel)
+        Spacer(modifier = Modifier.height(20.dp))
+        Peso(perfilViewModel)
+        Spacer(modifier = Modifier.height(20.dp))
+        Altura(perfilViewModel)
+        Spacer(modifier = Modifier.height(20.dp))
+
+
     }
 }
+
 @Composable
 fun NombreUsuario(perfilViewModel: PerfilViewModel) {
+
     val nombreUsuario by perfilViewModel.nombreUsuario.observeAsState(initial = "")
 
     Row(
@@ -99,7 +117,7 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
             .fillMaxSize(),
         horizontalArrangement = Arrangement.Center,
     ) {
-       FotoUsuario(perfilViewModel)
+        FotoUsuario(perfilViewModel)
         Spacer(modifier = Modifier.width(20.dp))
         Text(
             text = "Bienvenido $nombreUsuario",
@@ -190,19 +208,18 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
     }
 }
 
-
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Sexo(perfilViewModel: PerfilViewModel) {
 
-    val sexo by perfilViewModel.sexo.observeAsState(initial = "")
+    val sexo by perfilViewModel.sexo.observeAsState()
     val expandir by perfilViewModel.expandir.observeAsState(initial = false)
     val eleccionSexo = listOf("Hombre", "Mujer", "Otro")
 
     Box {
         //OutlineTextfield con un dropdown para seleccionar el sexo
         OutlinedTextField(
-            value = sexo,
+            value = sexo ?: "---",
             onValueChange = { perfilViewModel.setSexo(it) },
             label = { Text("Sexo") },
             maxLines = 1,
@@ -210,13 +227,7 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
             enabled = false,
             modifier = Modifier
                 .clickable { perfilViewModel.setDesplegable() },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF46B62D),
-                unfocusedBorderColor = Color(0xFF46B62D),
-                cursorColor = Color(0xFF46B62D),
-                textColor = Color.Black,
-                disabledTextColor = Color.Black
-            )
+            colors = TextFieldDefaults.textFieldColors(disabledTextColor = Color.Black),
         )
         DropdownMenu(
             expanded = expandir,
@@ -235,6 +246,57 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
         }
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Edad(perfilViewModel: PerfilViewModel) {
+
+    val edad by perfilViewModel.edad.observeAsState()
+    Log.d("EDAD Valor inicial", edad.toString())  //Añadido para comprobar el valor de la edad
+
+    OutlinedTextField(
+        value = edad?: "----",
+        onValueChange = {
+            perfilViewModel.setEdad(it)
+            Log.d("EDAD Valor cambiado", it.toString())
+        },
+
+        label = { Text("Edad") },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+
+        )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Peso(perfilViewModel: PerfilViewModel) {
+    val peso by perfilViewModel.peso.observeAsState()
+
+    OutlinedTextField(
+        value = peso?: "----",
+        onValueChange = { perfilViewModel.setPeso(it) },
+        label = { Text("Peso Kg") },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Altura(perfilViewModel: PerfilViewModel) {
+    val altura by perfilViewModel.altura.observeAsState()
+
+    OutlinedTextField(
+        value = altura?: "----",
+        onValueChange = { perfilViewModel.setAltura(it) },
+        label = { Text("Altura CM") },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+    )
+}
+
 
 
 @Composable

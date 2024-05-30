@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-
+import com.example.nutricionydeportefr.pantallas.sport.SportViewModel
 
 
 @Composable
@@ -21,6 +21,7 @@ fun Toolbar(scaffoldViewModel: ScaffoldViewModel, navController: NavController) 
             //Desplegable para que el usuario pueda cerrar sesion
             IconButton(onClick = {
                 scaffoldViewModel.setDesplegable()
+
             }) {
                 Icon(Icons.Filled.Settings , contentDescription = "Cerrar sesion")
             }

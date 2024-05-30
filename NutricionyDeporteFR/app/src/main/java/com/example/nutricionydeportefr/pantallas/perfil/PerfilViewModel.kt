@@ -7,8 +7,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nutricionydeportefr.pantallas.registro.firebaseAuth
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 
 class PerfilViewModel : ViewModel() {
@@ -33,8 +36,22 @@ class PerfilViewModel : ViewModel() {
     private val _sexo = MutableLiveData<String>()
     val sexo: LiveData<String> = _sexo
 
+
+    private val _edad = MutableLiveData<String>()
+    val edad: LiveData<String> = _edad
+
+    private val _peso = MutableLiveData<String>()
+    val peso: LiveData<String> = _peso
+
+    private val _altura = MutableLiveData<String>()
+    val altura: LiveData<String> = _altura
+
     private val _expandir = MutableLiveData(false)
     val expandir: LiveData<Boolean> = _expandir
+
+    init {
+        obtenerDatosUsuario()
+    }
 
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
@@ -42,22 +59,61 @@ class PerfilViewModel : ViewModel() {
 
     fun setSexo(sexo: String) {
         _sexo.value = sexo
+
     }
 
     fun setDesplegable() {
         _expandir.value = !(_expandir.value ?: false)
     }
 
-    fun obtenerNombreUsuario() {
-        val usuario = FirebaseAuth.getInstance().currentUser
-        _nombreUsuario.value = usuario?.displayName
-
+    fun setEdad(edad: String) {
+        _edad.value = edad
+        Log.d("Edad PerfilViewModel", "Edad: $edad")
     }
 
+    fun setPeso(peso: String) {
+        _peso.value = peso
+    }
+
+    fun setAltura(altura: String) {
+        _altura.value = altura
+    }
+
+    fun obtenerDatosUsuario() {
+
+        val usuario = FirebaseAuth.getInstance().currentUser
+
+        if (usuario != null) {
+
+            _nombreUsuario.value = usuario.displayName
+            val db = FirebaseFirestore.getInstance()
+            val user = db.collection("usuario").document(usuario.uid)
+            user.get()
+
+                .addOnSuccessListener { document ->
+
+                    val sexoObtenido = document.getString("sexo") ?: ""
+                    val edadObtenido = document.getString("edad") ?: ""
+                    val pesoObtenido = document.getString("peso") ?: ""
+                    val alturaObtenida = document.getString("altura") ?: ""
+
+                    _sexo.value = sexoObtenido
+                    _edad.value = edadObtenido
+
+                    _peso.value = pesoObtenido
+                    _altura.value = alturaObtenida
+                }
+                .addOnFailureListener {
+                    Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
+                }
+        }
+
+    }
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
+
     private fun guardarUrlEnPreferencias(context: Context, url: String) {
         val editor = getSharedPreferences(context).edit()
         editor.putString(PREF_IMAGEN_PERFIL_URL, url)
@@ -110,12 +166,38 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
+
     fun cargarImagenPerfil(context: Context) {
         val url = cargarUrlDesdePreferencias(context) // Cargar la URL desde SharedPreferences
         if (url != null) {
             _imagenPerfilUrl.value = url
         }
     }
+
+    fun registrarDatos() {
+        val db = Firebase.firestore
+        val usuario = hashMapOf(
+            "edad" to usuario,
+            "correo" to correo,
+            "fecha nacimiento" to fechaNacimiento,
+        )
+        val user = firebaseAuth.currentUser
+
+        if (user != null) {
+            db.collection("usuario")
+                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
+                .set(usuario)
+                .addOnSuccessListener {
+                    println("DocumentSnapshot successfully written!")
+                }
+                .addOnFailureListener { e ->
+                    println("Error writing document $e")
+                }
+        }
+
+    }
+
 }
+
 
 

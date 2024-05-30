@@ -1,4 +1,3 @@
-
 package com.example.nutricionydeportefr.pantallas.registrosport
 
 import android.app.DatePickerDialog
@@ -17,7 +16,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 lateinit var firebaseAuth: FirebaseAuth
-class RegistroSportViewModel: ViewModel() {
+
+class RegistroSportViewModel : ViewModel() {
 
     init {
         Firebase.firestore
@@ -70,25 +70,32 @@ class RegistroSportViewModel: ViewModel() {
     fun onfechaEntrenamientoChanged(fechaNacimiento: String) {
         _fechaEntrenamiento.value = fechaNacimiento
     }
+
     fun onparteCuerpoChanged(ejercicios: String) {
         _parteCuerpo.value = ejercicios
     }
+
     fun onEjerciciosChanged(ejercicios: String) {
         _ejercicios.value = ejercicios
     }
+
     fun onSeriesChanged(series: String) {
-       _series.value = series
+        _series.value = series
     }
+
     fun onRepeticionesChanged(repeticiones: String) {
 
-       _repeticiones.value = repeticiones
+        _repeticiones.value = repeticiones
     }
+
     fun onPesoInicialChanged(pesoinicial: String) {
         _pesoInicial.value = pesoinicial
     }
+
     fun onPesoFinalChanged(pesofinal: String) {
         _pesoFinal.value = pesofinal
     }
+
     init {
 
         fechaEntrenamiento.observeForever {
@@ -185,7 +192,15 @@ class RegistroSportViewModel: ViewModel() {
             _pesoFinal.value = pesoFinalNumber.toString()
             GlobalScope.launch(Dispatchers.Main) {
                 navController.navigate("progressBar")
-                registrarDatosEntrenamientos(partecuerpo, ejercicios, seriesNumber, repeticionesNumber, pesoInicialNumber, pesoFinalNumber, fechaEntrenamiento)
+                registrarDatosEntrenamientos(
+                    partecuerpo,
+                    ejercicios,
+                    seriesNumber,
+                    repeticionesNumber,
+                    pesoInicialNumber,
+                    pesoFinalNumber,
+                    fechaEntrenamiento
+                )
                 delay(2000)  // Espera un segundo y medio
                 Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
                 navController.navigate("ejercicios")
@@ -204,19 +219,20 @@ class RegistroSportViewModel: ViewModel() {
         pesoFinal: Float,
         fechaEntrenamiento: String
     ) {
-        val db = Firebase.firestore
-        val entrenamientoData = hashMapOf(
-            "Parte del cuerpo" to partecuerpo,
-            "Ejercicios" to ejercicios,
-            "Series" to series,
-            "Repeticiones" to repeticiones,
-            "Peso Inicial" to pesoInicial,
-            "Peso Final" to pesoFinal,
-            "Fecha Entrenamiento" to fechaEntrenamiento
-        )
         val user = firebaseAuth.currentUser
 
         if (user != null) {
+            val db = Firebase.firestore
+            val entrenamientoData = hashMapOf(
+                "Parte del cuerpo" to partecuerpo,
+                "Ejercicios" to ejercicios,
+                "Series" to series,
+                "Repeticiones" to repeticiones,
+                "Peso Inicial" to pesoInicial,
+                "Peso Final" to pesoFinal,
+                "Fecha Entrenamiento" to fechaEntrenamiento
+            )
+
             db.collection("entrenamientos")
                 .document(user.uid) // Usamos la ID del usuario como el nombre del documento
                 .set(entrenamientoData)

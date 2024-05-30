@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -17,6 +18,30 @@ import kotlinx.coroutines.tasks.await
 
 class SportViewModel : ViewModel() {
 
+    //Variable para el DropdownMenu
+    private val _expandir = MutableLiveData<Boolean>(false)
+    val expandir: LiveData<Boolean> = _expandir
+
+    //Variable para el alertDialog
+    private val _mostrarDialog = MutableLiveData<Boolean>(false)
+    val mostrarDialog: LiveData<Boolean> = _mostrarDialog
+
+    fun setMostrarDialog(){
+        _mostrarDialog.value = !(_mostrarDialog.value ?: false)
+    }
+
+    fun setDesplegable(){
+        _expandir.value = !(_expandir.value ?: false)
+    }
+    fun cerrarSesion() {
+        val auth = FirebaseAuth.getInstance()
+        auth.signOut()
+
+    }
+    fun limpiarEntrenamientos() {
+        _entrenamientos.value = emptyList()
+        Log.d(TAG, "Entrenamientos limpiados")
+    }
     //Variable para la seleccion de las opciones del bottom menu
     private var _opcionBottonMenu = MutableLiveData(1)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
@@ -30,23 +55,22 @@ class SportViewModel : ViewModel() {
     val cargaDatos: LiveData<Boolean> = _cargaDatos
 
     init {
-
-           getEntrenamientos()
-
+        getEntrenamientos()
     }
 
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
 
-    private  fun getEntrenamientos() {
+    private fun getEntrenamientos() {
         viewModelScope.launch {
             _cargaDatos.value = true
             try {
                 val db = Firebase.firestore
-                val result = db.collection("entrenamientos").get().await()
-                val entrenamientosList = result.map { document ->
-                    ItemEntrenamiento(
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    val document = db.collection("entrenamientos").document(user.uid).get().await()
+                    val entrenamiento = ItemEntrenamiento(
                         id = document.id,
                         fecha = document.getString("Fecha Entrenamiento") ?: "",
                         parteCuerpo = document.getString("Parte del cuerpo") ?: "",
@@ -56,8 +80,8 @@ class SportViewModel : ViewModel() {
                         pesoFinal = document.getDouble("Peso Final")?.toString() ?: "",
                         ejercicios = document.getString("Ejercicios") ?: ""
                     )
+                    _entrenamientos.value = listOf(entrenamiento)
                 }
-                _entrenamientos.value = entrenamientosList
             } catch (exception: Exception) {
                 Log.w("SportViewModel", "Error al obtener los datos.", exception)
             } finally {
@@ -81,7 +105,7 @@ class SportViewModel : ViewModel() {
             }
         }
     }
-}
 
+}
 
 

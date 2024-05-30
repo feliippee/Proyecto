@@ -57,7 +57,6 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffold
         }
     }
 }
-
 @Composable
 fun Body(modifier: Modifier, entrenamientos: List<ItemEntrenamiento>, sportViewModel: SportViewModel) {
     Column(modifier = modifier) {
@@ -139,7 +138,7 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
                     val pesoInicialFormateado = String.format("%.2f", itemEntrenamiento.pesoInicial.toDouble())
                     Text(text = "Peso Inicial: $pesoInicialFormateado")
                     val pesoFinalFormateado = String.format("%.2f", itemEntrenamiento.pesoFinal.toDouble())
-                    Text(text = "Peso Inicial: $pesoFinalFormateado")
+                    Text(text = "Peso Final: $pesoFinalFormateado")
                 }
             }
             IconButton(
