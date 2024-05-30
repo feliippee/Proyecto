@@ -69,9 +69,9 @@ class PerfilViewModel : ViewModel() {
     }
 
     fun setEdad(edad: String) {
-        Log.d("PerfilViewModel", "Edad: $edad")
+
         _edad.value = edad
-        Log.d("PerfilViewModel", "Edad: ${_edad.value}")
+
     }
 
     fun setPeso(peso: String) {

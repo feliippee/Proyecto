@@ -49,7 +49,6 @@ import com.example.nutricionydeportefr.scaffold.Toolbar
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
-
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerDatosUsuario()
@@ -68,9 +67,8 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
             Header(Modifier.align(Alignment.TopStart), perfilViewModel)
             Body(Modifier.align(Alignment.Center), perfilViewModel)
         }
-
-
     }
+
 }
 
 @Composable
@@ -248,12 +246,12 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
 fun Edad(perfilViewModel: PerfilViewModel) {
 
     val edad by perfilViewModel.edad.observeAsState(initial = "---")
-    Log.d("Perfil", "Edad iniical: $edad")
+
     OutlinedTextField(
         value = edad,
         onValueChange = {
             perfilViewModel.setEdad(it)
-            Log.d("Perfil", "Edad despues de cambiar: $it")
+
         },
 
         label = { Text("Edad") },
@@ -310,7 +308,6 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             selected = opcionBottonMenu == 0,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
-                Log.d("Perfil", "Guardando datos")
                 perfilViewModel.setOpcionBottonMenu(0)
                 navController.navigate("home")
             }
@@ -320,6 +317,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             label = { androidx.compose.material.Text(text = "Ejercicios") },
             selected = opcionBottonMenu == 1,
             onClick = {
+                perfilViewModel.guardarDatosUsuario()
                 perfilViewModel.setOpcionBottonMenu(1)
                 navController.navigate("ejercicios")
             }
@@ -329,6 +327,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             label = { androidx.compose.material.Text("Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
+                perfilViewModel.guardarDatosUsuario()
                 perfilViewModel.setOpcionBottonMenu(2)
                 navController.navigate("alimentacion")
             }
@@ -338,6 +337,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             label = { androidx.compose.material.Text("Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
+                perfilViewModel.guardarDatosUsuario()
                 perfilViewModel.setOpcionBottonMenu(3)
                 navController.navigate("perfil")
             }
