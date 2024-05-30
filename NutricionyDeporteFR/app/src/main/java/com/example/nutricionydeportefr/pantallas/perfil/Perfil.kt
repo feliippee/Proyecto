@@ -49,11 +49,6 @@ import com.example.nutricionydeportefr.scaffold.Toolbar
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
-    DisposableEffect(Unit) {
-        onDispose {
-            perfilViewModel.registrarDatos()
-        }
-    }
 
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
@@ -252,14 +247,13 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
 @Composable
 fun Edad(perfilViewModel: PerfilViewModel) {
 
-    val edad by perfilViewModel.edad.observeAsState()
-    Log.d("EDAD Valor inicial", edad.toString())  //Añadido para comprobar el valor de la edad
-
+    val edad by perfilViewModel.edad.observeAsState(initial = "---")
+    Log.d("Perfil", "Edad iniical: $edad")
     OutlinedTextField(
-        value = edad?: "----",
+        value = edad,
         onValueChange = {
             perfilViewModel.setEdad(it)
-            Log.d("EDAD Valor cambiado", it.toString())
+            Log.d("Perfil", "Edad despues de cambiar: $it")
         },
 
         label = { Text("Edad") },
@@ -272,10 +266,10 @@ fun Edad(perfilViewModel: PerfilViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Peso(perfilViewModel: PerfilViewModel) {
-    val peso by perfilViewModel.peso.observeAsState()
+    val peso by perfilViewModel.peso.observeAsState(initial = "")
 
     OutlinedTextField(
-        value = peso?: "----",
+        value = peso,
         onValueChange = { perfilViewModel.setPeso(it) },
         label = { Text("Peso Kg") },
         maxLines = 1,
@@ -289,14 +283,16 @@ fun Altura(perfilViewModel: PerfilViewModel) {
     val altura by perfilViewModel.altura.observeAsState()
 
     OutlinedTextField(
-        value = altura?: "----",
-        onValueChange = { perfilViewModel.setAltura(it) },
+        value = altura ?: "----",
+        onValueChange = {
+            perfilViewModel.setAltura(it)
+          
+        },
         label = { Text("Altura CM") },
         maxLines = 1,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
     )
 }
-
 
 
 @Composable
@@ -313,6 +309,8 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             label = { androidx.compose.material.Text("Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
+                perfilViewModel.guardarDatosUsuario()
+                Log.d("Perfil", "Guardando datos")
                 perfilViewModel.setOpcionBottonMenu(0)
                 navController.navigate("home")
             }

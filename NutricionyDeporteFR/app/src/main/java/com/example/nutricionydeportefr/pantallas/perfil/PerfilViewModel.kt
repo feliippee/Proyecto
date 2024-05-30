@@ -7,18 +7,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nutricionydeportefr.pantallas.registro.firebaseAuth
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
+
 
 class PerfilViewModel : ViewModel() {
 
 
     private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     private val PREFS_NAME = "foto perfil"
     private val PREF_IMAGEN_PERFIL_URL = "imagen_perfil_url"
@@ -67,8 +69,9 @@ class PerfilViewModel : ViewModel() {
     }
 
     fun setEdad(edad: String) {
+        Log.d("PerfilViewModel", "Edad: $edad")
         _edad.value = edad
-        Log.d("Edad PerfilViewModel", "Edad: $edad")
+        Log.d("PerfilViewModel", "Edad: ${_edad.value}")
     }
 
     fun setPeso(peso: String) {
@@ -80,34 +83,21 @@ class PerfilViewModel : ViewModel() {
     }
 
     fun obtenerDatosUsuario() {
-
-        val usuario = FirebaseAuth.getInstance().currentUser
-
+        val usuario = auth.currentUser
         if (usuario != null) {
-
             _nombreUsuario.value = usuario.displayName
-            val db = FirebaseFirestore.getInstance()
-            val user = db.collection("usuario").document(usuario.uid)
-            user.get()
-
-                .addOnSuccessListener { document ->
-
-                    val sexoObtenido = document.getString("sexo") ?: ""
-                    val edadObtenido = document.getString("edad") ?: ""
-                    val pesoObtenido = document.getString("peso") ?: ""
-                    val alturaObtenida = document.getString("altura") ?: ""
-
-                    _sexo.value = sexoObtenido
-                    _edad.value = edadObtenido
-
-                    _peso.value = pesoObtenido
-                    _altura.value = alturaObtenida
+            val userRef = firestore.collection("usuario").document(usuario.uid)
+            userRef.get().addOnSuccessListener { document ->
+                document?.let {
+                    _sexo.value = it.getString("sexo") ?: ""
+                    _edad.value = it.getString("edad") ?: ""
+                    _peso.value = it.getString("peso") ?: ""
+                    _altura.value = it.getString("altura") ?: ""
                 }
-                .addOnFailureListener {
-                    Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
-                }
+            }.addOnFailureListener {
+                Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
+            }
         }
-
     }
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
@@ -127,12 +117,9 @@ class PerfilViewModel : ViewModel() {
     fun subirImagen(context: Context, uri: Uri) {
         val user = auth.currentUser
         if (user != null) {
-            val storageRef = storage.reference
-            val imagenperfil = storageRef.child("imagenesperfil/${user.uid}")
-
-            val uploadTask = imagenperfil.putFile(uri)
-            uploadTask.addOnSuccessListener {
-                imagenperfil.downloadUrl.addOnSuccessListener { downloadUri ->
+            val storageRef = storage.reference.child("imagenesperfil/${user.uid}")
+            storageRef.putFile(uri).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
                     guardarUrlFirebase(downloadUri.toString())
                     _imagenPerfilUrl.value = downloadUri.toString()
                     guardarUrlEnPreferencias(context, downloadUri.toString())
@@ -148,21 +135,37 @@ class PerfilViewModel : ViewModel() {
     private fun guardarUrlFirebase(downloadUri: String) {
         val user = auth.currentUser
         if (user != null) {
-            val db = FirebaseFirestore.getInstance()
-            val usuario = db.collection("usuario").document(user.uid)
-            usuario.get()
-                .addOnSuccessListener { document ->
-                    usuario.update("fotodeperfil", downloadUri)
-                        .addOnSuccessListener {
-                            Log.d("PerfilViewModel", "La url de la imagen se ha guardado con exito")
-                        }
-                        .addOnFailureListener {
-                            Log.e("PerfilViewModel", "Error al guardar la url", it)
-                        }
+            val userRef = firestore.collection("usuario").document(user.uid)
+            userRef.update("fotodeperfil", downloadUri).addOnSuccessListener {
+                Log.d("PerfilViewModel", "La url de la imagen se ha guardado con éxito")
+            }.addOnFailureListener {
+                Log.e("PerfilViewModel", "Error al guardar la url", it)
+            }
+        }
+    }
+    fun guardarDatosUsuario() {
 
+        val sexo = _sexo.value
+        val edad = _edad.value
+        Log.d("PerfilViewModel", "Edad: $edad")
+        val peso = _peso.value
+        val altura = _altura.value
+
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            val datosUsuario = hashMapOf(
+                "sexo" to sexo,
+                "edad" to edad,
+                "peso" to peso,
+                "altura" to altura
+            )
+            firestore.collection("usuario").document(user.uid).set(datosUsuario, SetOptions.merge())
+                .addOnSuccessListener {
+                    Log.d("PerfilViewModel", "Datos guardados con exito")
                 }
                 .addOnFailureListener {
-                    Log.e("PerfilViewModel", "Error al comprobar la existencia del documento", it)
+                    Log.e("PerfilViewModel", "Error al guardar los datos", it)
                 }
         }
     }
@@ -172,29 +175,6 @@ class PerfilViewModel : ViewModel() {
         if (url != null) {
             _imagenPerfilUrl.value = url
         }
-    }
-
-    fun registrarDatos() {
-        val db = Firebase.firestore
-        val usuario = hashMapOf(
-            "edad" to usuario,
-            "correo" to correo,
-            "fecha nacimiento" to fechaNacimiento,
-        )
-        val user = firebaseAuth.currentUser
-
-        if (user != null) {
-            db.collection("usuario")
-                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
-                .set(usuario)
-                .addOnSuccessListener {
-                    println("DocumentSnapshot successfully written!")
-                }
-                .addOnFailureListener { e ->
-                    println("Error writing document $e")
-                }
-        }
-
     }
 
 }
