@@ -51,7 +51,7 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerDatosUsuario()
-        perfilViewModel.cargarImagenPerfil(context)
+        perfilViewModel.cargarImagenPerfil()
     }
 
     Scaffold(

@@ -53,6 +53,7 @@ class PerfilViewModel : ViewModel() {
 
     init {
         obtenerDatosUsuario()
+        cargarImagenPerfil()
     }
 
     fun setOpcionBottonMenu(opcion: Int) {
@@ -103,7 +104,7 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
-
+/*
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -116,7 +117,7 @@ class PerfilViewModel : ViewModel() {
 
     private fun cargarUrlDesdePreferencias(context: Context): String? {
         return getSharedPreferences(context).getString(PREF_IMAGEN_PERFIL_URL, null)
-    }
+    }*/
 
     fun subirImagen(context: Context, uri: Uri) {
         val user = auth.currentUser
@@ -126,7 +127,7 @@ class PerfilViewModel : ViewModel() {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
                     guardarUrlFirebase(downloadUri.toString())
                     _imagenPerfilUrl.value = downloadUri.toString()
-                    guardarUrlEnPreferencias(context, downloadUri.toString())
+                    //guardarUrlEnPreferencias(context, downloadUri.toString())
                 }.addOnFailureListener {
                     Log.e("PerfilViewModel", "Error getting download URL", it)
                 }
@@ -194,10 +195,23 @@ class PerfilViewModel : ViewModel() {
         }
     }
 
-    fun cargarImagenPerfil(context: Context) {
-        val url = cargarUrlDesdePreferencias(context) // Cargar la URL desde SharedPreferences
-        if (url != null) {
-            _imagenPerfilUrl.value = url
+    fun cargarImagenPerfil() {
+        val user = auth.currentUser
+        if (user != null) {
+            firestore.collection("usuario")
+                .whereEqualTo("usuarioId", user.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val url = document.getString("fotodeperfil")
+                        if (url != null) {
+                            _imagenPerfilUrl.value = url
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    Log.e("PerfilViewModel", "Error al cargar la imagen de perfil", it)
+                }
         }
     }
 
