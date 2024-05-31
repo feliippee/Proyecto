@@ -23,6 +23,7 @@ class RegistroDietaViewModel : ViewModel() {
         Firebase.firestore
         firebaseAuth = FirebaseAuth.getInstance()
     }
+
     //Variable para el DropdownMenu
     private val _expandir = MutableLiveData<Boolean>(false)
     val expandir: LiveData<Boolean> = _expandir
@@ -288,24 +289,27 @@ class RegistroDietaViewModel : ViewModel() {
         suplementacion: String,
         fechaDieta: String
     ) {
-
-        val db = Firebase.firestore
-        val dietaDatos = hashMapOf(
-            "Comida Seleccionada" to comidaseleccionada,
-            "Menu" to menu,
-            "Racion Verduras" to verdurasNumber,
-            "Racion Lacteo" to lacteoNumber,
-            "Racion Fruta" to frutaNumber,
-            "Racion Hidratos" to hidratosNumber,
-            "Racion Grasas" to grasasNumber,
-            "Racion Proteina" to proteinaNumber,
-            "Suplementacion" to suplementacion,
-            "Fecha Alimentacion" to fechaDieta
-        )
         val user = firebaseAuth.currentUser
+
         if (user != null) {
-            db.collection("alimentacion").document(user.uid)
-                .set(dietaDatos)
+
+            val db = Firebase.firestore
+            val usuarioid = user.uid
+            val dietaDatos = hashMapOf(
+                "usuarioId" to usuarioid,
+                "Comida Seleccionada" to comidaseleccionada,
+                "Menu" to menu,
+                "Racion Verduras" to verdurasNumber,
+                "Racion Lacteo" to lacteoNumber,
+                "Racion Fruta" to frutaNumber,
+                "Racion Hidratos" to hidratosNumber,
+                "Racion Grasas" to grasasNumber,
+                "Racion Proteina" to proteinaNumber,
+                "Suplementacion" to suplementacion,
+                "Fecha Alimentacion" to fechaDieta
+            )
+            db.collection("alimentacion")
+                .add(dietaDatos)
                 .addOnSuccessListener { documentReference ->
                     println("DocumentSnapshot added with ID")
                 }

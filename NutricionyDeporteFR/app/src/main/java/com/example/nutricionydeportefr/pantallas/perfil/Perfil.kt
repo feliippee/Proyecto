@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.nutricionydeportefr.R
 import com.example.nutricionydeportefr.scaffold.ScaffoldViewModel
 import com.example.nutricionydeportefr.scaffold.Toolbar
@@ -83,9 +82,7 @@ fun Header(modifier: Modifier, perfilViewModel: PerfilViewModel) {
 
 @Composable
 fun Body(modifier: Modifier, perfilViewModel: PerfilViewModel) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Sexo(perfilViewModel)
         Spacer(modifier = Modifier.height(20.dp))
         Edad(perfilViewModel)
@@ -179,7 +176,7 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
     ) {
         if (imagenPerfilUrl != null) {
             Image(
-                painter = rememberImagePainter(imagenPerfilUrl),
+                painter = rememberAsyncImagePainter(imagenPerfilUrl),
                 contentDescription = "Imagen de perfil",
                 modifier = Modifier
                     .width(75.dp)
@@ -304,7 +301,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
     ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            label = { androidx.compose.material.Text("Home") },
+            label = { Text("Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
@@ -314,7 +311,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
-            label = { androidx.compose.material.Text(text = "Ejercicios") },
+            label = { Text(text = "Ejercicios") },
             selected = opcionBottonMenu == 1,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
@@ -324,7 +321,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Dietas") },
-            label = { androidx.compose.material.Text("Dietas") },
+            label = { Text("Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
@@ -334,7 +331,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
-            label = { androidx.compose.material.Text("Perfil") },
+            label = { Text("Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()

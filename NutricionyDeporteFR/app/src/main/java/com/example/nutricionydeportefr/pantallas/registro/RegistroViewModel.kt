@@ -35,7 +35,7 @@ class RegistroViewModel : ViewModel() {
     val mostrarpassword: LiveData<Boolean> = _mostrarpassword
 
     private val _mostrarConfirmarpassword = MutableLiveData<Boolean>(false)
-    val mostrarConfirmarpassword : LiveData<Boolean> = _mostrarConfirmarpassword
+    val mostrarConfirmarpassword: LiveData<Boolean> = _mostrarConfirmarpassword
 
     private val _confirmarPassword = MutableLiveData<String>()
     val confirmarPassword: LiveData<String> = _confirmarPassword
@@ -75,9 +75,11 @@ class RegistroViewModel : ViewModel() {
     fun onMostrarPasswod() {
         _mostrarpassword.value = _mostrarpassword.value?.not()
     }
+
     fun onMostrarConfirmarPasswod() {
         _mostrarConfirmarpassword.value = _mostrarConfirmarpassword.value?.not()
     }
+
     fun onConfirmarPasswordChanged(confirmarPassword: String) {
         _confirmarPassword.value = confirmarPassword
     }
@@ -120,7 +122,7 @@ class RegistroViewModel : ViewModel() {
         fechaNacimiento: String,
         context: Context,
         navController: NavController,
-        ) {
+    ) {
         if (usuario.isEmpty()) {
             _usuarioError.value = "Usuario no puede estar vacio"
         } else if (password.isEmpty()) {
@@ -166,7 +168,7 @@ class RegistroViewModel : ViewModel() {
                             if (updateTask.isSuccessful) {
                                 registrarDatosUsuarios(usuario, correo, fechaNacimiento, context)
                                 val sharedPref = context.getSharedPreferences("Nombre Usuario", Context.MODE_PRIVATE)
-                                with (sharedPref.edit()) {
+                                with(sharedPref.edit()) {
                                     putString("email", correo)
                                     putString("password", contrasena)
                                     apply()
@@ -219,18 +221,19 @@ class RegistroViewModel : ViewModel() {
         fechaNacimiento: String,
         context: Context
     ) {
-        val db = Firebase.firestore
-        val usuario = hashMapOf(
-            "nombre" to usuario,
-            "correo" to correo,
-            "fecha nacimiento" to fechaNacimiento,
-        )
         val user = firebaseAuth.currentUser
-
         if (user != null) {
+            val db = Firebase.firestore
+            val usuarioId = user.uid
+            val datosdusuario = hashMapOf(
+                "usuarioId" to usuarioId,
+                "nombre" to usuario,
+                "correo" to correo,
+                "fecha nacimiento" to fechaNacimiento,
+            )
             db.collection("usuario")
-                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
-                .set(usuario)
+
+                .add(datosdusuario)
                 .addOnSuccessListener {
                     println("DocumentSnapshot successfully written!")
                 }

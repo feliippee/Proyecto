@@ -83,20 +83,24 @@ class PerfilViewModel : ViewModel() {
     }
 
     fun obtenerDatosUsuario() {
+
+
         val usuario = auth.currentUser
         if (usuario != null) {
             _nombreUsuario.value = usuario.displayName
-            val userRef = firestore.collection("usuario").document(usuario.uid)
-            userRef.get().addOnSuccessListener { document ->
-                document?.let {
-                    _sexo.value = it.getString("sexo") ?: ""
-                    _edad.value = it.getString("edad") ?: ""
-                    _peso.value = it.getString("peso") ?: ""
-                    _altura.value = it.getString("altura") ?: ""
+            val userRef = firestore.collection("usuario")
+            userRef.whereEqualTo("usuarioId", usuario.uid).get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        _sexo.value = document.getString("sexo") ?: ""
+                        _edad.value = document.getString("edad") ?: ""
+                        _peso.value = document.getString("peso") ?: ""
+                        _altura.value = document.getString("altura") ?: ""
+                    }
                 }
-            }.addOnFailureListener {
-                Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
-            }
+                .addOnFailureListener {
+                    Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
+                }
         }
     }
 
@@ -135,37 +139,57 @@ class PerfilViewModel : ViewModel() {
     private fun guardarUrlFirebase(downloadUri: String) {
         val user = auth.currentUser
         if (user != null) {
-            val userRef = firestore.collection("usuario").document(user.uid)
-            userRef.update("fotodeperfil", downloadUri).addOnSuccessListener {
-                Log.d("PerfilViewModel", "La url de la imagen se ha guardado con éxito")
-            }.addOnFailureListener {
-                Log.e("PerfilViewModel", "Error al guardar la url", it)
-            }
+            firestore.collection("usuario")
+                .whereEqualTo("usuarioId", user.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        document.reference.update("fotodeperfil", downloadUri)
+                            .addOnSuccessListener {
+                                Log.d("PerfilViewModel", "La url de la imagen se ha guardado con éxito")
+                            }
+                            .addOnFailureListener {
+                                Log.e("PerfilViewModel", "Error al guardar la url", it)
+                            }
+                    }
+                }
+                .addOnFailureListener {
+                    Log.e("PerfilViewModel", "Error al obtener el documento del usuario", it)
+                }
         }
     }
     fun guardarDatosUsuario() {
-
         val sexo = _sexo.value
         val edad = _edad.value
-        Log.d("PerfilViewModel", "Edad: $edad")
         val peso = _peso.value
         val altura = _altura.value
 
+        val user = auth.currentUser
 
-        val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
+
             val datosUsuario = hashMapOf(
                 "sexo" to sexo,
                 "edad" to edad,
                 "peso" to peso,
                 "altura" to altura
             )
-            firestore.collection("usuario").document(user.uid).set(datosUsuario, SetOptions.merge())
-                .addOnSuccessListener {
-                    Log.d("PerfilViewModel", "Datos guardados con exito")
+            firestore.collection("usuario")
+                .whereEqualTo("usuarioId", user.uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        document.reference.set(datosUsuario, SetOptions.merge())
+                            .addOnSuccessListener {
+                                Log.d("PerfilViewModel", "La url de la imagen se ha guardado con éxito")
+                            }
+                            .addOnFailureListener {
+                                Log.e("PerfilViewModel", "Error al guardar la url", it)
+                            }
+                    }
                 }
                 .addOnFailureListener {
-                    Log.e("PerfilViewModel", "Error al guardar los datos", it)
+                    Log.e("PerfilViewModel", "Error al obtener el documento del usuario", it)
                 }
         }
     }

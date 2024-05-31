@@ -33,7 +33,6 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffold
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
     val cargaDatosEntrenamiento by sportViewModel.cargaDatos.observeAsState(initial = true)
 
-
     Scaffold(
         topBar = { Toolbar(scaffoldViewModel, navController) },
         bottomBar = { BottomMenu(navController, sportViewModel) },

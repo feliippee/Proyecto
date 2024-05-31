@@ -1,20 +1,14 @@
 package com.example.nutricionydeportefr.pantallas.login
 
 
-import android.content.Context
+
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.nutricionydeportefr.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -133,35 +127,41 @@ class LoginViewModel : ViewModel() {
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         user?.let {
-                            guardarDatosUsuario(it.uid, it.email, it.displayName)
+                            guardarDatosUsuario( it.email, it.displayName)
                         }
-                        Log.d("GoFit", "Logeado con google")
+                        Log.d("Login", "Logeado con google")
                         home()
                     }
                 }
                 .addOnFailureListener {
-                    Log.d("GoFit", "Error al logear con google")
+                    Log.d("Login", "Error al logear con google")
                 }
         } catch (ex: Exception) {
-            Log.d("GoFit", "Error al logear con google")
+            Log.d("Login", "Error al logear con google")
         }
     }
-    private fun guardarDatosUsuario(uid: String, email: String?, displayName: String?) {
-        val db = FirebaseFirestore.getInstance()
-        val datosUsuario = hashMapOf(
-            "email" to email,
-            "usuario" to displayName,
-            "fecha De Nacimiento" to null,
-        )
-        db.collection("usuario")
-            .document(displayName ?: uid)
-            .set(datosUsuario)
-            .addOnSuccessListener {
-                Log.d("GoFit", "Datos del usuario guardados correctamente")
-            }
-            .addOnFailureListener { e ->
-                Log.e("GoFit", "Error al guardar los datos del usuario", e)
-            }
+    private fun guardarDatosUsuario( email: String?, displayName: String?) {
+
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+
+            val db = FirebaseFirestore.getInstance()
+            val usuarioId = user.uid
+            val datosUsuario = hashMapOf(
+                "usuarioId" to usuarioId,
+                "email" to email,
+                "usuario" to displayName,
+                "fecha De Nacimiento" to null,
+            )
+            db.collection("usuario")
+                .add(datosUsuario)
+                .addOnSuccessListener {
+                    Log.d("Login", "Datos del usuario guardados correctamente")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Login", "Error al guardar los datos del usuario", e)
+                }
+        }
     }
 }
 

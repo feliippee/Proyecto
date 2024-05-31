@@ -223,7 +223,9 @@ class RegistroSportViewModel : ViewModel() {
 
         if (user != null) {
             val db = Firebase.firestore
+            val usuarioid = user.uid
             val entrenamientoData = hashMapOf(
+                "usuarioId" to usuarioid,
                 "Parte del cuerpo" to partecuerpo,
                 "Ejercicios" to ejercicios,
                 "Series" to series,
@@ -232,10 +234,8 @@ class RegistroSportViewModel : ViewModel() {
                 "Peso Final" to pesoFinal,
                 "Fecha Entrenamiento" to fechaEntrenamiento
             )
-
             db.collection("entrenamientos")
-                .document(user.uid) // Usamos la ID del usuario como el nombre del documento
-                .set(entrenamientoData)
+                .add(entrenamientoData)
                 .addOnSuccessListener {
                     println("DocumentSnapshot successfully written!")
                 }
