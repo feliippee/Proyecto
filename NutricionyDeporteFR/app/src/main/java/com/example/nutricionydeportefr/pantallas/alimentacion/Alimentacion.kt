@@ -182,7 +182,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
         backgroundColor = Color(0xFF46B62D),
         contentColor = Color.Black
     ) {
-        BottomNavigationItem(
+       /* BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { androidx.compose.material.Text(text = "Home") },
             selected = opcionBottonMenu == 0,
@@ -190,7 +190,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
                 alimentacionViewModel.setOpcionBottonMenu(0)
                 navController.navigate("home")
             }
-        )
+        )*/
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { androidx.compose.material.Text(text = "Ejercicios") },

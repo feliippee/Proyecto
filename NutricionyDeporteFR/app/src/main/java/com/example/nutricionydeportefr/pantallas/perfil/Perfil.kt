@@ -310,12 +310,12 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
             }
         }
     }
-
+    Spacer(modifier = Modifier.height(20.dp))
     when (objetivoMarcado) {
         "Perder peso" -> {
             Card(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                     .fillMaxSize(),
                 border = BorderStroke(2.dp, Color(0xFF46B62D)),
                 elevation = 8.dp,
@@ -323,34 +323,71 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
             ) {
                 Column {
                     Text(
-                        text = "Para perder peso",
+                        text = "Si deseas perder peso las raciones recomendadas son:",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Se recomienda una dieta baja en calorias y rica en fibra",
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
                         style = MaterialTheme.typography.body1,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
+
                     )
                 }
             }
         }
 
         "Ganar peso" -> {
-            Text(
-                text = "Para ganar pesos",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(16.dp)
-            )
+            Card(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    .fillMaxSize(),
+                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                elevation = 8.dp,
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Column {
+                    Text(
+                        text = "Si deseas ganar peso las raciones recomendadas son:",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Text(
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
+
+                    )
+                }
+            }
         }
 
         "Mantener peso" -> {
+            Card(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    .fillMaxSize(),
+                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                elevation = 8.dp,
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Column {
+                    Text(
+                        text = "Si deseas matener peso las raciones recomendadas son:",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Text(
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
-            Text(
-                text = "Para mantener peso",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(16.dp)
-            )
+                    )
+                }
+            }
         }
     }
 
@@ -366,7 +403,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
         backgroundColor = Color(0xFF46B62D),
         contentColor = Color.Black
     ) {
-        BottomNavigationItem(
+        /*BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { Text("Home") },
             selected = opcionBottonMenu == 0,
@@ -375,7 +412,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
                 perfilViewModel.setOpcionBottonMenu(0)
                 navController.navigate("home")
             }
-        )
+        )*/
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { Text(text = "Ejercicios") },

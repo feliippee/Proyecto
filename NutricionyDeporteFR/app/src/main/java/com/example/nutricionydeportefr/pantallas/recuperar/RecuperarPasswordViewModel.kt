@@ -18,6 +18,8 @@ class RecuperarPasswordViewModel {
     private val _errorEmail = MutableLiveData<String>()
     val errorEmail: LiveData<String> = _errorEmail
 
+    val showDialog = MutableLiveData<Boolean>(false)
+
     //Funciones
     fun onEmailChanged(email: String) {
         _email.value = email
@@ -39,13 +41,7 @@ class RecuperarPasswordViewModel {
             firebaseAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        //Correo enviado
-                        Toast.makeText(Firebase.app.applicationContext, "Correo enviado", Toast.LENGTH_SHORT).show()
-
-                        GlobalScope.launch(Dispatchers.Main) {
-                            delay(1500)
-                        }
-                        navController.navigate("login")
+                        showDialog.value = true
                     } else {
                         //Error
                         Toast.makeText(Firebase.app.applicationContext, "Error al enviar el correo", Toast.LENGTH_SHORT)
@@ -54,6 +50,8 @@ class RecuperarPasswordViewModel {
                 }
         }
     }
+
+
     fun validarCorreo(correo: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }

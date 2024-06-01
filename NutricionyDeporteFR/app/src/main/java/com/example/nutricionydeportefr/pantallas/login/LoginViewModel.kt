@@ -73,7 +73,7 @@ class LoginViewModel : ViewModel() {
                         Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
                         delay(1000)
                         navController.popBackStack()
-                        navController.navigate("home")
+                        navController.navigate("perfil")
                     }
 
                 } else {
@@ -120,7 +120,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun iniciarSesionGoogle(credential: AuthCredential, home: () -> Unit) = viewModelScope.launch {
+    fun iniciarSesionGoogle(credential: AuthCredential, perfil: () -> Unit) = viewModelScope.launch {
         try {
             auth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
@@ -130,7 +130,7 @@ class LoginViewModel : ViewModel() {
                             guardarDatosUsuario( it.email, it.displayName)
                         }
                         Log.d("Login", "Logeado con google")
-                        home()
+                        perfil()
                     }
                 }
                 .addOnFailureListener {
@@ -158,8 +158,8 @@ class LoginViewModel : ViewModel() {
                 .addOnSuccessListener {
                     Log.d("Login", "Datos del usuario guardados correctamente")
                 }
-                .addOnFailureListener { e ->
-                    Log.e("Login", "Error al guardar los datos del usuario", e)
+                .addOnFailureListener {
+                    Log.d("Login", "Error al guardar los datos del usuario",)
                 }
         }
     }

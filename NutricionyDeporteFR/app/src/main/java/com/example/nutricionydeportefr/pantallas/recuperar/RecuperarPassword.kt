@@ -30,6 +30,23 @@ fun RecuperarPassword(navController: NavController, recuperarPasswordViewModel: 
 @Composable
 fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordViewModel, navController: NavController) {
     val emailError: String? by recuperarPasswordViewModel.errorEmail.observeAsState(initial = null)
+    val showDialog by recuperarPasswordViewModel.showDialog.observeAsState(false)
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = { Text("Correo de recuperación enviado") },
+            text = { Text("Si el correo existe, recibirá un email en breves.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    recuperarPasswordViewModel.showDialog.value = false
+                    navController.navigate("login")
+                }) {
+                    Text( text = "Aceptar",
+                        color = Color.Black,)
+                }
+            }
+        )
+    }
     Column(modifier = modifier) {
         //Titulo
         Text(
