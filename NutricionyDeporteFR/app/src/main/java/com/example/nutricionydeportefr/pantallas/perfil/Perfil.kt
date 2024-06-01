@@ -58,52 +58,28 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
         topBar = { Toolbar(scaffoldViewModel, navController) },
         bottomBar = { BottomMenu(navController, perfilViewModel) }
     ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Header(Modifier.align(Alignment.TopStart), perfilViewModel)
-            Body(Modifier.align(Alignment.Center), perfilViewModel)
+            item {
+                NombreUsuario(perfilViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                Sexo(perfilViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                Edad(perfilViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                Peso(perfilViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                Altura(perfilViewModel)
+                Spacer(modifier = Modifier.height(20.dp))
+                ObjetivoMarcado(perfilViewModel)
+            }
+            item { Spacer(modifier = Modifier.height(56.dp)) }
         }
     }
 
-}
-
-@Composable
-fun Header(modifier: Modifier, perfilViewModel: PerfilViewModel) {
-    Column(
-        modifier = modifier
-    ) {
-        NombreUsuario(perfilViewModel)
-        Spacer(modifier = Modifier.height(20.dp))
-    }
-}
-
-@Composable
-fun Body(modifier: Modifier, perfilViewModel: PerfilViewModel) {
-    LazyColumn(modifier = modifier) {
-        item {
-            Sexo(perfilViewModel)
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-        item {
-            Edad(perfilViewModel)
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-        item {
-            Peso(perfilViewModel)
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-        item {
-            Altura(perfilViewModel)
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-        item {
-            ObjetivoMarcado(perfilViewModel)
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-    }
 }
 
 @Composable
@@ -340,7 +316,7 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
             Card(
                 modifier = Modifier
                     .padding(16.dp)
-                    .width(100.dp),
+                    .fillMaxSize(),
                 border = BorderStroke(2.dp, Color(0xFF46B62D)),
                 elevation = 8.dp,
                 shape = MaterialTheme.shapes.medium,
