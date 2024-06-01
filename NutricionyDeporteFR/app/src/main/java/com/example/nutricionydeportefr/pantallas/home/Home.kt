@@ -45,61 +45,7 @@ fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldVie
 @Composable
 fun Body(modifier: Modifier, homeViewModel: HomeViewModel) {
     Column(modifier = modifier) {
-        Titulo()
-        Spacer(modifier = Modifier.height(8.dp))
-        ObjetivoMarcado(homeViewModel)
-    }
 
-}
-
-@Composable
-fun Titulo() {
-    Text(
-        text = "¿Que objetivo deseas lograr?",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(start = 8.dp, top = 16.dp)
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ObjetivoMarcado(homeViewModel: HomeViewModel) {
-
-    val objetivoMarcado by homeViewModel.objetivoMarcado.observeAsState(initial = "Pulsa para seleccionar un objetivo")
-    val expandir by homeViewModel.expandir.observeAsState(initial = false)
-
-    val opcionesObjetivo = listOf("Perder peso", "Ganar peso", "Mantener peso")
-    Box (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-
-    ) {
-        //OutlinedTextField y dropdownmenu con las opciones
-        OutlinedTextField(
-            value = objetivoMarcado,
-            onValueChange = { homeViewModel.setObjetivoMarcado(it) },
-            readOnly = true,
-            maxLines = 1,
-            enabled = false,
-            modifier = Modifier
-                .clickable { homeViewModel.setDesplegable() },
-            colors = TextFieldDefaults.textFieldColors(disabledTextColor = Color.Black),
-        )
-        DropdownMenu(
-            expanded = expandir,
-            onDismissRequest = { homeViewModel.setDesplegable() })
-        {
-            opcionesObjetivo.forEach { opcion ->
-                DropdownMenuItem(onClick = {
-                    homeViewModel.setObjetivoMarcado(opcion)
-                    homeViewModel.setDesplegable()
-                }) {
-                    Text(text = opcion)
-                }
-            }
-        }
     }
 
 }

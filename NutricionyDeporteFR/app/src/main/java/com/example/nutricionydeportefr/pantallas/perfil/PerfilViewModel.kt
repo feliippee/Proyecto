@@ -44,8 +44,9 @@ class PerfilViewModel : ViewModel() {
     private val _altura = MutableLiveData<String>()
     val altura: LiveData<String> = _altura
 
-    private val _expandir = MutableLiveData(false)
-    val expandir: LiveData<Boolean> = _expandir
+    private val _objetivoMarcado = MutableLiveData<String>()
+    val objetivoMarcado: LiveData<String> = _objetivoMarcado
+
 
     init {
         obtenerDatosUsuario()
@@ -61,10 +62,6 @@ class PerfilViewModel : ViewModel() {
 
     }
 
-    fun setDesplegable() {
-        _expandir.value = !(_expandir.value ?: false)
-    }
-
     fun setEdad(edad: String) {
 
         _edad.value = edad
@@ -78,9 +75,11 @@ class PerfilViewModel : ViewModel() {
     fun setAltura(altura: String) {
         _altura.value = altura
     }
+    fun setObjetivoMarcado(objetivoMarcado: String) {
+        _objetivoMarcado.value = objetivoMarcado
+    }
 
     fun obtenerDatosUsuario() {
-
         val usuario = auth.currentUser
         if (usuario != null) {
             _nombreUsuario.value = usuario.displayName
@@ -92,6 +91,7 @@ class PerfilViewModel : ViewModel() {
                         _edad.value = document.getString("edad") ?: ""
                         _peso.value = document.getString("peso") ?: ""
                         _altura.value = document.getString("altura") ?: ""
+                        _objetivoMarcado.value = document.getString("objetivoMarcado") ?: ""
                     }
                 }
                 .addOnFailureListener {
@@ -99,7 +99,6 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
-
     fun subirImagen( uri: Uri) {
         val user = auth.currentUser
         if (user != null) {
@@ -144,6 +143,7 @@ class PerfilViewModel : ViewModel() {
         val edad = _edad.value
         val peso = _peso.value
         val altura = _altura.value
+        val objetivo = _objetivoMarcado.value
 
         val user = auth.currentUser
 
@@ -153,7 +153,8 @@ class PerfilViewModel : ViewModel() {
                 "sexo" to sexo,
                 "edad" to edad,
                 "peso" to peso,
-                "altura" to altura
+                "altura" to altura,
+                "objetivoMarcado" to objetivo
             )
             firestore.collection("usuario")
                 .whereEqualTo("usuarioId", user.uid)
@@ -194,6 +195,7 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
+
 
 }
 

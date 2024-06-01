@@ -7,10 +7,12 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -22,9 +24,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +48,7 @@ import com.example.nutricionydeportefr.scaffold.Toolbar
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
-    val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerDatosUsuario()
         perfilViewModel.cargarImagenPerfil()
@@ -82,17 +82,27 @@ fun Header(modifier: Modifier, perfilViewModel: PerfilViewModel) {
 
 @Composable
 fun Body(modifier: Modifier, perfilViewModel: PerfilViewModel) {
-    Column(modifier = modifier) {
-        Sexo(perfilViewModel)
-        Spacer(modifier = Modifier.height(20.dp))
-        Edad(perfilViewModel)
-        Spacer(modifier = Modifier.height(20.dp))
-        Peso(perfilViewModel)
-        Spacer(modifier = Modifier.height(20.dp))
-        Altura(perfilViewModel)
-        Spacer(modifier = Modifier.height(20.dp))
-
-
+    LazyColumn(modifier = modifier) {
+        item {
+            Sexo(perfilViewModel)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            Edad(perfilViewModel)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            Peso(perfilViewModel)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            Altura(perfilViewModel)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            ObjetivoMarcado(perfilViewModel)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 
@@ -203,7 +213,7 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
 fun Sexo(perfilViewModel: PerfilViewModel) {
 
     val sexo by perfilViewModel.sexo.observeAsState()
-    val expandir by perfilViewModel.expandir.observeAsState(initial = false)
+    var expandir by remember { mutableStateOf(false) }
     val eleccionSexo = listOf("Hombre", "Mujer", "Otro")
 
     Box {
@@ -216,19 +226,19 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
             readOnly = true,
             enabled = false,
             modifier = Modifier
-                .clickable { perfilViewModel.setDesplegable() },
+                .clickable { expandir = !expandir },
             colors = TextFieldDefaults.textFieldColors(disabledTextColor = Color.Black),
         )
         DropdownMenu(
             expanded = expandir,
             onDismissRequest = {
-                perfilViewModel.setDesplegable()
+                expandir = false
             }
         ) {
             eleccionSexo.forEach { opcion ->
                 DropdownMenuItem(onClick = {
                     perfilViewModel.setSexo(opcion)
-                    perfilViewModel.setDesplegable()
+                    expandir = false
                 }) {
                     Text(text = opcion)
                 }
@@ -281,12 +291,93 @@ fun Altura(perfilViewModel: PerfilViewModel) {
         value = altura ?: "----",
         onValueChange = {
             perfilViewModel.setAltura(it)
-          
+
         },
         label = { Text("Altura CM") },
         maxLines = 1,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
+
+    val objetivoMarcado by perfilViewModel.objetivoMarcado.observeAsState(initial = "Objetivo")
+    var expandir by remember { mutableStateOf(false) }
+    val opcionesObjetivo = listOf("Perder peso", "Ganar peso", "Mantener peso")
+
+    Box {
+        //OutlinedTextField y dropdownmenu con las opciones
+        OutlinedTextField(
+            value = objetivoMarcado,
+            onValueChange = { perfilViewModel.setObjetivoMarcado(it) },
+            label = { Text("Objetivo") },
+            readOnly = true,
+            maxLines = 1,
+            enabled = false,
+            modifier = Modifier
+                .clickable { expandir = !expandir },
+            colors = TextFieldDefaults.textFieldColors(disabledTextColor = Color.Black),
+        )
+        DropdownMenu(
+            expanded = expandir,
+            onDismissRequest = { expandir = false })
+        {
+            opcionesObjetivo.forEach { opcion ->
+                DropdownMenuItem(onClick = {
+                    perfilViewModel.setObjetivoMarcado(opcion)
+                    expandir = false
+                }) {
+                    Text(text = opcion)
+                }
+            }
+        }
+    }
+
+    when (objetivoMarcado) {
+        "Perder peso" -> {
+            Card(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .width(100.dp),
+                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                elevation = 8.dp,
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Column {
+                    Text(
+                        text = "Para perder peso",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Text(
+                        text = "Se recomienda una dieta baja en calorias y rica en fibra",
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        }
+
+        "Ganar peso" -> {
+            Text(
+                text = "Para ganar pesos",
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        "Mantener peso" -> {
+
+            Text(
+                text = "Para mantener peso",
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+
 }
 
 
