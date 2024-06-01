@@ -129,7 +129,7 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
     val galeria = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
-            uri?.let { perfilViewModel.subirImagen(context, it) }
+            uri?.let { perfilViewModel.subirImagen(it) }
         }
     )
 

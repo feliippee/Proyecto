@@ -22,9 +22,6 @@ class PerfilViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    private val PREFS_NAME = "foto perfil"
-    private val PREF_IMAGEN_PERFIL_URL = "imagen_perfil_url"
-
     //Variable para la seleccion de las opciones del bottom menu
     private var _opcionBottonMenu = MutableLiveData(3)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
@@ -37,7 +34,6 @@ class PerfilViewModel : ViewModel() {
 
     private val _sexo = MutableLiveData<String>()
     val sexo: LiveData<String> = _sexo
-
 
     private val _edad = MutableLiveData<String>()
     val edad: LiveData<String> = _edad
@@ -85,7 +81,6 @@ class PerfilViewModel : ViewModel() {
 
     fun obtenerDatosUsuario() {
 
-
         val usuario = auth.currentUser
         if (usuario != null) {
             _nombreUsuario.value = usuario.displayName
@@ -104,22 +99,8 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
-/*
-    private fun getSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
 
-    private fun guardarUrlEnPreferencias(context: Context, url: String) {
-        val editor = getSharedPreferences(context).edit()
-        editor.putString(PREF_IMAGEN_PERFIL_URL, url)
-        editor.apply()
-    }
-
-    private fun cargarUrlDesdePreferencias(context: Context): String? {
-        return getSharedPreferences(context).getString(PREF_IMAGEN_PERFIL_URL, null)
-    }*/
-
-    fun subirImagen(context: Context, uri: Uri) {
+    fun subirImagen( uri: Uri) {
         val user = auth.currentUser
         if (user != null) {
             val storageRef = storage.reference.child("imagenesperfil/${user.uid}")
@@ -127,7 +108,6 @@ class PerfilViewModel : ViewModel() {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
                     guardarUrlFirebase(downloadUri.toString())
                     _imagenPerfilUrl.value = downloadUri.toString()
-                    //guardarUrlEnPreferencias(context, downloadUri.toString())
                 }.addOnFailureListener {
                     Log.e("PerfilViewModel", "Error getting download URL", it)
                 }

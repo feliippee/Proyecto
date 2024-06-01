@@ -24,10 +24,6 @@ class AlimentacionViewModel : ViewModel() {
     private val _alimentacion = MutableLiveData<List<ItemAlimentacion>>()
     val alimentacion: LiveData<List<ItemAlimentacion>> = _alimentacion
 
-    private val _racionesDiarias = MutableLiveData<List<ItemAlimentacion>>()
-    val racionesDiarias: LiveData<List<ItemAlimentacion>> = _racionesDiarias
-
-
     private val _cargaDatos = MutableLiveData(true)
     val cargaDatos: LiveData<Boolean> = _cargaDatos
 
@@ -66,6 +62,7 @@ class AlimentacionViewModel : ViewModel() {
                         )
                     }
                         _alimentacion.value = alimentacionList
+
             }catch (exception: Exception) {
                 Log.d("AlimentacionViewModel", "Error al obtener los datos.", exception)
             } finally {
@@ -74,8 +71,6 @@ class AlimentacionViewModel : ViewModel() {
             }
         }
     }
-
-
 
     //Funcion para borrar registro de alimentacion
     fun borrarAlimentacion(itemAlimentacion: ItemAlimentacion) {

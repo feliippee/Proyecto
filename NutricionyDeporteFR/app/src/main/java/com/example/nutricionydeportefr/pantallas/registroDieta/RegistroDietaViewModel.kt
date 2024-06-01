@@ -59,6 +59,7 @@ class RegistroDietaViewModel : ViewModel() {
     private val _suplementacion = MutableLiveData<String>()
     val suplementacion: LiveData<String> = _suplementacion
 
+
     //Variables para mostrar errores en los campos
     private val _fechaError = MutableLiveData<String?>()
     val fechaError: LiveData<String?> = _fechaError
@@ -275,6 +276,12 @@ class RegistroDietaViewModel : ViewModel() {
         }
     }
 
+    private val _totalRacionLacteo = MutableLiveData<Float>()
+    val totalRacionLacteo: LiveData<Float> = _totalRacionLacteo
+    fun sumarRaciones() {
+        _totalRacionLacteo.value = (_totalRacionLacteo.value ?: 0f) + (racionLacteo.value?.toFloatOrNull() ?: 0f)
+    Log.d("Registro Alimentacion", "Racion Lacteo Sumada $${totalRacionLacteo.value}")
+    }
 
     //Funcion para guardar los datos de la alimentacion en Firebase
     fun registrarDatosAlimentacion(
@@ -312,10 +319,15 @@ class RegistroDietaViewModel : ViewModel() {
                 .add(dietaDatos)
                 .addOnSuccessListener { documentReference ->
                     println("DocumentSnapshot added with ID")
+                    Log.d("Registro Alimentacion", "Funcion suma llamada")
+                    sumarRaciones()
+                    Log.d("Registro Alimentacion", "Valor racion lacteo: ${totalRacionLacteo.value}")
                 }
                 .addOnFailureListener { e ->
                     println("Error adding document $e")
                 }
+
         }
     }
+
 }

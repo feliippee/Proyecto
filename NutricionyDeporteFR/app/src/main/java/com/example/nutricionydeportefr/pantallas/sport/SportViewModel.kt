@@ -35,7 +35,7 @@ class SportViewModel : ViewModel() {
         _opcionBottonMenu.value = opcion
     }
 
-    private  fun getEntrenamientos() {
+      fun getEntrenamientos() {
         viewModelScope.launch {
             _cargaDatos.value = true
             try {
