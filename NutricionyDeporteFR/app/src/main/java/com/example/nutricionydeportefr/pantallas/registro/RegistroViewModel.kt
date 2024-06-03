@@ -177,7 +177,7 @@ class RegistroViewModel : ViewModel() {
                                     navController.navigate("progressBar")
                                     delay(1000)
                                     Log.d("Registro Usuario", "Usuario registrado correctamente")
-                                    navController.navigate("perfil")
+                                    navController.navigate("home")
                                 }
 
                             }
