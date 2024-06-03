@@ -30,12 +30,17 @@ import com.example.nutricionydeportefr.scaffold.*
 @Composable
 fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
+    LaunchedEffect(key1 = true){
+        sportViewModel.getEntrenamientos()
+    }
+
+
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
     val cargaDatosEntrenamiento by sportViewModel.cargaDatos.observeAsState(initial = true)
 
     Scaffold(
         topBar = { Toolbar(scaffoldViewModel, navController) },
-        bottomBar = { BottomMenu(navController, sportViewModel) },
+        bottomBar = { BottomMenu(navController) },
         floatingActionButton = { ActionFloatingButton(navController) }
     ) {
         Box(
@@ -177,30 +182,32 @@ fun AlertDialogEntreno(
 }
 
 @Composable
-fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
-    val opcionBottonMenu: Int by sportViewModel.opcionBottonMenu.observeAsState(initial = 1)
+fun BottomMenu(navController: NavController) {
+
+    var opcionBottonMenu by remember { mutableStateOf(1) }
+
 
     BottomNavigation(
         backgroundColor = Color(0xFF56C63D),
 
         ) {
-       /* BottomNavigationItem(
+        BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { androidx.compose.material.Text(text = "Home") },
 
             selected = opcionBottonMenu == 0,
             onClick = {
-                sportViewModel.setOpcionBottonMenu(0)
+                opcionBottonMenu = 0
                 navController.navigate("home")
             }
-        )*/
+        )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { androidx.compose.material.Text("Ejercicios") },
             selected = opcionBottonMenu == 1,
 
             onClick = {
-                sportViewModel.setOpcionBottonMenu(1)
+                opcionBottonMenu = 1
                 navController.navigate("ejercicios")
             }
         )
@@ -210,7 +217,7 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
             selected = opcionBottonMenu == 2,
 
             onClick = {
-                sportViewModel.setOpcionBottonMenu(2)
+                opcionBottonMenu = 2
                 navController.navigate("alimentacion")
             }
         )
@@ -219,7 +226,7 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
             label = { androidx.compose.material.Text("Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
-                sportViewModel.setOpcionBottonMenu(3)
+                opcionBottonMenu = 3
                 navController.navigate("perfil")
             }
         )

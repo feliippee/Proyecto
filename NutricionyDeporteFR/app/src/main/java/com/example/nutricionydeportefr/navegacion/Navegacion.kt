@@ -34,7 +34,8 @@ fun Navegacion() {
         }
         //Composable donde se define la ruta de la pantalla del home
         composable( route = Escenas.Home.ruta) {
-            Home(navController, HomeViewModel(), ScaffoldViewModel())
+            val homeViewModel = HomeViewModel.getInstance()
+            Home(navController, homeViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del recuperar password
         composable( route = Escenas.RecuperarPassword.ruta) {
@@ -42,15 +43,18 @@ fun Navegacion() {
         }
         //Composable donde se define la ruta de la pantalla del perfil
         composable (route = Escenas.Perfil.ruta) {
-            Perfil(navController, PerfilViewModel(), ScaffoldViewModel())
+            val perfilViewModel = PerfilViewModel.getInstance()
+            Perfil(navController, perfilViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del alimentacion
         composable (route = Escenas.Alimentacion.ruta) {
-            Alimentacion(navController, AlimentacionViewModel(), ScaffoldViewModel())
+            val alimentacionViewModel = AlimentacionViewModel.getInstance()
+            Alimentacion(navController, alimentacionViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del sport
         composable (route = Escenas.Ejercicios.ruta) {
-            Sport(navController, SportViewModel(), ScaffoldViewModel())
+            val sportViewModel = SportViewModel.getInstance()
+            Sport(navController, sportViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del splashscreen
         composable(route = Escenas.SplashScreen.ruta) {

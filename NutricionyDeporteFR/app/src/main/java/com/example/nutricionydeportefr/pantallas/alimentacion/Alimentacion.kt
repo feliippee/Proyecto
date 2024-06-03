@@ -29,13 +29,16 @@ import com.example.nutricionydeportefr.scaffold.*
 @Composable
 fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
+    LaunchedEffect(key1 = true) {
+        alimentacionViewModel.getAlimentacion()
+    }
     //Variables que obtenemos del ViewModel
     val alimentacion by alimentacionViewModel.alimentacion.observeAsState(initial = emptyList())
     val cargaDatosalimentacion by alimentacionViewModel.cargaDatos.observeAsState(initial = true)
 
     Scaffold(
         topBar = { Toolbar(scaffoldViewModel, navController) },
-        bottomBar = { BottomMenu(navController, alimentacionViewModel) },
+        bottomBar = { BottomMenu(navController) },
         floatingActionButton = { ActionFloatingButton(navController) }
     ) {
         Box(
@@ -178,10 +181,9 @@ fun AlertDialogAlimentacion(
 }
 
 @Composable
-fun BottomMenu(navController: NavController, alimentacionViewModel: AlimentacionViewModel) {
+fun BottomMenu(navController: NavController) {
 
-    //Variable para manejar la opcion elegida del bottom menu
-    val opcionBottonMenu: Int by alimentacionViewModel.opcionBottonMenu.observeAsState(initial = 2)
+    var opcionBottonMenu by remember { mutableStateOf(2)   }
 
     BottomNavigation(
         backgroundColor = Color(0xFF56C63D),
@@ -192,7 +194,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
             label = { androidx.compose.material.Text(text = "Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
-                alimentacionViewModel.setOpcionBottonMenu(0)
+                opcionBottonMenu = 0
                 navController.navigate("home")
             }
         )
@@ -201,7 +203,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
             label = { androidx.compose.material.Text(text = "Ejercicios") },
             selected = opcionBottonMenu == 1,
             onClick = {
-                alimentacionViewModel.setOpcionBottonMenu(1)
+                opcionBottonMenu = 1
                 navController.navigate("ejercicios")
             }
         )
@@ -210,7 +212,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
             label = { androidx.compose.material.Text(text = "Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
-                alimentacionViewModel.setOpcionBottonMenu(2)
+                opcionBottonMenu = 2
                 navController.navigate("alimentacion")
             }
         )
@@ -219,7 +221,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
             label = { androidx.compose.material.Text(text = "Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
-                alimentacionViewModel.setOpcionBottonMenu(3)
+                opcionBottonMenu = 3
                 navController.navigate("perfil")
             }
         )

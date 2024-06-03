@@ -16,11 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class SportViewModel : ViewModel() {
-
-    //Variable para la seleccion de las opciones del bottom menu
-    private var _opcionBottonMenu = MutableLiveData(1)
-    var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
+class SportViewModel private constructor() : ViewModel() {
 
 
     // Variable para coger los datos de Firebase
@@ -35,13 +31,8 @@ class SportViewModel : ViewModel() {
         getEntrenamientos()
     }
 
-    // Funcion para cambiar la opcion del bottom menu
-    fun setOpcionBottonMenu(opcion: Int) {
-        _opcionBottonMenu.value = opcion
-    }
-
     // Funcion para obtener los datos de Firebase
-    private fun getEntrenamientos() {
+    fun getEntrenamientos() {
         viewModelScope.launch {
             _cargaDatos.value = true
             try {
@@ -97,6 +88,23 @@ class SportViewModel : ViewModel() {
         }
     }
 
+    companion object {
+        @Volatile
+        private var INSTANCE: SportViewModel? = null
+
+        fun getInstance(): SportViewModel {
+            synchronized(this) {
+                var instance = INSTANCE
+
+                if (instance == null) {
+                    instance = SportViewModel()
+                    INSTANCE = instance
+                }
+
+                return instance
+            }
+        }
+    }
 }
 
 

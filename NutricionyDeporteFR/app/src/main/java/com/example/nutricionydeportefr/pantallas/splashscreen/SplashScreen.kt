@@ -25,7 +25,7 @@ fun SplashScreen(navController: NavController, splashScreenViewModel: SplashScre
     LaunchedEffect(key1 = true) {
         delay(2000)
         navController.popBackStack()
-        if (splashScreenViewModel.usuarioLogueado()) navController.navigate("perfil") else navController.navigate("login")
+        if (splashScreenViewModel.usuarioLogueado()) navController.navigate("home") else navController.navigate("login")
     }
     Splash()
 }

@@ -1,15 +1,12 @@
 package com.example.nutricionydeportefr.pantallas.home
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -19,101 +16,201 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.nutricionydeportefr.pantallas.registroDieta.RegistroDietaViewModel
 import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
-    Scaffold(
-        topBar = { Toolbar(scaffoldViewModel, navController) },
-        bottomBar = { BottomMenu(navController, homeViewModel) }
-    ) {
+    LaunchedEffect(key1 = true) {
+        homeViewModel.getEntrenamientosHoy()
+        homeViewModel.getAlimentacionesHoy()
+    }
+    Scaffold(topBar = { Toolbar(scaffoldViewModel, navController) }, bottomBar = { BottomMenu(navController) }) {
         Box(
             Modifier
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            Body(Modifier.align(Alignment.TopStart), homeViewModel)
+            Body(Modifier.align(Alignment.TopStart), homeViewModel, navController)
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Body(modifier: Modifier, homeViewModel: HomeViewModel) {
+fun Body(modifier: Modifier, homeViewModel: HomeViewModel, navController: NavController) {
     Column(modifier = modifier) {
+        EntrenamientosDiarios(homeViewModel, navController)
+        DietasDiarias(homeViewModel, navController)
+        ConsejoDelDia()
 
     }
 
 }
 
-@Composable
-fun Titulo(){
-    Text(
-        text = "Consejo del día",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(10.dp)
-    )
-}
 
 @Composable
 fun ConsejoDelDia() {
+    val consejos = listOf(
+        "Recuerda beber al menos 2 litros de agua al día.\n",
+        "Intenta hacer al menos 30 minutos de cardio al día.\n",
+        "Asegúrate de dormir al menos 7 horas al día.\n",
+        "El descanso es importante, deja un dia a la semana de recuperacion.\n",
+        "Intenta moverte cada hora si tu trabajo es sedentario.\n",
+        "Estirar antes y despues de un entrenamiento puede evitar lesiones\n",
+        "No te saltes ninguna comida, es importante para mantener el metabolismo activo.\n",
+    )
     Card(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
+            .fillMaxWidth()
+            .padding(16.dp),
+        border = BorderStroke(2.dp, Color(0xFF56C63D)),
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
     ) {
+        Column(
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Text(
+                text = "Consejo del día",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp)
+            )
+            Text(
+                text = consejos.random(), lineHeight = 20.sp, modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+            )
+        }
+    }
 
+}
+
+@Composable
+fun EntrenamientosDiarios(homeViewModel: HomeViewModel, navController: NavController) {
+
+    val entrenamientosDiarios: Int by homeViewModel.entrenamientosDiarios.observeAsState(initial = 0)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clickable { navController.navigate("ejercicios") },
+        border = BorderStroke(2.dp, Color(0xFF56C63D)),
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Text(
+                text = "Entrenamientos diarios",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp)
+            )
+            if (entrenamientosDiarios == 0) {
+                Text(
+                    text = "Hoy no has realiado ningun entrenamiento, animate a hacerlo!\n Clica para registrar un entrenamiento\n",
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+
+                )
+            } else {
+                Text(
+                    text = "Hoy has realizado $entrenamientosDiarios entrenamientos\n",
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+                )
+
+            }
+        }
     }
 }
+
 @Composable
-fun BottomMenu(navController: NavController, homeViewModel: HomeViewModel) {
-    val opcionBottonMenu: Int by homeViewModel.opcionBottonMenu.observeAsState(initial = 0)
+fun DietasDiarias(homeViewModel: HomeViewModel, navController: NavController) {
+
+    val alimentacionesDiarias: Int by homeViewModel.alimentacionesDiarias.observeAsState(initial = 0)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clickable { navController.navigate("alimentacion") },
+        border = BorderStroke(2.dp, Color(0xFF56C63D)),
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Text(
+                text = "Alimentaciones diarias",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp)
+            )
+            if (alimentacionesDiarias == 0) {
+                Text(
+                    text = "Hoy no has registrado ninguna alimentacion, animate a hacerlo!\n Clica para registrar una alimentacion\n",
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+
+                )
+            } else {
+                Text(
+                    text = "Hoy has registrado $alimentacionesDiarias alimentaciones\n",
+                    lineHeight = 20.sp,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+                )
+
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomMenu(navController: NavController) {
+
+
+    var opcionBottonMenu by remember { mutableStateOf(0) }
 
     BottomNavigation(
-        backgroundColor = Color(0xFF46B62D),
-        contentColor = Color.Black
+        backgroundColor = Color(0xFF46B62D), contentColor = Color.Black
     ) {
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+        BottomNavigationItem(icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { Text("Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(0)
-                // navController.navigate("home")
-            }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
+                opcionBottonMenu = 0
+                navController.navigate("home")
+            })
+        BottomNavigationItem(icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { Text("Ejercicios") },
             selected = opcionBottonMenu == 1,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(1)
+                opcionBottonMenu = 1
                 navController.navigate("ejercicios")
-            }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Dietas") },
+            })
+        BottomNavigationItem(icon = { Icon(Icons.Filled.FoodBank, contentDescription = "Dietas") },
             label = { Text("Dietas") },
             selected = opcionBottonMenu == 2,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(2)
+                opcionBottonMenu = 2
                 navController.navigate("alimentacion")
-            }
-        )
-        BottomNavigationItem(
-            icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
+            })
+        BottomNavigationItem(icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
             label = { Text("Perfil") },
             selected = opcionBottonMenu == 3,
             onClick = {
-                homeViewModel.setOpcionBottonMenu(3)
+                opcionBottonMenu = 3
                 navController.navigate("perfil")
-            }
-        )
+            })
     }
 }
 

@@ -10,16 +10,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 
-class PerfilViewModel : ViewModel() {
+class PerfilViewModel private constructor()  : ViewModel() {
 
     //Instanciamos firebase
     private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    //Variable para la seleccion de las opciones del bottom menu
-    private var _opcionBottonMenu = MutableLiveData(3)
-    var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
 
     private val _nombreUsuario = MutableLiveData<String>()
     val nombreUsuario: LiveData<String> = _nombreUsuario
@@ -48,10 +45,6 @@ class PerfilViewModel : ViewModel() {
         cargarImagenPerfil()
     }
 
-    //Funcion para establecer datos en los campos
-    fun setOpcionBottonMenu(opcion: Int) {
-        _opcionBottonMenu.value = opcion
-    }
 
     fun setSexo(sexo: String) {
         _sexo.value = sexo
@@ -191,6 +184,17 @@ class PerfilViewModel : ViewModel() {
                 .addOnFailureListener {
                     Log.e("PerfilViewModel", "Error al cargar la imagen de perfil", it)
                 }
+        }
+    }
+
+    //Singlenton para perfil
+    companion object {
+        private var instance: PerfilViewModel? = null
+        fun getInstance(): PerfilViewModel {
+            if (instance == null) {
+                instance = PerfilViewModel()
+            }
+            return instance as PerfilViewModel
         }
     }
 }

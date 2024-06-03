@@ -16,11 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AlimentacionViewModel : ViewModel() {
-
-    //Variable para la seleccion de las opciones del bottom menu
-    private var _opcionBottonMenu = MutableLiveData(2)
-    var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
+class AlimentacionViewModel private constructor() : ViewModel() {
 
     //Variable LiveData para la optencion de los datos
     private val _alimentacion = MutableLiveData<List<ItemAlimentacion>>()
@@ -34,13 +30,8 @@ class AlimentacionViewModel : ViewModel() {
         getAlimentacion()
     }
 
-    //Funcion para poder cambiar la opcion del bottom menu
-    fun setOpcionBottonMenu(opcion: Int) {
-        _opcionBottonMenu.value = opcion
-    }
-
     //Funcion para obtener los datos de alimentacion de firebase
-    private fun getAlimentacion() {
+    fun getAlimentacion() {
         viewModelScope.launch {
             _cargaDatos.value = true
             try {
@@ -73,7 +64,7 @@ class AlimentacionViewModel : ViewModel() {
                 }
                 _alimentacion.value = alimentacionList
 
-            }catch (exception: Exception) {
+            } catch (exception: Exception) {
                 Log.d("AlimentacionViewModel", "Error al obtener los datos.", exception)
             } finally {
                 _cargaDatos.value = false
@@ -94,6 +85,25 @@ class AlimentacionViewModel : ViewModel() {
                 Log.d("AlimentacionViewModel", "Error al borrar el documento", exception)
             } finally {
                 _cargaDatos.value = false
+            }
+        }
+    }
+
+    //Singlenton para que persista los datos a pesar de cambiar de pantalla
+    companion object {
+        @Volatile
+        private var INSTANCE: AlimentacionViewModel? = null
+
+        fun getInstance(): AlimentacionViewModel {
+            synchronized(this) {
+                var instance = INSTANCE
+
+                if (instance == null) {
+                    instance = AlimentacionViewModel()
+                    INSTANCE = instance
+                }
+
+                return instance
             }
         }
     }

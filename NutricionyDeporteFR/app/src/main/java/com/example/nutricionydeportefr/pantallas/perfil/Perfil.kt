@@ -414,29 +414,29 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
 @Composable
 fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
 
-    val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
+    var opcionBottonMenu by remember { mutableStateOf(3) }
 
     BottomNavigation(
         backgroundColor = Color(0xFF56C63D),
         contentColor = Color.Black
     ) {
-        /*BottomNavigationItem(
+        BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { Text("Home") },
             selected = opcionBottonMenu == 0,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
-                perfilViewModel.setOpcionBottonMenu(0)
+                opcionBottonMenu = 0
                 navController.navigate("home")
             }
-        )*/
+        )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { Text(text = "Ejercicios") },
             selected = opcionBottonMenu == 1,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
-                perfilViewModel.setOpcionBottonMenu(1)
+                opcionBottonMenu = 1
                 navController.navigate("ejercicios")
             }
         )
@@ -446,7 +446,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             selected = opcionBottonMenu == 2,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
-                perfilViewModel.setOpcionBottonMenu(2)
+                opcionBottonMenu = 2
                 navController.navigate("alimentacion")
             }
         )
@@ -456,7 +456,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
             selected = opcionBottonMenu == 3,
             onClick = {
                 perfilViewModel.guardarDatosUsuario()
-                perfilViewModel.setOpcionBottonMenu(3)
+                opcionBottonMenu = 3
                 navController.navigate("perfil")
             }
         )

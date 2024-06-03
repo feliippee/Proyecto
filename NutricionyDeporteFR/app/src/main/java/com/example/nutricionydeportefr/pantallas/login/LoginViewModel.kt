@@ -71,7 +71,7 @@ class LoginViewModel : ViewModel() {
                         delay(1000)
                         //Bloqueo la pantalla para que no se pueda volver atras
                         navController.popBackStack()
-                        navController.navigate("perfil")
+                        navController.navigate("home")
                     }
 
                 } else {
