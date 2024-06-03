@@ -27,10 +27,9 @@ import com.google.firebase.auth.*
 @Composable
 fun Registro(navController: NavController, registroViewModel: RegistroViewModel) {
 
-    val context = LocalContext.current
-
     //Instanciamos firebase
     firebaseAuth = FirebaseAuth.getInstance()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +47,7 @@ fun Registro(navController: NavController, registroViewModel: RegistroViewModel)
 
 @Composable
 fun Textotitulo() {
-    // Texto de bienvenida
+
     Text(
         text = "Crear Cuenta",
         style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold),
@@ -57,15 +56,18 @@ fun Textotitulo() {
             .fillMaxWidth()
             .padding(top = 30.dp),
 
-    )
+        )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
 
+    //Obtengo el contexto de la pantalla actual
     val context = LocalContext.current
-    val usuario:String by registroViewModel.usuario.observeAsState(initial = "")
+
+    //Variables para obtener y escribir datos en el ViewModel
+    val usuario: String by registroViewModel.usuario.observeAsState(initial = "")
     val password by registroViewModel.password.observeAsState(initial = "")
     val confirmarPassword by registroViewModel.confirmarPassword.observeAsState(initial = "")
     val mostrarPassword by registroViewModel.mostrarpassword.observeAsState(initial = false)
@@ -73,13 +75,12 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
     val correo by registroViewModel.correo.observeAsState(initial = "")
     val fechaNacimiento by registroViewModel.fechaNacimiento.observeAsState(initial = "")
 
+    //Variables para mostrar errores en los campos de texto
     val usuarioError: String? by registroViewModel.usuarioError.observeAsState(initial = null)
     val passwordError: String? by registroViewModel.passwordError.observeAsState(initial = null)
     val correoError: String? by registroViewModel.emailError.observeAsState(initial = null)
     val confirmarPasswordError: String? by registroViewModel.confirmarPasswordError.observeAsState(initial = null)
     val fechaNacimientoError: String? by registroViewModel.fechaError.observeAsState(initial = null)
-
-
 
     // OutlinedTextfield para registrar el nombre del usuario
     OutlinedTextField(value = usuario,
@@ -99,15 +100,13 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
                 )
             }
         }
-        )
+    )
 
     Spacer(modifier = Modifier.height(20.dp))
 
     // OutlinedTextfield para registrar la contraseña del usuario
     OutlinedTextField(
-        //Vinculamos el valor del campo de texto con la variable contrasena
         value = password,
-        //Cuando el usuario introduce la contraseña, se guarda en la variable contrasena
         onValueChange = { registroViewModel.onPasswordChanged(it) },
         label = { Text("Contraseña") },
         maxLines = 1,
@@ -136,7 +135,8 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
             }
         },
 
-    )
+        )
+
     Spacer(modifier = Modifier.height(20.dp))
 
     // OutlinedTextfield para confirmar la contraseña del usuario
@@ -178,7 +178,7 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
     OutlinedTextField(
         value = correo,
         onValueChange = {
-           registroViewModel.onCorreoChanged(it)
+            registroViewModel.onCorreoChanged(it)
 
 
         },
@@ -196,10 +196,10 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
 
-    )
-
+        )
 
     Spacer(modifier = Modifier.height(20.dp))
+
     // OutlinedTextfield para registrar la fecha de nacimiento del usuario
     OutlinedTextField(
         value = fechaNacimiento,
@@ -222,28 +222,30 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
                 contentDescription = "Fecha de nacimiento",
                 tint = Color.Black,
                 modifier = Modifier.clickable {
-                    registroViewModel.FechaDialog(context, calendar) { fechaSeleccionada ->
+                    registroViewModel.fechaDialog(context, calendar) { fechaSeleccionada ->
                         registroViewModel.onFechaNacimientoChanged(fechaSeleccionada)
                     }
                 }
             )
         }
     )
-    Spacer(modifier = Modifier.height(35.dp))
-    //Boton de registro
-    Button(onClick = {
-        registroViewModel.compobarCampos(
-            usuario,
-            password,
-            confirmarPassword,
-            correo,
-            fechaNacimiento,
-            context,
-            navController
-            )
-    },
 
-        ) {
+    Spacer(modifier = Modifier.height(35.dp))
+
+
+    Button(
+        onClick = {
+            registroViewModel.compobarCampos(
+                usuario,
+                password,
+                confirmarPassword,
+                correo,
+                fechaNacimiento,
+                context,
+                navController
+            )
+        },
+    ) {
         Text(text = "Registrarse")
     }
 

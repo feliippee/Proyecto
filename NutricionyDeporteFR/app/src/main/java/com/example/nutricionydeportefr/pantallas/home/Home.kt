@@ -51,6 +51,26 @@ fun Body(modifier: Modifier, homeViewModel: HomeViewModel) {
 }
 
 @Composable
+fun Titulo(){
+    Text(
+        text = "Consejo del día",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(10.dp)
+    )
+}
+
+@Composable
+fun ConsejoDelDia() {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+
+    }
+}
+@Composable
 fun BottomMenu(navController: NavController, homeViewModel: HomeViewModel) {
     val opcionBottonMenu: Int by homeViewModel.opcionBottonMenu.observeAsState(initial = 0)
 

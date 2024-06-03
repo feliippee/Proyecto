@@ -9,14 +9,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.nutricionydeportefr.pantallas.sport.SportViewModel
 
 
 @Composable
 fun Toolbar(scaffoldViewModel: ScaffoldViewModel, navController: NavController) {
     TopAppBar(
         title = { androidx.compose.material.Text(text = "NutriSport") },
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
         actions = {
             //Desplegable para que el usuario pueda cerrar sesion
             IconButton(onClick = {
@@ -33,7 +32,10 @@ fun Toolbar(scaffoldViewModel: ScaffoldViewModel, navController: NavController) 
 }
 @Composable
 fun CerrarSesion(scaffoldViewModel: ScaffoldViewModel, navController: NavController) {
+
+    //Variable para controlar el desplegado del menu
     val expandir by scaffoldViewModel.expandir.observeAsState(initial = false)
+
     DropdownMenu(
         expanded = expandir,
         onDismissRequest = { scaffoldViewModel.setDesplegable() }
@@ -51,7 +53,7 @@ fun CerrarSesion(scaffoldViewModel: ScaffoldViewModel, navController: NavControl
 fun AlertDialog(scaffoldViewModel: ScaffoldViewModel, navController: NavController) {
     val mostrarDialog by scaffoldViewModel.mostrarDialog.observeAsState(initial = false)
     if (mostrarDialog) {
-        androidx.compose.material.AlertDialog(
+       AlertDialog(
             onDismissRequest = { scaffoldViewModel.setMostrarDialog() },
             text = { Text("¿Estas seguro que deseas cerrar sesion?") },
             confirmButton = {

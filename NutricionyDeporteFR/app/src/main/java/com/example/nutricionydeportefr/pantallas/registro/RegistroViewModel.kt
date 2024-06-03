@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-val calendar = Calendar.getInstance()
+val calendar: Calendar = Calendar.getInstance()
 
 
 //Variables de Firebase
@@ -31,10 +31,10 @@ class RegistroViewModel : ViewModel() {
     private val _password = MutableLiveData<String>()
     val password: LiveData<String> = _password
 
-    private val _mostrarpassword = MutableLiveData<Boolean>(false)
+    private val _mostrarpassword = MutableLiveData(false)
     val mostrarpassword: LiveData<Boolean> = _mostrarpassword
 
-    private val _mostrarConfirmarpassword = MutableLiveData<Boolean>(false)
+    private val _mostrarConfirmarpassword = MutableLiveData(false)
     val mostrarConfirmarpassword: LiveData<Boolean> = _mostrarConfirmarpassword
 
     private val _confirmarPassword = MutableLiveData<String>()
@@ -47,7 +47,6 @@ class RegistroViewModel : ViewModel() {
     val fechaNacimiento: LiveData<String> = _fechaNacimiento
 
     //Variables para mostrar errores en los campos
-
     private val _usuarioError = MutableLiveData<String?>()
     val usuarioError: LiveData<String?> = _usuarioError
 
@@ -93,7 +92,7 @@ class RegistroViewModel : ViewModel() {
     }
 
 
-    //En caso de que escriba en el campo, se quita el erro del campo
+    //En caso de que escriba en el campo, se quita el error del campo
     init {
         usuario.observeForever {
             _usuarioError.value = null
@@ -114,6 +113,7 @@ class RegistroViewModel : ViewModel() {
         }
     }
 
+    //Funcion para comprobar los campo
     fun compobarCampos(
         usuario: String,
         password: String,
@@ -150,7 +150,7 @@ class RegistroViewModel : ViewModel() {
         correo: String,
         fechaNacimiento: String,
         //Context es para indicarle donde queremos mostrar el mesaje
-        context: android.content.Context,
+        context: Context,
         navController: NavController
     ) {
         firebaseAuth.createUserWithEmailAndPassword(correo, contrasena)
@@ -166,7 +166,7 @@ class RegistroViewModel : ViewModel() {
                     user?.updateProfile(profileUpdates)
                         ?.addOnCompleteListener { updateTask ->
                             if (updateTask.isSuccessful) {
-                                registrarDatosUsuarios(usuario, correo, fechaNacimiento, context)
+                                registrarDatosUsuarios(usuario, correo, fechaNacimiento)
                                 val sharedPref = context.getSharedPreferences("Nombre Usuario", Context.MODE_PRIVATE)
                                 with(sharedPref.edit()) {
                                     putString("email", correo)
@@ -215,11 +215,10 @@ class RegistroViewModel : ViewModel() {
     }
 
     //Funcion para guardar los datos de los usuarios en Firebase
-    fun registrarDatosUsuarios(
+    private fun registrarDatosUsuarios(
         usuario: String,
         correo: String,
         fechaNacimiento: String,
-        context: Context
     ) {
         val user = firebaseAuth.currentUser
         if (user != null) {
@@ -232,27 +231,26 @@ class RegistroViewModel : ViewModel() {
                 "fecha nacimiento" to fechaNacimiento,
             )
             db.collection("usuario")
-
                 .add(datosdusuario)
                 .addOnSuccessListener {
-                    println("DocumentSnapshot successfully written!")
+                    Log.d("Registro Usuario", "Usuario registrado correctamente")
                 }
                 .addOnFailureListener { e ->
-                    println("Error writing document $e")
+                    Log.w("Registro Usuario", "Error al registrar el usuario", e)
                 }
         }
     }
 
     //Funcion para validar el correo
-    fun validarCorreo(correo: String): Boolean {
+    private fun validarCorreo(correo: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }
 
     //Funcion DaterPickerDialog
-    fun FechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
+    fun fechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fecha = DatePickerDialog(
             context,
-            { view: DatePicker, year: Int, month: Int, day: Int ->
+            { _: DatePicker, year: Int, month: Int, day: Int ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
@@ -267,7 +265,7 @@ class RegistroViewModel : ViewModel() {
     }
 
     //Funcion para formato de la fecha
-    fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
+    private fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fechaformato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)

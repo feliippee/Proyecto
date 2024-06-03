@@ -1,23 +1,18 @@
 package com.example.nutricionydeportefr.pantallas.perfil
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
-
 
 class PerfilViewModel : ViewModel() {
 
-
+    //Instanciamos firebase
     private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
@@ -47,25 +42,23 @@ class PerfilViewModel : ViewModel() {
     private val _objetivoMarcado = MutableLiveData<String>()
     val objetivoMarcado: LiveData<String> = _objetivoMarcado
 
-
+    //Obtenemos los datos nada mas se genere el viewmodel
     init {
         obtenerDatosUsuario()
         cargarImagenPerfil()
     }
 
+    //Funcion para establecer datos en los campos
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
 
     fun setSexo(sexo: String) {
         _sexo.value = sexo
-
     }
 
     fun setEdad(edad: String) {
-
         _edad.value = edad
-
     }
 
     fun setPeso(peso: String) {
@@ -79,6 +72,7 @@ class PerfilViewModel : ViewModel() {
         _objetivoMarcado.value = objetivoMarcado
     }
 
+    //Obtenemos los datos del usuario de firebase
     fun obtenerDatosUsuario() {
         val usuario = auth.currentUser
         if (usuario != null) {
@@ -93,12 +87,14 @@ class PerfilViewModel : ViewModel() {
                         _altura.value = document.getString("altura") ?: ""
                         _objetivoMarcado.value = document.getString("objetivoMarcado") ?: ""
                     }
+                    Log.d("PerfilViewModel", "Datos del usuario cargados con éxito")
                 }
                 .addOnFailureListener {
                     Log.e("PerfilViewModel", "Error al cargar los datos del usuario", it)
                 }
         }
     }
+    //Subimos la imagen en firebase
     fun subirImagen( uri: Uri) {
         val user = auth.currentUser
         if (user != null) {
@@ -108,14 +104,14 @@ class PerfilViewModel : ViewModel() {
                     guardarUrlFirebase(downloadUri.toString())
                     _imagenPerfilUrl.value = downloadUri.toString()
                 }.addOnFailureListener {
-                    Log.e("PerfilViewModel", "Error getting download URL", it)
+                    Log.e("PerfilViewModel", "Error al guardar la imagen", it)
                 }
             }.addOnFailureListener {
-                Log.e("PerfilViewModel", "Upload failed", it)
+                Log.e("PerfilViewModel", "Subida de la imagen fallida", it)
             }
         }
     }
-
+    //Guardamos la url de la imagen en firebase
     private fun guardarUrlFirebase(downloadUri: String) {
         val user = auth.currentUser
         if (user != null) {
@@ -138,6 +134,7 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
+    //Guardamos los datos del usuario en firebase
     fun guardarDatosUsuario() {
         val sexo = _sexo.value
         val edad = _edad.value
@@ -163,10 +160,10 @@ class PerfilViewModel : ViewModel() {
                     for (document in documents) {
                         document.reference.set(datosUsuario, SetOptions.merge())
                             .addOnSuccessListener {
-                                Log.d("PerfilViewModel", "La url de la imagen se ha guardado con éxito")
+                                Log.d("PerfilViewModel", "Datos del usuario guardados con éxito")
                             }
                             .addOnFailureListener {
-                                Log.e("PerfilViewModel", "Error al guardar la url", it)
+                                Log.e("PerfilViewModel", "Error al guardar los datos del usuario", it)
                             }
                     }
                 }
@@ -175,7 +172,7 @@ class PerfilViewModel : ViewModel() {
                 }
         }
     }
-
+    //Cargamos la imagen de perfil
     fun cargarImagenPerfil() {
         val user = auth.currentUser
         if (user != null) {
@@ -189,14 +186,13 @@ class PerfilViewModel : ViewModel() {
                             _imagenPerfilUrl.value = url
                         }
                     }
+                    Log.d("PerfilViewModel", "Imagen de perfil cargada con éxito")
                 }
                 .addOnFailureListener {
                     Log.e("PerfilViewModel", "Error al cargar la imagen de perfil", it)
                 }
         }
     }
-
-
 }
 
 

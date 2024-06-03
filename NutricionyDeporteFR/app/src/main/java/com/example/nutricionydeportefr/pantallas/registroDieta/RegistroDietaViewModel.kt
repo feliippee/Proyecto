@@ -19,10 +19,6 @@ lateinit var firebaseAuth: FirebaseAuth
 
 class RegistroDietaViewModel : ViewModel() {
 
-    init {
-        Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-    }
 
     //Variable para el DropdownMenu
     private val _expandir = MutableLiveData<Boolean>(false)
@@ -137,6 +133,9 @@ class RegistroDietaViewModel : ViewModel() {
     }
 
     init {
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+
         fechaDieta.observeForever {
             _fechaError.value = null
         }
@@ -170,10 +169,10 @@ class RegistroDietaViewModel : ViewModel() {
     }
 
     //Funcion DaterPickerDialog
-    fun FechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
+    fun fechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fecha = DatePickerDialog(
             context,
-            { view: DatePicker, year: Int, month: Int, day: Int ->
+            { _: DatePicker, year: Int, month: Int, day: Int ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
@@ -188,7 +187,7 @@ class RegistroDietaViewModel : ViewModel() {
     }
 
     //Funcion para formato de la fecha
-    fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
+    private fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fechaformato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
@@ -210,12 +209,12 @@ class RegistroDietaViewModel : ViewModel() {
         navController: NavController
     ) {
 
-        val LacteoNumber = racionLacteo.toFloatOrNull()
-        val VerdurasNumber = racionVerduras.toFloatOrNull()
-        val FrutaNumber = racionFruta.toFloatOrNull()
-        val HidratosNumber = racionHidratos.toFloatOrNull()
-        val GrasasNumber = racionGrasas.toFloatOrNull()
-        val ProteinaNumber = racionProteina.toFloatOrNull()
+        val lacteoNumber = racionLacteo.toFloatOrNull()
+        val verdurasNumber = racionVerduras.toFloatOrNull()
+        val frutaNumber = racionFruta.toFloatOrNull()
+        val hidratosNumber = racionHidratos.toFloatOrNull()
+        val grasasNumber = racionGrasas.toFloatOrNull()
+        val proteinaNumber = racionProteina.toFloatOrNull()
 
         if (fechaDieta.isEmpty()) {
             _fechaError.value = "Fecha no puede estar vacio"
@@ -226,45 +225,46 @@ class RegistroDietaViewModel : ViewModel() {
         } else if (menu.isEmpty()) {
             _menuError.value = "Menu no puede estar vacio"
             Log.d("Registro Entreno", "Campo Menu Vacio")
-        } else if (LacteoNumber == null || LacteoNumber < 0) {
+        } else if (lacteoNumber == null || lacteoNumber < 0) {
             _racionLacteoError.value = "La racion de lacteo no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Lacteo Calorias Vacio")
-        } else if (VerdurasNumber == null || VerdurasNumber < 0) {
+        } else if (verdurasNumber == null || verdurasNumber < 0) {
             _racionVerduraError.value = "La racion de verduras no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Verduras Calorias Vacio")
-        } else if (FrutaNumber == null || FrutaNumber < 0) {
+        } else if (frutaNumber == null || frutaNumber < 0) {
             _racionFrutaError.value = "La racion de fruta no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Fruta Calorias Vacio")
-        } else if (HidratosNumber == null || HidratosNumber < 0) {
+        } else if (hidratosNumber == null || hidratosNumber < 0) {
             _racionHidratosError.value = "La racion de hidratos no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Hidratos Calorias Vacio")
-        } else if (GrasasNumber == null || GrasasNumber < 0) {
+        } else if (grasasNumber == null || grasasNumber < 0) {
             _racionGrasasError.value = "La racion de grasas no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Grasas Calorias Vacio")
-        } else if (ProteinaNumber == null || ProteinaNumber < 0) {
+        } else if (proteinaNumber == null || proteinaNumber < 0) {
             _racionProteinaError.value = "La racion de proteina no puede estar vacio o ser positivo"
             Log.d("Registro Entreno", "Proteina Calorias Vacio")
         } else if (suplementacion.isEmpty()) {
             _suplementacionError.value = "Suplementacion no puede estar vacio"
             Log.d("Registro Entreno", "Suplementacion Vacio")
         } else {
-            _racionVerduras.value = VerdurasNumber.toString()
-            _racionLacteo.value = LacteoNumber.toString()
-            _racionFruta.value = FrutaNumber.toString()
-            _racionHidratos.value = HidratosNumber.toString()
-            _racionGrasas.value = GrasasNumber.toString()
-            _racionProteina.value = ProteinaNumber.toString()
+            _racionVerduras.value = verdurasNumber.toString()
+            _racionLacteo.value = lacteoNumber.toString()
+            _racionFruta.value = frutaNumber.toString()
+            _racionHidratos.value = hidratosNumber.toString()
+            _racionGrasas.value = grasasNumber.toString()
+            _racionProteina.value = proteinaNumber.toString()
+
             GlobalScope.launch(Dispatchers.Main) {
                 navController.navigate("progressBar")
                 registrarDatosAlimentacion(
                     comidaseleccionada,
                     menu,
-                    VerdurasNumber,
-                    LacteoNumber,
-                    FrutaNumber,
-                    HidratosNumber,
-                    GrasasNumber,
-                    ProteinaNumber,
+                    verdurasNumber,
+                    lacteoNumber,
+                    frutaNumber,
+                    hidratosNumber,
+                    grasasNumber,
+                    proteinaNumber,
                     suplementacion,
                     fechaDieta
                 )
@@ -276,15 +276,8 @@ class RegistroDietaViewModel : ViewModel() {
         }
     }
 
-    private val _totalRacionLacteo = MutableLiveData<Float>()
-    val totalRacionLacteo: LiveData<Float> = _totalRacionLacteo
-    fun sumarRaciones() {
-        _totalRacionLacteo.value = (_totalRacionLacteo.value ?: 0f) + (racionLacteo.value?.toFloatOrNull() ?: 0f)
-    Log.d("Registro Alimentacion", "Racion Lacteo Sumada $${totalRacionLacteo.value}")
-    }
-
     //Funcion para guardar los datos de la alimentacion en Firebase
-    fun registrarDatosAlimentacion(
+    private fun registrarDatosAlimentacion(
         comidaseleccionada: String,
         menu: String,
         verdurasNumber: Float,
@@ -300,6 +293,10 @@ class RegistroDietaViewModel : ViewModel() {
 
         if (user != null) {
 
+            //Convertimos la fecha a timpo timestamp para guardarlo en firebase
+            val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val fecha = formatoFecha.parse(fechaDieta)
+
             val db = Firebase.firestore
             val usuarioid = user.uid
             val dietaDatos = hashMapOf(
@@ -313,21 +310,17 @@ class RegistroDietaViewModel : ViewModel() {
                 "Racion Grasas" to grasasNumber,
                 "Racion Proteina" to proteinaNumber,
                 "Suplementacion" to suplementacion,
-                "Fecha Alimentacion" to fechaDieta
+                "Fecha Alimentacion" to fecha
             )
             db.collection("alimentacion")
                 .add(dietaDatos)
                 .addOnSuccessListener { documentReference ->
-                    println("DocumentSnapshot added with ID")
-                    Log.d("Registro Alimentacion", "Funcion suma llamada")
-                    sumarRaciones()
-                    Log.d("Registro Alimentacion", "Valor racion lacteo: ${totalRacionLacteo.value}")
+                    Log.d("Registro Alimentacion", "Documento Creado con ID: ${documentReference.id}")
+
                 }
                 .addOnFailureListener { e ->
-                    println("Error adding document $e")
+                   Log.d("Registro Alimentacion", "Error al guardar los datos en Firebase", e)
                 }
-
         }
     }
-
 }

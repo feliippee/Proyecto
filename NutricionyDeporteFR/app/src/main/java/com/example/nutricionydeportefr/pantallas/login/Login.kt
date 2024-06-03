@@ -1,10 +1,8 @@
 package com.example.nutricionydeportefr.pantallas.login
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
+
+import  android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.nutricionydeportefr.R
 import androidx.compose.foundation.Image
@@ -40,9 +38,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 @Composable
 fun Login(navController: NavController, loginViewModel: LoginViewModel) {
 
-
+    //Variables para obtener y guardar los datos del ViewModel
     val email: String by loginViewModel.email.observeAsState(initial = "")
     val password: String by loginViewModel.password.observeAsState(initial = "")
+    //Variable para obtener el contexto de la pantalla actual
     val context = LocalContext.current
 
     Box(
@@ -57,15 +56,14 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
 
             //Instanciamos firebase
             firebaseAuth = FirebaseAuth.getInstance()
-            //Inicializamos resultLauncher
+
             Titulo()
             Spacer(modifier = Modifier.height(10.dp))
             Fotologin()
             Spacer(modifier = Modifier.height(10.dp))
-            //Campos de texto
             Camposlogin(loginViewModel)
             Spacer(modifier = Modifier.height(10.dp))
-            Recuperarcontraseña(navController)
+            Recuperarpassword(navController)
             Spacer(modifier = Modifier.height(30.dp))
             Botonlogin(
                 correo = email,
@@ -101,7 +99,7 @@ fun Titulo() {
 
 @Composable
 fun Fotologin() {
-    //Imagen
+
     Image(
         painter = painterResource(id = R.drawable.nutrisport),
         contentDescription = "Logo",
@@ -115,6 +113,8 @@ fun Fotologin() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Camposlogin(loginViewModel: LoginViewModel) {
+
+    //Variables para obtener y guardar los datos del ViewModel
     val email: String by loginViewModel.email.observeAsState(initial = "")
     val password: String by loginViewModel.password.observeAsState(initial = "")
     val mostrarpassword by loginViewModel.mostrarpassword.observeAsState(initial = false)
@@ -139,6 +139,7 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
         }
 
     )
+
     Spacer(modifier = Modifier.height(20.dp))
 
     OutlinedTextField(
@@ -176,7 +177,7 @@ fun Camposlogin(loginViewModel: LoginViewModel) {
 }
 
 @Composable
-fun Recuperarcontraseña(navController: NavController) {
+fun Recuperarpassword(navController: NavController) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
@@ -204,7 +205,7 @@ fun Botonlogin(
 ) {
     Button(
         onClick = {
-            loginViewModel.inicioSesion(correo, contrasena, context, navController)
+            loginViewModel.comprobarCampos(correo, contrasena, context, navController)
 
         }, modifier = Modifier
             .padding(8.dp)
@@ -216,8 +217,11 @@ fun Botonlogin(
 
 @Composable
 fun BotonesLoginRedes(loginViewModel: LoginViewModel, navController: NavController) {
+
+    //Variable para obtener el contexto de la pantalla actual
     val context = LocalContext.current
 
+    //Creamos el launcher para la eleccion del correo
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
@@ -235,6 +239,8 @@ fun BotonesLoginRedes(loginViewModel: LoginViewModel, navController: NavControll
 
     Button(
         onClick = {
+
+            //Cuando clica, nos conectamos con google y lanzamos el launcher
             val opciones = GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("911309946399-8obn3pn0ctlvijarvfdsrnv08e4ug00h.apps.googleusercontent.com")
@@ -272,7 +278,7 @@ fun TextoRegistro(navController: NavController) {
 }
 @Composable
 fun LineaDivisora(){
-    //Linea Divisora
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,

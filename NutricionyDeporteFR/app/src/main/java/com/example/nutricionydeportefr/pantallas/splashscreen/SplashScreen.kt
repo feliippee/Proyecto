@@ -1,6 +1,5 @@
 package com.example.nutricionydeportefr.pantallas.splashscreen
 
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,11 +19,13 @@ import com.example.nutricionydeportefr.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController, SplashScreenViewModel: SplashScreenViewModel) {
+fun SplashScreen(navController: NavController, splashScreenViewModel: SplashScreenViewModel) {
+
+    //Nada mas iniciar la vista cargamos el logo y esperamos 2 segundos para redirigir a la siguiente vista
     LaunchedEffect(key1 = true) {
         delay(2000)
         navController.popBackStack()
-        if (SplashScreenViewModel.usuarioLogueado()) navController.navigate("perfil") else navController.navigate("login")
+        if (splashScreenViewModel.usuarioLogueado()) navController.navigate("perfil") else navController.navigate("login")
     }
     Splash()
 }

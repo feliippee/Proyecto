@@ -12,5 +12,4 @@ data class ItemAlimentacion(
     var grasas: String,
     var proteinas: String,
     var suplementacion: String
-
     )

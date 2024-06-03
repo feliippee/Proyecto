@@ -6,14 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nutricionydeportefr.itemsRecycler.ItemAlimentacion
-import com.example.nutricionydeportefr.itemsRecycler.ItemEntrenamiento
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class AlimentacionViewModel : ViewModel() {
 
@@ -21,6 +22,7 @@ class AlimentacionViewModel : ViewModel() {
     private var _opcionBottonMenu = MutableLiveData(2)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
 
+    //Variable LiveData para la optencion de los datos
     private val _alimentacion = MutableLiveData<List<ItemAlimentacion>>()
     val alimentacion: LiveData<List<ItemAlimentacion>> = _alimentacion
 
@@ -45,23 +47,31 @@ class AlimentacionViewModel : ViewModel() {
                 val db = Firebase.firestore
                 val usuarioId = FirebaseAuth.getInstance().currentUser?.uid
                 val result = db.collection("alimentacion")
-                    .whereEqualTo("usuarioId", usuarioId).get().await()
-                    val alimentacionList = result.map { document ->
-                        ItemAlimentacion(
-                            id = document.id,
-                            fecha = document.getString("Fecha Alimentacion") ?: "",
-                            comida = document.getString("Comida Seleccionada") ?: "",
-                            menu = document.getString("Menu") ?: "",
-                            verduras = document.getDouble("Racion Verduras")?.toString() ?: "",
-                            lacteos = document.getDouble("Racion Lacteo")?.toString() ?: "",
-                            frutas = document.getDouble("Racion Fruta")?.toString() ?: "",
-                            hidratos = document.getDouble("Racion Hidratos")?.toString() ?: "",
-                            grasas = document.getDouble("Racion Grasas")?.toString() ?: "",
-                            proteinas = document.getDouble("Racion Proteina")?.toString() ?: "",
-                            suplementacion = document.getString("Suplementacion") ?: "",
-                        )
-                    }
-                        _alimentacion.value = alimentacionList
+                    .whereEqualTo("usuarioId", usuarioId)
+                    .orderBy("Fecha Alimentacion", Query.Direction.DESCENDING)
+                    .get().await()
+                val alimentacionList = result.map { document ->
+
+                    val timestamp = document.getTimestamp("Fecha Alimentacion")
+                    val date = timestamp?.toDate()
+                    val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val fecha = date?.let { formatoFecha.format(it) } ?: ""
+
+                    ItemAlimentacion(
+                        id = document.id,
+                        fecha = fecha,
+                        comida = document.getString("Comida Seleccionada") ?: "",
+                        menu = document.getString("Menu") ?: "",
+                        verduras = document.getDouble("Racion Verduras")?.toString() ?: "",
+                        lacteos = document.getDouble("Racion Lacteo")?.toString() ?: "",
+                        frutas = document.getDouble("Racion Fruta")?.toString() ?: "",
+                        hidratos = document.getDouble("Racion Hidratos")?.toString() ?: "",
+                        grasas = document.getDouble("Racion Grasas")?.toString() ?: "",
+                        proteinas = document.getDouble("Racion Proteina")?.toString() ?: "",
+                        suplementacion = document.getString("Suplementacion") ?: "",
+                    )
+                }
+                _alimentacion.value = alimentacionList
 
             }catch (exception: Exception) {
                 Log.d("AlimentacionViewModel", "Error al obtener los datos.", exception)
@@ -79,9 +89,9 @@ class AlimentacionViewModel : ViewModel() {
             try {
                 val db = Firebase.firestore
                 db.collection("alimentacion").document(itemAlimentacion.id).delete().await()
-                getAlimentacion() // Refresh the list after deletion
+                getAlimentacion() //Mostramos la lista sin el elemento borrado
             } catch (exception: Exception) {
-                Log.w("AlimentacionViewModel", "Error al borrar el documento", exception)
+                Log.d("AlimentacionViewModel", "Error al borrar el documento", exception)
             } finally {
                 _cargaDatos.value = false
             }

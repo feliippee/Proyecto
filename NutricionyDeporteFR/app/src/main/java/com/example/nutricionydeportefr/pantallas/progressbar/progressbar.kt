@@ -20,7 +20,7 @@ fun ProgressBar() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        CircularProgressIndicator(color = Color(0xFF46B62D), strokeWidth = 5.dp, modifier = Modifier.size(50.dp))
+        CircularProgressIndicator(color = Color(0xFF56C63D), strokeWidth = 5.dp, modifier = Modifier.size(50.dp))
     }
 
 }

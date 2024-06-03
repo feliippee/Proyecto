@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.nutricionydeportefr.pantallas.registrosport
 
 import androidx.compose.foundation.clickable
@@ -25,21 +26,20 @@ import com.example.nutricionydeportefr.pantallas.registro.calendar
 
 @Composable
 fun RegistroSport(navController: NavController, registroSportViewModel: RegistroSportViewModel) {
+
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Body(Modifier.align(Alignment.Center), navController, registroSportViewModel)
-
     }
-
 }
 
 
 @Composable
 fun Body(modifier: Modifier, navController: NavController, registroSportViewModel: RegistroSportViewModel) {
+
     Column(modifier = modifier) {
         Titulo()
         Spacer(modifier = Modifier.size(30.dp))
@@ -54,12 +54,9 @@ fun Body(modifier: Modifier, navController: NavController, registroSportViewMode
         Pesos(registroSportViewModel)
         Spacer(modifier = Modifier.size(8.dp))
         BtnRegistrarEntreno(navController, registroSportViewModel)
-
-
     }
 }
 
-//Fun titulo
 @Composable
 fun Titulo() {
     Text(
@@ -70,12 +67,19 @@ fun Titulo() {
     )
 }
 
-//Fun para registrar dia de entrenamiento
+
 @Composable
 fun CampoFecha(registroSportViewModel: RegistroSportViewModel) {
+
+    //Obtener el contexto de la pantalla actual
     val context = LocalContext.current
+
+    //Variables para guardar y obtener datos en el viewModel
     val fechEntrenamiento by registroSportViewModel.fechaEntrenamiento.observeAsState(initial = "")
+
+    //Variables para mostrar error en los campos
     val fechEntrenamientoError: String? by registroSportViewModel.fechaError.observeAsState(initial = null)
+
     // Textfield para registrar la fecha de nacimiento del usuario
     TextField(
         value = fechEntrenamiento,
@@ -98,7 +102,7 @@ fun CampoFecha(registroSportViewModel: RegistroSportViewModel) {
                 contentDescription = "Fecha de nacimiento",
                 tint = Color.Black,
                 modifier = Modifier.clickable {
-                    registroSportViewModel.FechaDialog(context, calendar) { fechaSeleccionada ->
+                    registroSportViewModel.fechaDialog(context, calendar) { fechaSeleccionada ->
                         registroSportViewModel.onfechaEntrenamientoChanged(fechaSeleccionada)
                     }
                 }
@@ -107,12 +111,17 @@ fun CampoFecha(registroSportViewModel: RegistroSportViewModel) {
     )
 }
 
-//Fun para registrar la parte del cuerpo
+
 @Composable
 fun ParteCuerpo(registroSportViewModel: RegistroSportViewModel) {
 
+    //Variables para guardar y obtener datos en el viewModel
     val parteCuerpo by registroSportViewModel.parteCuerpo.observeAsState(initial = "")
+
+    //Variables para mostrar error en los campos
     val parteCuerpoError: String? by registroSportViewModel.parteCuerpoError.observeAsState(initial = null)
+
+
     // Textfield para registrar la fecha de nacimiento del usuario
     TextField(
         value = parteCuerpo,
@@ -131,11 +140,13 @@ fun ParteCuerpo(registroSportViewModel: RegistroSportViewModel) {
     )
 }
 
-//Registro el nombre de los ejercicios
 @Composable
 fun Ejercicios(registroSportViewModel: RegistroSportViewModel) {
 
+    //Variables para guardar y obtener datos en el viewModel
     val ejercicios by registroSportViewModel.ejercicios.observeAsState(initial = "")
+
+    //Variables para mostrar error en los campos
     val ejerciciosError: String? by registroSportViewModel.ejerciciosError.observeAsState(initial = null)
 
     // Textfield para registrar el nombre del entrenamiento
@@ -156,7 +167,7 @@ fun Ejercicios(registroSportViewModel: RegistroSportViewModel) {
     )
 }
 
-//Registro de series y repeticiones
+
 @Composable
 fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
 
@@ -164,7 +175,7 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
     val series by registroSportViewModel.series.observeAsState(initial = "")
     val repeticiones by registroSportViewModel.repeticiones.observeAsState(initial = "")
 
-
+    //Variables para mostrar error en los campos
     val seriesError: String? by registroSportViewModel.seriesError.observeAsState(initial = null)
     val repeticionesError: String? by registroSportViewModel.repeticionesError.observeAsState(initial = null)
 
@@ -188,7 +199,9 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
                 }
             },
         )
+
         Spacer(modifier = Modifier.size(15.dp))
+
         //TextField para registrar las repeticiones del entrenamiento
         TextField(
             value = repeticiones,
@@ -214,11 +227,14 @@ fun SeriesRepeticiones(registroSportViewModel: RegistroSportViewModel) {
 @Composable
 fun Pesos(registroSportViewModel: RegistroSportViewModel) {
 
+    //Variables para guardar y obtener datos en el viewModel
     val pesoInicial by registroSportViewModel.pesoInicial.observeAsState(initial = "")
     val pesoInicialError: String? by registroSportViewModel.pesoInicialError.observeAsState(initial = null)
 
+    //Variables para mostrar error en los campos
     val pesoFinal by registroSportViewModel.pesoFinal.observeAsState(initial = "")
     val pesoFinalError: String? by registroSportViewModel.pesoFinalError.observeAsState(initial = null)
+
     Row {
         TextField(
             value = pesoInicial,
@@ -237,7 +253,9 @@ fun Pesos(registroSportViewModel: RegistroSportViewModel) {
                 }
             },
         )
+
         Spacer(modifier = Modifier.size(15.dp))
+
         TextField(
             value = pesoFinal,
             onValueChange = { registroSportViewModel.onPesoFinalChanged(it) },
@@ -255,14 +273,14 @@ fun Pesos(registroSportViewModel: RegistroSportViewModel) {
                 }
             },
         )
-
     }
 }
 
-//Boton para registrar en firebase.
+
 @Composable
 fun BtnRegistrarEntreno(navController: NavController, registroSportViewModel: RegistroSportViewModel) {
 
+    //Variables para guardar y obtener datos en el viewModel
     val fechEntrenamiento by registroSportViewModel.fechaEntrenamiento.observeAsState(initial = "")
     val parteCuerpo by registroSportViewModel.parteCuerpo.observeAsState(initial = "")
     val ejercicios by registroSportViewModel.ejercicios.observeAsState(initial = "")

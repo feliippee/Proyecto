@@ -112,7 +112,7 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
             .fillMaxSize()
             .padding(start = 10.dp, end = 10.dp)
             .clickable { expandir = !expandir },
-        border = BorderStroke(2.dp, Color(0xFF46B62D)),
+        border = BorderStroke(2.dp, Color(0xFF56C63D)),
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium,
     ) {
@@ -181,7 +181,7 @@ fun BottomMenu(navController: NavController, sportViewModel: SportViewModel) {
     val opcionBottonMenu: Int by sportViewModel.opcionBottonMenu.observeAsState(initial = 1)
 
     BottomNavigation(
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
 
         ) {
        /* BottomNavigationItem(
@@ -232,7 +232,7 @@ fun ActionFloatingButton(navController: NavController) {
         onClick = {
             navController.navigate("registrosport")
         },
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
     ) {
         Icon(Icons.Filled.Add, contentDescription = "Add")
     }

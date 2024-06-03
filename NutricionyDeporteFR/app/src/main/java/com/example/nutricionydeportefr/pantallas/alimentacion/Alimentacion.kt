@@ -27,12 +27,9 @@ import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Alimentacion(
-    navController: NavController,
-    alimentacionViewModel: AlimentacionViewModel,
-    scaffoldViewModel: ScaffoldViewModel
-) {
+fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel, scaffoldViewModel: ScaffoldViewModel) {
 
+    //Variables que obtenemos del ViewModel
     val alimentacion by alimentacionViewModel.alimentacion.observeAsState(initial = emptyList())
     val cargaDatosalimentacion by alimentacionViewModel.cargaDatos.observeAsState(initial = true)
 
@@ -46,6 +43,7 @@ fun Alimentacion(
                 .fillMaxSize()
                 .padding(8.dp),
         ) {
+            //Cargamos los datos de alimentacion, mientras muestro progressbar
             if (cargaDatosalimentacion) {
                 ProgressBar()
             } else {
@@ -64,6 +62,7 @@ fun Body(modifier: Modifier, alimentacion: List<ItemAlimentacion>, alimentacionV
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(16.dp)
         )
+        //Sino hemos obtenido ningun item de alimentacion, muestro que no hay dietas registradas
         if (alimentacion.isEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -83,6 +82,7 @@ fun Body(modifier: Modifier, alimentacion: List<ItemAlimentacion>, alimentacionV
                 items(alimentacion) { itemAlimentacion ->
                     Itemalimentacion(itemAlimentacion = itemAlimentacion, alimentacionViewModel)
                 }
+                //Spacer para que no se vea cortado el ultimo item
                 item { Spacer(modifier = Modifier.height(56.dp)) }
             }
         }
@@ -92,9 +92,12 @@ fun Body(modifier: Modifier, alimentacion: List<ItemAlimentacion>, alimentacionV
 @Composable
 fun Itemalimentacion(itemAlimentacion: ItemAlimentacion, alimentacionViewModel: AlimentacionViewModel) {
 
+    //Variable para manejar el expandir del card
     var expandir by remember { mutableStateOf(false) }
+    //Variable para mostrar el alertDialog si quiere borrar
     var mostrarDialog by remember { mutableStateOf(false) }
 
+    //Si clica en el icono de borrar, se muestra
     if (mostrarDialog) {
         AlertDialogAlimentacion(
             onDismissRequest = { mostrarDialog = false },
@@ -108,8 +111,9 @@ fun Itemalimentacion(itemAlimentacion: ItemAlimentacion, alimentacionViewModel: 
     Card(
         modifier = Modifier
             .fillMaxSize()
+            .padding(start = 10.dp, end = 10.dp)
             .clickable { expandir = !expandir },
-        border = BorderStroke(2.dp, Color(0xFF46B62D)),
+        border = BorderStroke(2.dp, Color(0xFF56C63D)),
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium,
     ) {
@@ -176,13 +180,14 @@ fun AlertDialogAlimentacion(
 @Composable
 fun BottomMenu(navController: NavController, alimentacionViewModel: AlimentacionViewModel) {
 
+    //Variable para manejar la opcion elegida del bottom menu
     val opcionBottonMenu: Int by alimentacionViewModel.opcionBottonMenu.observeAsState(initial = 2)
 
     BottomNavigation(
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
         contentColor = Color.Black
     ) {
-       /* BottomNavigationItem(
+        BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { androidx.compose.material.Text(text = "Home") },
             selected = opcionBottonMenu == 0,
@@ -190,7 +195,7 @@ fun BottomMenu(navController: NavController, alimentacionViewModel: Alimentacion
                 alimentacionViewModel.setOpcionBottonMenu(0)
                 navController.navigate("home")
             }
-        )*/
+        )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.FitnessCenter, contentDescription = "Ejercicios") },
             label = { androidx.compose.material.Text(text = "Ejercicios") },
@@ -227,7 +232,7 @@ fun ActionFloatingButton(navController: NavController) {
         onClick = {
             navController.navigate("registroDieta")
         },
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
     ) {
         Icon(Icons.Filled.Add, contentDescription = "Add")
     }

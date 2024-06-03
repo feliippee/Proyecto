@@ -1,10 +1,8 @@
 package com.example.nutricionydeportefr.scaffold
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nutricionydeportefr.pantallas.sport.SportViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class ScaffoldViewModel: ViewModel() {
@@ -17,13 +15,15 @@ class ScaffoldViewModel: ViewModel() {
     private val _mostrarDialog = MutableLiveData<Boolean>(false)
     val mostrarDialog: LiveData<Boolean> = _mostrarDialog
 
+    //funcion para cambiar los estados
     fun setMostrarDialog(){
         _mostrarDialog.value = !(_mostrarDialog.value ?: false)
     }
-
     fun setDesplegable(){
         _expandir.value = !(_expandir.value ?: false)
     }
+
+    //Funcion para cerrar la sesion
     fun cerrarSesion() {
         val auth = FirebaseAuth.getInstance()
         auth.signOut()

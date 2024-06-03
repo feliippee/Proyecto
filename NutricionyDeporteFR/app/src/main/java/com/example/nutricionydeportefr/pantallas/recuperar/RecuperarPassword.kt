@@ -21,16 +21,21 @@ fun RecuperarPassword(navController: NavController, recuperarPasswordViewModel: 
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
-        Cuerpo(Modifier.align(Alignment.TopCenter), recuperarPasswordViewModel, navController)
+        Body(Modifier.align(Alignment.TopCenter), recuperarPasswordViewModel, navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordViewModel, navController: NavController) {
+fun Body(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordViewModel, navController: NavController) {
+
+    //Variable para obtener dato del ViewModel
+    val email: String by recuperarPasswordViewModel.email.observeAsState(initial = "")
     val emailError: String? by recuperarPasswordViewModel.errorEmail.observeAsState(initial = null)
+
+    //Variable para mostrar dialogo
     val showDialog by recuperarPasswordViewModel.showDialog.observeAsState(false)
+
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { },
@@ -41,14 +46,16 @@ fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordView
                     recuperarPasswordViewModel.showDialog.value = false
                     navController.navigate("login")
                 }) {
-                    Text( text = "Aceptar",
-                        color = Color.Black,)
+                    Text(
+                        text = "Aceptar",
+                        color = Color.Black,
+                    )
                 }
             }
         )
     }
     Column(modifier = modifier) {
-        //Titulo
+
         Text(
             modifier = modifier
                 .padding(16.dp),
@@ -56,9 +63,9 @@ fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordView
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
         )
+
         Spacer(modifier = Modifier.height(16.dp))
-        val email: String by recuperarPasswordViewModel.email.observeAsState(initial = "")
-        //Campo para el correo
+
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -76,19 +83,17 @@ fun Cuerpo(modifier: Modifier, recuperarPasswordViewModel: RecuperarPasswordView
             },
             modifier = modifier
         )
+
         Spacer(modifier = Modifier.height(32.dp))
-        //Boton
+
         Button(
             onClick = {
-                recuperarPasswordViewModel.recuperarPassword(email, navController)
+                recuperarPasswordViewModel.recuperarPassword(email)
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = "Enviar Email")
         }
-
-
     }
-
 }
 

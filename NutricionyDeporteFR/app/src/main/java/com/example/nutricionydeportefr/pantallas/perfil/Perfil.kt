@@ -47,8 +47,7 @@ import com.example.nutricionydeportefr.scaffold.Toolbar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
-
-
+    //Se cargan los datos del usuario y la imagen de perfil al iniciar la pantalla
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerDatosUsuario()
         perfilViewModel.cargarImagenPerfil()
@@ -85,6 +84,7 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
 @Composable
 fun NombreUsuario(perfilViewModel: PerfilViewModel) {
 
+    //Se obtiene el nombre de usuario del viewmodel
     val nombreUsuario by perfilViewModel.nombreUsuario.observeAsState(initial = "")
 
     Row(
@@ -109,16 +109,19 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
 
 @Composable
 fun FotoUsuario(perfilViewModel: PerfilViewModel) {
+    //Se obtiene el contexto de la pantalla actual
     val context = LocalContext.current
+    //Se obtiene la url de la imagen de perfil del viewmodel
     val imagenPerfilUrl by perfilViewModel.imagenPerfilUrl.observeAsState()
 
+    //Creamos el launcher para obtener la imagen de la galeria
     val galeria = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
             uri?.let { perfilViewModel.subirImagen(it) }
         }
     )
-
+    //Creamos el launcher para solicitar permisos de la galeria
     val permisosGaleria = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { permiso: Boolean ->
@@ -158,8 +161,9 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
                     }
                 }
             }
-            .border(2.dp, Color(0xFF46B62D), CircleShape)
+            .border(2.dp, Color(0xFF56C63D), CircleShape)
     ) {
+        //Si la url de la imagen de perfil no es nula se muestra la imagen, sino muestro una por defecto
         if (imagenPerfilUrl != null) {
             Image(
                 painter = rememberAsyncImagePainter(imagenPerfilUrl),
@@ -188,14 +192,17 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
 @Composable
 fun Sexo(perfilViewModel: PerfilViewModel) {
 
-    val sexo by perfilViewModel.sexo.observeAsState()
+    //Variable para guardar y obtener el dato del viewModel
+    val sexo by perfilViewModel.sexo.observeAsState(initial = "---")
+    //Variable para expandir el dropdown
     var expandir by remember { mutableStateOf(false) }
+    //Lista de opciones para el dropdown
     val eleccionSexo = listOf("Hombre", "Mujer", "Otro")
 
     Box {
         //OutlineTextfield con un dropdown para seleccionar el sexo
         OutlinedTextField(
-            value = sexo ?: "---",
+            value = sexo,
             onValueChange = { perfilViewModel.setSexo(it) },
             label = { Text("Sexo") },
             maxLines = 1,
@@ -228,6 +235,7 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
 @Composable
 fun Edad(perfilViewModel: PerfilViewModel) {
 
+    //Variable para guardar y obtener el dato del viewModel
     val edad by perfilViewModel.edad.observeAsState(initial = "---")
 
     OutlinedTextField(
@@ -247,6 +255,8 @@ fun Edad(perfilViewModel: PerfilViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Peso(perfilViewModel: PerfilViewModel) {
+
+    //Variable para guardar y obtener el dato del viewModel
     val peso by perfilViewModel.peso.observeAsState(initial = "")
 
     OutlinedTextField(
@@ -261,6 +271,8 @@ fun Peso(perfilViewModel: PerfilViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Altura(perfilViewModel: PerfilViewModel) {
+
+    //Variable para guardar y obtener el dato del viewModel
     val altura by perfilViewModel.altura.observeAsState()
 
     OutlinedTextField(
@@ -279,8 +291,11 @@ fun Altura(perfilViewModel: PerfilViewModel) {
 @Composable
 fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
 
+    //Variable para guardar y obtener el dato del viewModel
     val objetivoMarcado by perfilViewModel.objetivoMarcado.observeAsState(initial = "Objetivo")
+    //Variable para expandir el dropdown
     var expandir by remember { mutableStateOf(false) }
+    //Lista de opciones para el dropdown
     val opcionesObjetivo = listOf("Perder peso", "Ganar peso", "Mantener peso")
 
     Box {
@@ -311,13 +326,15 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
         }
     }
     Spacer(modifier = Modifier.height(20.dp))
+
+    //En funcion del objetivo marcado muestro unas raciones recomendadas
     when (objetivoMarcado) {
         "Perder peso" -> {
             Card(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                     .fillMaxSize(),
-                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                border = BorderStroke(2.dp, Color(0xFF56C63D)),
                 elevation = 8.dp,
                 shape = MaterialTheme.shapes.medium,
             ) {
@@ -328,8 +345,8 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
-                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 2\n" +
+                                "Raciones de Grasas: 0\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
@@ -343,7 +360,7 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                     .fillMaxSize(),
-                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                border = BorderStroke(2.dp, Color(0xFF56C63D)),
                 elevation = 8.dp,
                 shape = MaterialTheme.shapes.medium,
             ) {
@@ -354,8 +371,8 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
-                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 8\nRaciones de Hidratos: 6\n" +
+                                "Raciones de Grasas: 1\nRaciones de Lacteos: 3\nRaciones de Verduras: 2",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
@@ -369,7 +386,7 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                     .fillMaxSize(),
-                border = BorderStroke(2.dp, Color(0xFF46B62D)),
+                border = BorderStroke(2.dp, Color(0xFF56C63D)),
                 elevation = 8.dp,
                 shape = MaterialTheme.shapes.medium,
             ) {
@@ -380,8 +397,8 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 4\n" +
-                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        text = "Raciones de Frutas: 3\nRaciones Proteina: 3\nRaciones de Hidratos: 3\n" +
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 3",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
@@ -400,7 +417,7 @@ fun BottomMenu(navController: NavController, perfilViewModel: PerfilViewModel) {
     val opcionBottonMenu: Int by perfilViewModel.opcionBottonMenu.observeAsState(initial = 3)
 
     BottomNavigation(
-        backgroundColor = Color(0xFF46B62D),
+        backgroundColor = Color(0xFF56C63D),
         contentColor = Color.Black
     ) {
         /*BottomNavigationItem(

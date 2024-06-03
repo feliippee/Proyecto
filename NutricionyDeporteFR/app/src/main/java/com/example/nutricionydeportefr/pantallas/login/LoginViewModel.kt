@@ -1,7 +1,5 @@
 package com.example.nutricionydeportefr.pantallas.login
 
-
-
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -16,24 +14,22 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 
-
+//Variable para la autenticacion de firebase
 lateinit var firebaseAuth: FirebaseAuth
-
 
 class LoginViewModel : ViewModel() {
 
+    //Inicializamos la variable de autenticacion
     private val auth: FirebaseAuth = Firebase.auth
 
-    //Variable para el email, aqui se modifica
+    //Variable livedata para la obtencion  y guardar datos
     private val _email = MutableLiveData<String>()
-
-    //Variable para email, esta no modifica el valor, sino que accede a la variale Mutable y la modifica
     val email: LiveData<String> = _email
 
     private val _password = MutableLiveData<String>()
     val password: LiveData<String> = _password
 
-    private val _mostrarpassword = MutableLiveData<Boolean>(false)
+    private val _mostrarpassword = MutableLiveData(false)
     val mostrarpassword: LiveData<Boolean> = _mostrarpassword
 
     //Variables para mostrar errores en los campos
@@ -57,9 +53,9 @@ class LoginViewModel : ViewModel() {
         _mostrarpassword.value = _mostrarpassword.value?.not()
     }
 
-    //Funcion para iniciar sesion, comprobando los campos
+    //Funcion para iniciar sesion
     @OptIn(DelicateCoroutinesApi::class)
-    private fun comprobarInicioSesion(
+    private fun inicioSesion(
         email: String,
         password: String,
         context: android.content.Context,
@@ -71,7 +67,9 @@ class LoginViewModel : ViewModel() {
                     GlobalScope.launch(Dispatchers.Main) {
                         //Mostramos un mensaje y llamamos al menu
                         Toast.makeText(context, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show()
+                        Log.d("Login", "Inicio de sesion correcto")
                         delay(1000)
+                        //Bloqueo la pantalla para que no se pueda volver atras
                         navController.popBackStack()
                         navController.navigate("perfil")
                     }
@@ -82,11 +80,10 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
-
+    //Funcion para validar el formato del correo
     private fun validarCorreo(correo: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }
-
 
     //En caso de que escriba en el campo, se quita el erro del campo
     init {
@@ -99,8 +96,8 @@ class LoginViewModel : ViewModel() {
 
     }
 
-    //Funcion para iniciar sesion
-    fun inicioSesion(
+    //Funcion para comprobar los campos
+    fun comprobarCampos(
         correo: String,
         password: String,
         context: android.content.Context,
@@ -116,10 +113,11 @@ class LoginViewModel : ViewModel() {
 
         } else {
             //Comprobamos el inicio de sesion
-            comprobarInicioSesion(correo, password, context, navController)
+            inicioSesion(correo, password, context, navController)
         }
     }
 
+    //Funcion para iniciar sesion con google
     fun iniciarSesionGoogle(credential: AuthCredential, perfil: () -> Unit) = viewModelScope.launch {
         try {
             auth.signInWithCredential(credential)
@@ -140,6 +138,7 @@ class LoginViewModel : ViewModel() {
             Log.d("Login", "Error al logear con google")
         }
     }
+    //Registramos los datos del usuario en firebase
     private fun guardarDatosUsuario( email: String?, displayName: String?) {
 
         val user = firebaseAuth.currentUser
@@ -159,7 +158,7 @@ class LoginViewModel : ViewModel() {
                     Log.d("Login", "Datos del usuario guardados correctamente")
                 }
                 .addOnFailureListener {
-                    Log.d("Login", "Error al guardar los datos del usuario",)
+                    Log.d("Login", "Error al guardar los datos del usuario")
                 }
         }
     }

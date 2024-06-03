@@ -19,11 +19,6 @@ lateinit var firebaseAuth: FirebaseAuth
 
 class RegistroSportViewModel : ViewModel() {
 
-    init {
-        Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-    }
-
     //Variable para modificar los campos
     private val _fechaEntrenamiento = MutableLiveData<String>()
     val fechaEntrenamiento: LiveData<String> = _fechaEntrenamiento
@@ -67,6 +62,8 @@ class RegistroSportViewModel : ViewModel() {
 
     private val _pesoFinalError = MutableLiveData<String?>()
     val pesoFinalError: LiveData<String?> = _pesoFinalError
+
+    //Funciones para escribir en campos
     fun onfechaEntrenamientoChanged(fechaNacimiento: String) {
         _fechaEntrenamiento.value = fechaNacimiento
     }
@@ -84,7 +81,6 @@ class RegistroSportViewModel : ViewModel() {
     }
 
     fun onRepeticionesChanged(repeticiones: String) {
-
         _repeticiones.value = repeticiones
     }
 
@@ -96,7 +92,11 @@ class RegistroSportViewModel : ViewModel() {
         _pesoFinal.value = pesofinal
     }
 
+    //Bloque de inicialización y quitar errores en campos
     init {
+
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
 
         fechaEntrenamiento.observeForever {
             _fechaError.value = null
@@ -122,10 +122,10 @@ class RegistroSportViewModel : ViewModel() {
     }
 
     //Funcion DaterPickerDialog
-    fun FechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
+    fun fechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fecha = DatePickerDialog(
             context,
-            { view: DatePicker, year: Int, month: Int, day: Int ->
+            { _: DatePicker, year: Int, month: Int, day: Int ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
@@ -140,7 +140,7 @@ class RegistroSportViewModel : ViewModel() {
     }
 
     //Funcion para formato de la fecha
-    fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
+    private fun formatoFecha(calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fechaformato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
@@ -164,6 +164,7 @@ class RegistroSportViewModel : ViewModel() {
         val repeticionesNumber = repeticiones.toIntOrNull()
         val pesoInicialNumber = pesoInicial.toFloatOrNull()
         val pesoFinalNumber = pesoFinal.toFloatOrNull()
+
         if (fechaEntrenamiento.isEmpty()) {
             _fechaError.value = "Fecha de entreno no puede estar vacio"
             Log.d("Registro Entreno", "Campo Fecha Vacio")
@@ -210,7 +211,7 @@ class RegistroSportViewModel : ViewModel() {
     }
 
     //Funcion para guardar los datos del entrenamiento en Firebase
-    fun registrarDatosEntrenamientos(
+    private fun registrarDatosEntrenamientos(
         partecuerpo: String,
         ejercicios: String,
         series: Int,
@@ -222,6 +223,9 @@ class RegistroSportViewModel : ViewModel() {
         val user = firebaseAuth.currentUser
 
         if (user != null) {
+            //Convertimos la fecha a timpo timestamp para guardarlo en firebase
+            val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val fecha = formatoFecha.parse(fechaEntrenamiento)
             val db = Firebase.firestore
             val usuarioid = user.uid
             val entrenamientoData = hashMapOf(
@@ -232,15 +236,15 @@ class RegistroSportViewModel : ViewModel() {
                 "Repeticiones" to repeticiones,
                 "Peso Inicial" to pesoInicial,
                 "Peso Final" to pesoFinal,
-                "Fecha Entrenamiento" to fechaEntrenamiento
+                "Fecha Entrenamiento" to fecha
             )
             db.collection("entrenamientos")
                 .add(entrenamientoData)
                 .addOnSuccessListener {
-                    println("DocumentSnapshot successfully written!")
+                   Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
                 }
                 .addOnFailureListener { e ->
-                    println("Error writing document $e")
+                   Log.d("Registro Entreno", "Error al registrar entrenamiento", e)
                 }
         }
     }

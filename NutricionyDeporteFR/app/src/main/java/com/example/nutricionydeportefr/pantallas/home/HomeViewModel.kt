@@ -12,21 +12,9 @@ class HomeViewModel : ViewModel() {
     private var _opcionBottonMenu = MutableLiveData(0)
     var opcionBottonMenu: LiveData<Int> = _opcionBottonMenu
 
-    private val _expandir = MutableLiveData(false)
-    val expandir: LiveData<Boolean> = _expandir
-
-    private val _objetivoMarcado = MutableLiveData<String>()
-    val objetivoMarcado: LiveData<String> = _objetivoMarcado
-
-
     fun setOpcionBottonMenu(opcion: Int) {
         _opcionBottonMenu.value = opcion
     }
-    fun setObjetivoMarcado(objetivoMarcado: String) {
-        _objetivoMarcado.value = objetivoMarcado
-    }
-    fun setDesplegable() {
-        _expandir.value = !(_expandir.value ?: false)
-    }
+
 
 }
