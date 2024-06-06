@@ -39,6 +39,18 @@ class LoginViewModel : ViewModel() {
     private val _passwordError = MutableLiveData<String?>()
     val passwordError: LiveData<String?> = _passwordError
 
+    init {
+        //Instanciamos firebase
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        email.observeForever {
+            _emailError.value = null
+        }
+        password.observeForever {
+            _passwordError.value = null
+        }
+
+    }
 
     //Funciones para obtener el valor de los campos y actualizarlos
     fun onEmailChanged(email: String) {
@@ -80,21 +92,12 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
+
     //Funcion para validar el formato del correo
     private fun validarCorreo(correo: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
     }
 
-    //En caso de que escriba en el campo, se quita el erro del campo
-    init {
-        email.observeForever {
-            _emailError.value = null
-        }
-        password.observeForever {
-            _passwordError.value = null
-        }
-
-    }
 
     //Funcion para comprobar los campos
     fun comprobarCampos(
@@ -125,7 +128,7 @@ class LoginViewModel : ViewModel() {
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         user?.let {
-                            guardarDatosUsuario( it.email, it.displayName)
+                            guardarDatosUsuario(it.email, it.displayName)
                         }
                         Log.d("Login", "Logeado con google")
                         perfil()
@@ -138,8 +141,9 @@ class LoginViewModel : ViewModel() {
             Log.d("Login", "Error al logear con google")
         }
     }
+
     //Registramos los datos del usuario en firebase
-    private fun guardarDatosUsuario( email: String?, displayName: String?) {
+    private fun guardarDatosUsuario(email: String?, displayName: String?) {
 
         val user = firebaseAuth.currentUser
         if (user != null) {

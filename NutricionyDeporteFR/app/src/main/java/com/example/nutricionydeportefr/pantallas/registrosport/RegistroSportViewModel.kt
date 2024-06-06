@@ -63,6 +63,35 @@ class RegistroSportViewModel : ViewModel() {
     private val _pesoFinalError = MutableLiveData<String?>()
     val pesoFinalError: LiveData<String?> = _pesoFinalError
 
+    //Bloque de inicialización y quitar errores en campos
+    init {
+
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        fechaEntrenamiento.observeForever {
+            _fechaError.value = null
+        }
+        parteCuerpo.observeForever {
+            _parteCuerpoError.value = null
+        }
+        ejercicios.observeForever {
+            _ejerciciosError.value = null
+        }
+        series.observeForever {
+            _seriesError.value = null
+        }
+        repeticiones.observeForever {
+            _repeticionesError.value = null
+        }
+        pesoInicial.observeForever {
+            _pesoInicialError.value = null
+        }
+        pesoFinal.observeForever {
+            _pesoFinalError.value = null
+        }
+    }
+
     //Funciones para escribir en campos
     fun onfechaEntrenamientoChanged(fechaNacimiento: String) {
         _fechaEntrenamiento.value = fechaNacimiento
@@ -93,33 +122,6 @@ class RegistroSportViewModel : ViewModel() {
     }
 
     //Bloque de inicialización y quitar errores en campos
-    init {
-
-        Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        fechaEntrenamiento.observeForever {
-            _fechaError.value = null
-        }
-        parteCuerpo.observeForever {
-            _parteCuerpoError.value = null
-        }
-        ejercicios.observeForever {
-            _ejerciciosError.value = null
-        }
-        series.observeForever {
-            _seriesError.value = null
-        }
-        repeticiones.observeForever {
-            _repeticionesError.value = null
-        }
-        pesoInicial.observeForever {
-            _pesoInicialError.value = null
-        }
-        pesoFinal.observeForever {
-            _pesoFinalError.value = null
-        }
-    }
 
     //Funcion DaterPickerDialog
     fun fechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
@@ -241,10 +243,10 @@ class RegistroSportViewModel : ViewModel() {
             db.collection("entrenamientos")
                 .add(entrenamientoData)
                 .addOnSuccessListener {
-                   Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
+                    Log.d("Registro Entreno", "Entrenamiento registrado correctamente")
                 }
                 .addOnFailureListener { e ->
-                   Log.d("Registro Entreno", "Error al registrar entrenamiento", e)
+                    Log.d("Registro Entreno", "Error al registrar entrenamiento", e)
                 }
         }
     }

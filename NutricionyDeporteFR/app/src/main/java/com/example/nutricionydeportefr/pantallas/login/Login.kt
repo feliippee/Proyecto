@@ -45,7 +45,8 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
     val context = LocalContext.current
 
     Box(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
@@ -54,8 +55,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            //Instanciamos firebase
-            firebaseAuth = FirebaseAuth.getInstance()
+
 
             Titulo()
             Spacer(modifier = Modifier.height(10.dp))
@@ -75,7 +75,7 @@ fun Login(navController: NavController, loginViewModel: LoginViewModel) {
             Spacer(modifier = Modifier.height(30.dp))
             LineaDivisora()
             Spacer(modifier = Modifier.height(30.dp))
-            BotonesLoginRedes(loginViewModel,navController)
+            BotonesLoginRedes(loginViewModel, navController)
             Spacer(modifier = Modifier.height(125.dp))
             TextoRegistro(navController)
 
@@ -247,7 +247,7 @@ fun BotonesLoginRedes(loginViewModel: LoginViewModel, navController: NavControll
                 .requestEmail()
                 .build()
 
-            val googleSignInCliente= GoogleSignIn.getClient(context,opciones)
+            val googleSignInCliente = GoogleSignIn.getClient(context, opciones)
             launcher.launch(googleSignInCliente.signInIntent)
 
         }
@@ -276,8 +276,9 @@ fun TextoRegistro(navController: NavController) {
         fontWeight = FontWeight.Bold
     )
 }
+
 @Composable
-fun LineaDivisora(){
+fun LineaDivisora() {
 
     Row(
         modifier = Modifier.fillMaxWidth(),

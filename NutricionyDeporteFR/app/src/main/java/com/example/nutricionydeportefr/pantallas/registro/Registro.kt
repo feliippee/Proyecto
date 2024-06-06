@@ -27,9 +27,6 @@ import com.google.firebase.auth.*
 @Composable
 fun Registro(navController: NavController, registroViewModel: RegistroViewModel) {
 
-    //Instanciamos firebase
-    firebaseAuth = FirebaseAuth.getInstance()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +52,6 @@ fun Textotitulo() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 30.dp),
-
         )
 }
 
@@ -121,7 +117,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
                     painter = painterResource(id = if (mostrarPassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
                     contentDescription = if (mostrarPassword) "Ocultar contraseña" else "Mostrar contraseña",
                     tint = Color.Black
-
                 )
             }
         },
@@ -151,13 +146,11 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
         trailingIcon = {
             IconButton(onClick = {
                 registroViewModel.onMostrarConfirmarPasswod()
-
             }) {
                 Icon(
                     painter = painterResource(id = if (mostrarConfirmarPassword) R.drawable.mostrar_password else R.drawable.ocultar_password),
                     contentDescription = if (mostrarConfirmarPassword) "Ocultar contraseña" else "Mostrar contraseña",
                     tint = Color.Black
-
                 )
             }
         },
@@ -179,8 +172,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
         value = correo,
         onValueChange = {
             registroViewModel.onCorreoChanged(it)
-
-
         },
         label = { Text("Correo") },
         maxLines = 1,
@@ -195,7 +186,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-
         )
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -232,7 +222,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
 
     Spacer(modifier = Modifier.height(35.dp))
 
-
     Button(
         onClick = {
             registroViewModel.compobarCampos(
@@ -248,7 +237,6 @@ fun Body(registroViewModel: RegistroViewModel, navController: NavController) {
     ) {
         Text(text = "Registrarse")
     }
-
 }
 
 

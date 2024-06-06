@@ -41,8 +41,8 @@ class AlimentacionViewModel private constructor() : ViewModel() {
                     .whereEqualTo("usuarioId", usuarioId)
                     .orderBy("Fecha Alimentacion", Query.Direction.DESCENDING)
                     .get().await()
-                val alimentacionList = result.map { document ->
 
+                val alimentacionList = result.map { document ->
                     val timestamp = document.getTimestamp("Fecha Alimentacion")
                     val date = timestamp?.toDate()
                     val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -63,12 +63,10 @@ class AlimentacionViewModel private constructor() : ViewModel() {
                     )
                 }
                 _alimentacion.value = alimentacionList
-
             } catch (exception: Exception) {
                 Log.d("AlimentacionViewModel", "Error al obtener los datos.", exception)
             } finally {
                 _cargaDatos.value = false
-
             }
         }
     }

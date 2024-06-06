@@ -26,6 +26,7 @@ fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldVie
         homeViewModel.getEntrenamientosHoy()
         homeViewModel.getAlimentacionesHoy()
     }
+
     Scaffold(topBar = { Toolbar(scaffoldViewModel, navController) }, bottomBar = { BottomMenu(navController) }) {
         Box(
             Modifier
@@ -40,11 +41,11 @@ fun Home(navController: NavController, homeViewModel: HomeViewModel, scaffoldVie
 
 @Composable
 fun Body(modifier: Modifier, homeViewModel: HomeViewModel, navController: NavController) {
+
     Column(modifier = modifier) {
         EntrenamientosDiarios(homeViewModel, navController)
         DietasDiarias(homeViewModel, navController)
         ConsejoDelDia()
-
     }
 
 }
@@ -52,6 +53,7 @@ fun Body(modifier: Modifier, homeViewModel: HomeViewModel, navController: NavCon
 
 @Composable
 fun ConsejoDelDia() {
+
     val consejos = listOf(
         "Recuerda beber al menos 2 litros de agua al día.\n",
         "Intenta hacer al menos 30 minutos de cardio al día.\n",
@@ -61,6 +63,7 @@ fun ConsejoDelDia() {
         "Estirar antes y despues de un entrenamiento puede evitar lesiones\n",
         "No te saltes ninguna comida, es importante para mantener el metabolismo activo.\n",
     )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,7 +86,6 @@ fun ConsejoDelDia() {
             )
         }
     }
-
 }
 
 @Composable
@@ -109,22 +111,35 @@ fun EntrenamientosDiarios(homeViewModel: HomeViewModel, navController: NavContro
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp)
             )
-            if (entrenamientosDiarios == 0) {
-                Text(
-                    text = "Hoy no has realiado ningun entrenamiento, animate a hacerlo!\n Clica para registrar un entrenamiento\n",
-                    lineHeight = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp)
+            when (entrenamientosDiarios) {
+                0 -> {
+                    Text(
+                        text = "Hoy no has registrado ningún entrenamiento, animate a hacerlo!\nClica para registrar un entrenamiento\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
 
-                )
-            } else {
-                Text(
-                    text = "Hoy has realizado $entrenamientosDiarios entrenamientos\n",
-                    lineHeight = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp)
-                )
+                    )
+                }
 
+                1 -> {
+                    Text(
+                        text = "Hoy has registrado $entrenamientosDiarios entrenamiento\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                    )
+                }
+
+                else -> {
+                    Text(
+                        text = "Hoy has registrado $entrenamientosDiarios entrenamientos\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                    )
+
+                }
             }
         }
     }
@@ -153,22 +168,35 @@ fun DietasDiarias(homeViewModel: HomeViewModel, navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(10.dp)
             )
-            if (alimentacionesDiarias == 0) {
-                Text(
-                    text = "Hoy no has registrado ninguna alimentacion, animate a hacerlo!\n Clica para registrar una alimentacion\n",
-                    lineHeight = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp)
+            when (alimentacionesDiarias) {
+                0 -> {
+                    Text(
+                        text = "Hoy no has registrado ninguna alimentación, animate a hacerlo!\nClica para registrar una alimentación\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
 
-                )
-            } else {
-                Text(
-                    text = "Hoy has registrado $alimentacionesDiarias alimentaciones\n",
-                    lineHeight = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp)
-                )
+                    )
+                }
 
+                1 -> {
+                    Text(
+                        text = "Hoy has registrado $alimentacionesDiarias alimentación\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                    )
+                }
+
+                else -> {
+                    Text(
+                        text = "Hoy has registrado $alimentacionesDiarias alimentaciones\n",
+                        lineHeight = 20.sp,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                    )
+
+                }
             }
         }
     }
@@ -178,7 +206,7 @@ fun DietasDiarias(homeViewModel: HomeViewModel, navController: NavController) {
 fun BottomMenu(navController: NavController) {
 
 
-    var opcionBottonMenu by remember { mutableStateOf(0) }
+    var opcionBottonMenu by remember { mutableIntStateOf(0) }
 
     BottomNavigation(
         backgroundColor = Color(0xFF46B62D), contentColor = Color.Black

@@ -62,6 +62,30 @@ class RegistroViewModel : ViewModel() {
     private val _confirmarPasswordError = MutableLiveData<String?>()
     val confirmarPasswordError: LiveData<String?> = _confirmarPasswordError
 
+    //En caso de que escriba en el campo, se quita el error del campo
+    init {
+        //Instanciamos firebase
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        usuario.observeForever {
+            _usuarioError.value = null
+        }
+
+        password.observeForever {
+            _passwordError.value = null
+        }
+        confirmarPassword.observeForever {
+            _confirmarPasswordError.value = null
+        }
+
+        correo.observeForever {
+            _emailError.value = null
+        }
+        fechaNacimiento.observeForever {
+            _fechaError.value = null
+        }
+    }
+
     //Funciones para modificar campos
     fun onUsuarioChanged(usuario: String) {
         _usuario.value = usuario
@@ -89,28 +113,6 @@ class RegistroViewModel : ViewModel() {
 
     fun onFechaNacimientoChanged(fechaNacimiento: String) {
         _fechaNacimiento.value = fechaNacimiento
-    }
-
-
-    //En caso de que escriba en el campo, se quita el error del campo
-    init {
-        usuario.observeForever {
-            _usuarioError.value = null
-        }
-
-        password.observeForever {
-            _passwordError.value = null
-        }
-        confirmarPassword.observeForever {
-            _confirmarPasswordError.value = null
-        }
-
-        correo.observeForever {
-            _emailError.value = null
-        }
-        fechaNacimiento.observeForever {
-            _fechaError.value = null
-        }
     }
 
     //Funcion para comprobar los campo
@@ -270,6 +272,4 @@ class RegistroViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
-
-
 }

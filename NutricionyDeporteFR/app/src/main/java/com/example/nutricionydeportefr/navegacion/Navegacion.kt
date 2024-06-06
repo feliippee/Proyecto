@@ -23,36 +23,39 @@ fun Navegacion() {
 
     //Esta variable gestiona el estado de navegacion para poder desplazarnos
     val navController = rememberNavController()
+
+    //Establecemos el navhost con la ruta inicial cuando se abra la app
     NavHost(navController = navController, startDestination = Escenas.SplashScreen.ruta) {
+
         //Composable donde se define la ruta de la pantalla del login
-        composable( route = Escenas.Login.ruta) {
+        composable(route = Escenas.Login.ruta) {
             Login(navController, LoginViewModel())
         }
         //Composable donde se define la ruta de la pantalla del registro
-        composable( route = Escenas.Registro.ruta) {
+        composable(route = Escenas.Registro.ruta) {
             Registro(navController, RegistroViewModel())
         }
         //Composable donde se define la ruta de la pantalla del home
-        composable( route = Escenas.Home.ruta) {
+        composable(route = Escenas.Home.ruta) {
             val homeViewModel = HomeViewModel.getInstance()
             Home(navController, homeViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del recuperar password
-        composable( route = Escenas.RecuperarPassword.ruta) {
+        composable(route = Escenas.RecuperarPassword.ruta) {
             RecuperarPassword(navController, RecuperarPasswordViewModel())
         }
         //Composable donde se define la ruta de la pantalla del perfil
-        composable (route = Escenas.Perfil.ruta) {
+        composable(route = Escenas.Perfil.ruta) {
             val perfilViewModel = PerfilViewModel.getInstance()
             Perfil(navController, perfilViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del alimentacion
-        composable (route = Escenas.Alimentacion.ruta) {
+        composable(route = Escenas.Alimentacion.ruta) {
             val alimentacionViewModel = AlimentacionViewModel.getInstance()
             Alimentacion(navController, alimentacionViewModel, ScaffoldViewModel())
         }
         //Composable donde se define la ruta de la pantalla del sport
-        composable (route = Escenas.Ejercicios.ruta) {
+        composable(route = Escenas.Ejercicios.ruta) {
             val sportViewModel = SportViewModel.getInstance()
             Sport(navController, sportViewModel, ScaffoldViewModel())
         }
@@ -69,7 +72,7 @@ fun Navegacion() {
             ProgressBar()
         }
         //Composable donde se define la ruta de la pantalla del registro de alimentacion
-        composable(route = Escenas.RegistroDieta.ruta){
+        composable(route = Escenas.RegistroDieta.ruta) {
             RegistroDieta(navController, RegistroDietaViewModel())
         }
     }

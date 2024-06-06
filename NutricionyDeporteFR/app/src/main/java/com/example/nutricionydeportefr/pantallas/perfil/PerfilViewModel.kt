@@ -10,14 +10,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 
-class PerfilViewModel private constructor()  : ViewModel() {
+class PerfilViewModel private constructor() : ViewModel() {
 
     //Instanciamos firebase
     private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-
+    //Variables LiveData
     private val _nombreUsuario = MutableLiveData<String>()
     val nombreUsuario: LiveData<String> = _nombreUsuario
 
@@ -45,7 +45,6 @@ class PerfilViewModel private constructor()  : ViewModel() {
         cargarImagenPerfil()
     }
 
-
     fun setSexo(sexo: String) {
         _sexo.value = sexo
     }
@@ -61,6 +60,7 @@ class PerfilViewModel private constructor()  : ViewModel() {
     fun setAltura(altura: String) {
         _altura.value = altura
     }
+
     fun setObjetivoMarcado(objetivoMarcado: String) {
         _objetivoMarcado.value = objetivoMarcado
     }
@@ -87,8 +87,9 @@ class PerfilViewModel private constructor()  : ViewModel() {
                 }
         }
     }
+
     //Subimos la imagen en firebase
-    fun subirImagen( uri: Uri) {
+    fun subirImagen(uri: Uri) {
         val user = auth.currentUser
         if (user != null) {
             val storageRef = storage.reference.child("imagenesperfil/${user.uid}")
@@ -104,6 +105,7 @@ class PerfilViewModel private constructor()  : ViewModel() {
             }
         }
     }
+
     //Guardamos la url de la imagen en firebase
     private fun guardarUrlFirebase(downloadUri: String) {
         val user = auth.currentUser
@@ -127,14 +129,15 @@ class PerfilViewModel private constructor()  : ViewModel() {
                 }
         }
     }
+
     //Guardamos los datos del usuario en firebase
     fun guardarDatosUsuario() {
+
         val sexo = _sexo.value
         val edad = _edad.value
         val peso = _peso.value
         val altura = _altura.value
         val objetivo = _objetivoMarcado.value
-
         val user = auth.currentUser
 
         if (user != null) {
@@ -165,8 +168,10 @@ class PerfilViewModel private constructor()  : ViewModel() {
                 }
         }
     }
+
     //Cargamos la imagen de perfil
     fun cargarImagenPerfil() {
+
         val user = auth.currentUser
         if (user != null) {
             firestore.collection("usuario")

@@ -87,6 +87,42 @@ class RegistroDietaViewModel : ViewModel() {
     private val _suplementacionError = MutableLiveData<String?>()
     val suplementacionError: LiveData<String?> = _suplementacionError
 
+    init {
+        Firebase.firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        fechaDieta.observeForever {
+            _fechaError.value = null
+        }
+        comidaseleccionada.observeForever {
+            _comidaSeleccionadaError.value = null
+        }
+        menu.observeForever {
+            _menuError.value = null
+        }
+        racionVerduras.observeForever {
+            _racionLacteoError.value = null
+        }
+        racionLacteo.observeForever {
+            _racionLacteoError.value = null
+        }
+        racionFruta.observeForever {
+            _racionFrutaError.value = null
+        }
+        racionHidratos.observeForever {
+            _racionHidratosError.value = null
+        }
+        racionGrasas.observeForever {
+            _racionGrasasError.value = null
+        }
+        racionProteina.observeForever {
+            _racionProteinaError.value = null
+        }
+        suplementacion.observeForever {
+            _suplementacionError.value = null
+        }
+    }
+
     //Funciones para modificar los campos
     fun onfechaDietaChanged(fechaDieta: String) {
         _fechaDieta.value = fechaDieta
@@ -132,42 +168,6 @@ class RegistroDietaViewModel : ViewModel() {
         _expandir.value = !(_expandir.value ?: false)
     }
 
-    init {
-        Firebase.firestore
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        fechaDieta.observeForever {
-            _fechaError.value = null
-        }
-        comidaseleccionada.observeForever {
-            _comidaSeleccionadaError.value = null
-        }
-        menu.observeForever {
-            _menuError.value = null
-        }
-        racionVerduras.observeForever {
-            _racionLacteoError.value = null
-        }
-        racionLacteo.observeForever {
-            _racionLacteoError.value = null
-        }
-        racionFruta.observeForever {
-            _racionFrutaError.value = null
-        }
-        racionHidratos.observeForever {
-            _racionHidratosError.value = null
-        }
-        racionGrasas.observeForever {
-            _racionGrasasError.value = null
-        }
-        racionProteina.observeForever {
-            _racionProteinaError.value = null
-        }
-        suplementacion.observeForever {
-            _suplementacionError.value = null
-        }
-    }
-
     //Funcion DaterPickerDialog
     fun fechaDialog(context: Context, calendar: Calendar, onDateSelected: (String) -> Unit) {
         val fecha = DatePickerDialog(
@@ -192,7 +192,6 @@ class RegistroDietaViewModel : ViewModel() {
         val fecha = fechaformato.format(calendar.time)
         onDateSelected(fecha)
     }
-
 
     @OptIn(DelicateCoroutinesApi::class)
     fun comprobarCamposDieta(
@@ -319,7 +318,7 @@ class RegistroDietaViewModel : ViewModel() {
 
                 }
                 .addOnFailureListener { e ->
-                   Log.d("Registro Alimentacion", "Error al guardar los datos en Firebase", e)
+                    Log.d("Registro Alimentacion", "Error al guardar los datos en Firebase", e)
                 }
         }
     }

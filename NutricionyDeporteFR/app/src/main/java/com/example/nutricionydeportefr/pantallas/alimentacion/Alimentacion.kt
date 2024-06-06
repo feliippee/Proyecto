@@ -27,11 +27,16 @@ import com.example.nutricionydeportefr.scaffold.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Alimentacion(navController: NavController, alimentacionViewModel: AlimentacionViewModel, scaffoldViewModel: ScaffoldViewModel) {
+fun Alimentacion(
+    navController: NavController,
+    alimentacionViewModel: AlimentacionViewModel,
+    scaffoldViewModel: ScaffoldViewModel
+) {
 
     LaunchedEffect(key1 = true) {
         alimentacionViewModel.getAlimentacion()
     }
+
     //Variables que obtenemos del ViewModel
     val alimentacion by alimentacionViewModel.alimentacion.observeAsState(initial = emptyList())
     val cargaDatosalimentacion by alimentacionViewModel.cargaDatos.observeAsState(initial = true)
@@ -46,6 +51,7 @@ fun Alimentacion(navController: NavController, alimentacionViewModel: Alimentaci
                 .fillMaxSize()
                 .padding(8.dp),
         ) {
+
             //Cargamos los datos de alimentacion, mientras muestro progressbar
             if (cargaDatosalimentacion) {
                 ProgressBar()
@@ -65,7 +71,7 @@ fun Body(modifier: Modifier, alimentacion: List<ItemAlimentacion>, alimentacionV
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(16.dp)
         )
-        //Sino hemos obtenido ningun item de alimentacion, muestro que no hay dietas registradas
+        //Sino hemos obtenido ningun item de alimentacion, muestro un texto
         if (alimentacion.isEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -132,17 +138,21 @@ fun Itemalimentacion(itemAlimentacion: ItemAlimentacion, alimentacionViewModel: 
                     fontSize = 15.sp,
                     modifier = Modifier.padding(bottom = 4.dp),
                     fontWeight = FontWeight.Bold,
+                    lineHeight = 20.sp
                 )
                 Text(text = "Tipo Comida: ${itemAlimentacion.comida}")
                 if (expandir) {
-                    Text(text = "Platos: ${itemAlimentacion.menu}")
-                    Text(text = "Verdura: ${itemAlimentacion.verduras}")
-                    Text(text = "Lacteos: ${itemAlimentacion.lacteos}")
-                    Text(text = "Frutas: ${itemAlimentacion.frutas}")
-                    Text(text = "Hidratos: ${itemAlimentacion.hidratos}")
-                    Text(text = "Grasas: ${itemAlimentacion.grasas}")
-                    Text(text = "Proteinas: ${itemAlimentacion.proteinas}")
-                    Text(text = "Suplementacion: ${itemAlimentacion.suplementacion}")
+                    Text(text = "Platos: ${itemAlimentacion.menu}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Verduras: ${itemAlimentacion.verduras}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Lacteos: ${itemAlimentacion.lacteos}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Frutas: ${itemAlimentacion.frutas}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Hidratos: ${itemAlimentacion.hidratos}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Grasas: ${itemAlimentacion.grasas}", modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Proteinas: ${itemAlimentacion.proteinas}", modifier = Modifier.padding(top = 4.dp))
+                    Text(
+                        text = "Suplementacion: ${itemAlimentacion.suplementacion}",
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
             IconButton(
@@ -158,6 +168,7 @@ fun Itemalimentacion(itemAlimentacion: ItemAlimentacion, alimentacionViewModel: 
         }
     }
 }
+
 @Composable
 fun AlertDialogAlimentacion(
     onDismissRequest: () -> Unit,
@@ -183,7 +194,7 @@ fun AlertDialogAlimentacion(
 @Composable
 fun BottomMenu(navController: NavController) {
 
-    var opcionBottonMenu by remember { mutableStateOf(2)   }
+    var opcionBottonMenu by remember { mutableIntStateOf(2) }
 
     BottomNavigation(
         backgroundColor = Color(0xFF56C63D),

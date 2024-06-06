@@ -18,6 +18,7 @@ import java.util.*
 
 class HomeViewModel private constructor() : ViewModel() {
 
+    //Variables para almacenar los entrenamientos y alimentaciones diarias
     private val _entrenamientosDiarios = MutableLiveData(0)
     val entrenamientosDiarios: LiveData<Int> = _entrenamientosDiarios
 
@@ -31,57 +32,63 @@ class HomeViewModel private constructor() : ViewModel() {
 
     //Funcion para obtener los entrenamientos de hoy
     fun getEntrenamientosHoy() {
-        viewModelScope.launch {
-            val db = Firebase.firestore
-            val user = FirebaseAuth.getInstance().currentUser
-            if (user != null) {
-                val usuarioId = user.uid
-                val result = db.collection("entrenamientos")
-                    .whereEqualTo("usuarioId", usuarioId)
-                    .orderBy("Fecha Entrenamiento", Query.Direction.DESCENDING)
-                    .get().await()
+        try {
+            viewModelScope.launch {
+                val db = Firebase.firestore
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    val usuarioId = user.uid
+                    val result = db.collection("entrenamientos")
+                        .whereEqualTo("usuarioId", usuarioId)
+                        .orderBy("Fecha Entrenamiento", Query.Direction.DESCENDING)
+                        .get().await()
 
-                val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val fechaHoy = formatoFecha.format(Date())
+                    val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val fechaHoy = formatoFecha.format(Date())
 
-                val entrenamientosHoy = result.documents.count { document ->
-                    val timestamp = document.getTimestamp("Fecha Entrenamiento")
-                    val fecha = timestamp?.toDate()?.let { formatoFecha.format(it) }
-                    fecha == fechaHoy
+                    val entrenamientosHoy = result.documents.count { document ->
+                        val timestamp = document.getTimestamp("Fecha Entrenamiento")
+                        val fecha = timestamp?.toDate()?.let { formatoFecha.format(it) }
+                        fecha == fechaHoy
+                    }
+                    _entrenamientosDiarios.value = entrenamientosHoy
                 }
-
-                _entrenamientosDiarios.value = entrenamientosHoy
             }
+        } catch (e: Exception) {
+            Log.d("HomeViewModel", "Error al obtener los entrenamientos de hoy: ", e)
         }
     }
 
     //Funcion para obtener las alimentaciones registradas
     fun getAlimentacionesHoy() {
-        viewModelScope.launch {
-            val db = Firebase.firestore
-            val usuario = FirebaseAuth.getInstance().currentUser
-            if (usuario != null) {
-                val usuarioId = usuario.uid
-                val result = db.collection("alimentacion")
-                    .whereEqualTo("usuarioId", usuarioId)
-                    .orderBy("Fecha Alimentacion", Query.Direction.DESCENDING)
-                    .get().await()
+        try {
+            viewModelScope.launch {
+                val db = Firebase.firestore
+                val usuario = FirebaseAuth.getInstance().currentUser
+                if (usuario != null) {
+                    val usuarioId = usuario.uid
+                    val result = db.collection("alimentacion")
+                        .whereEqualTo("usuarioId", usuarioId)
+                        .orderBy("Fecha Alimentacion", Query.Direction.DESCENDING)
+                        .get().await()
 
-                val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val fechaHoy = formatoFecha.format(Date())
+                    val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val fechaHoy = formatoFecha.format(Date())
 
-                val alimentacionesHoy = result.documents.count { document ->
-                    val timestamp = document.getTimestamp("Fecha Alimentacion")
-                    val fecha = timestamp?.toDate()?.let { formatoFecha.format(it) }
-                    fecha == fechaHoy
+                    val alimentacionesHoy = result.documents.count { document ->
+                        val timestamp = document.getTimestamp("Fecha Alimentacion")
+                        val fecha = timestamp?.toDate()?.let { formatoFecha.format(it) }
+                        fecha == fechaHoy
+                    }
+                    _alimentacionesDiarias.value = alimentacionesHoy
                 }
-
-                _alimentacionesDiarias.value = alimentacionesHoy
             }
+        } catch (e: Exception) {
+            Log.d("HomeViewModel", "Error al obtener las alimentaciones de hoy", e)
         }
     }
 
-    //Singlento para persistencia de datos entre view model
+    //Singlenton para persistencia de datos entre viewModel
     companion object {
         @Volatile
         private var INSTANCE: HomeViewModel? = null
@@ -94,7 +101,6 @@ class HomeViewModel private constructor() : ViewModel() {
                     instance = HomeViewModel()
                     INSTANCE = instance
                 }
-
                 return instance
             }
         }

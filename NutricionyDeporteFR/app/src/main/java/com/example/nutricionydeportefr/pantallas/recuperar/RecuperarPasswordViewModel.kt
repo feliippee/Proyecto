@@ -9,27 +9,27 @@ import com.google.firebase.auth.auth
 
 class RecuperarPasswordViewModel {
 
-    //Variable para el email
+    //Variables LiveDatas para el email y el error
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
 
-    //Variable de error
+
     private val _errorEmail = MutableLiveData<String>()
     val errorEmail: LiveData<String> = _errorEmail
 
     //Variable para mostrar dialogo
     val showDialog = MutableLiveData(false)
 
-    //Funcion para escribir en el campo email
-    fun onEmailChanged(email: String) {
-        _email.value = email
-    }
-
     //Funcion para limpiar el error en el campo
     init {
         email.observeForever {
             _errorEmail.value = null
         }
+    }
+
+    //Funcion para escribir en el campo email
+    fun onEmailChanged(email: String) {
+        _email.value = email
     }
 
     //Funcion para enviar correo para recuperar la contraseña
@@ -44,7 +44,7 @@ class RecuperarPasswordViewModel {
                     if (task.isSuccessful) {
                         showDialog.value = true
                     } else {
-                      Log.d("RecuperarPasswordViewModel", "Error al enviar el correo")
+                        Log.d("RecuperarPasswordViewModel", "Error al enviar el correo")
                     }
                 }
         }

@@ -34,7 +34,6 @@ fun Sport(navController: NavController, sportViewModel: SportViewModel, scaffold
         sportViewModel.getEntrenamientos()
     }
 
-
     val entrenamientos by sportViewModel.entrenamientos.observeAsState(initial = emptyList())
     val cargaDatosEntrenamiento by sportViewModel.cargaDatos.observeAsState(initial = true)
 
@@ -133,16 +132,17 @@ fun Itementreno(itemEntrenamiento: ItemEntrenamiento, sportViewModel: SportViewM
                     fontSize = 15.sp,
                     modifier = Modifier.padding(bottom = 4.dp),
                     fontWeight = FontWeight.Bold,
+                    lineHeight = 20.sp
                 )
                 Text(text = "Parte del Cuerpo: ${itemEntrenamiento.parteCuerpo}")
                 if (expandir) {
-                    Text(text = "Ejercicios: ${itemEntrenamiento.ejercicios}")
-                    Text(text = "Series: ${itemEntrenamiento.series}")
-                    Text(text = "Repeticiones: ${itemEntrenamiento.repeticiones}")
+                    Text(text = "Ejercicios: ${itemEntrenamiento.ejercicios}",modifier = Modifier.padding(top = 4.dp) )
+                    Text(text = "Series: ${itemEntrenamiento.series}",modifier = Modifier.padding(top = 4.dp))
+                    Text(text = "Repeticiones: ${itemEntrenamiento.repeticiones}", modifier = Modifier.padding(top = 4.dp))
                     val pesoInicialFormateado = String.format("%.2f", itemEntrenamiento.pesoInicial.toDouble())
-                    Text(text = "Peso Inicial: $pesoInicialFormateado")
+                    Text(text = "Peso Inicial: $pesoInicialFormateado",modifier = Modifier.padding(top = 4.dp))
                     val pesoFinalFormateado = String.format("%.2f", itemEntrenamiento.pesoFinal.toDouble())
-                    Text(text = "Peso Final: $pesoFinalFormateado")
+                    Text(text = "Peso Final: $pesoFinalFormateado",modifier = Modifier.padding(top = 4.dp))
                 }
             }
             IconButton(
@@ -167,7 +167,7 @@ fun AlertDialogEntreno(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        text = { Text("¿Estás seguro que deseas borrar este entreno?") },
+        text = { Text("¿Estás seguro que deseas borrar este entrenamiento?") },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text("Aceptar")

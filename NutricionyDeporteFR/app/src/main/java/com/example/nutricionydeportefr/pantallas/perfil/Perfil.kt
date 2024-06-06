@@ -47,6 +47,7 @@ import com.example.nutricionydeportefr.scaffold.Toolbar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaffoldViewModel: ScaffoldViewModel) {
+
     //Se cargan los datos del usuario y la imagen de perfil al iniciar la pantalla
     LaunchedEffect(key1 = true) {
         perfilViewModel.obtenerDatosUsuario()
@@ -75,6 +76,7 @@ fun Perfil(navController: NavController, perfilViewModel: PerfilViewModel, scaff
                 Spacer(modifier = Modifier.height(20.dp))
                 ObjetivoMarcado(perfilViewModel)
             }
+            //Espacio para que no se corte el item con el bottomnavigation
             item { Spacer(modifier = Modifier.height(56.dp)) }
         }
     }
@@ -109,6 +111,7 @@ fun NombreUsuario(perfilViewModel: PerfilViewModel) {
 
 @Composable
 fun FotoUsuario(perfilViewModel: PerfilViewModel) {
+
     //Se obtiene el contexto de la pantalla actual
     val context = LocalContext.current
     //Se obtiene la url de la imagen de perfil del viewmodel
@@ -139,7 +142,7 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
             .width(75.dp)
             .height(75.dp)
             .clickable {
-                //En funcion de la version de androd se solicitaran unos permisos u otros
+                //En funcion de la version de android se solicitaran unos permisos u otros
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES)
                         == PackageManager.PERMISSION_GRANTED
@@ -193,7 +196,7 @@ fun FotoUsuario(perfilViewModel: PerfilViewModel) {
 fun Sexo(perfilViewModel: PerfilViewModel) {
 
     //Variable para guardar y obtener el dato del viewModel
-    val sexo by perfilViewModel.sexo.observeAsState(initial = "---")
+    val sexo by perfilViewModel.sexo.observeAsState(initial = "")
     //Variable para expandir el dropdown
     var expandir by remember { mutableStateOf(false) }
     //Lista de opciones para el dropdown
@@ -236,7 +239,7 @@ fun Sexo(perfilViewModel: PerfilViewModel) {
 fun Edad(perfilViewModel: PerfilViewModel) {
 
     //Variable para guardar y obtener el dato del viewModel
-    val edad by perfilViewModel.edad.observeAsState(initial = "---")
+    val edad by perfilViewModel.edad.observeAsState(initial = "")
 
     OutlinedTextField(
         value = edad,
@@ -244,7 +247,6 @@ fun Edad(perfilViewModel: PerfilViewModel) {
             perfilViewModel.setEdad(it)
 
         },
-
         label = { Text("Edad") },
         maxLines = 1,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -273,10 +275,10 @@ fun Peso(perfilViewModel: PerfilViewModel) {
 fun Altura(perfilViewModel: PerfilViewModel) {
 
     //Variable para guardar y obtener el dato del viewModel
-    val altura by perfilViewModel.altura.observeAsState()
+    val altura by perfilViewModel.altura.observeAsState(initial = "")
 
     OutlinedTextField(
-        value = altura ?: "----",
+        value = altura,
         onValueChange = {
             perfilViewModel.setAltura(it)
 
@@ -345,8 +347,8 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Raciones de Frutas: 3\nRaciones Proteina: 5\nRaciones de Hidratos: 2\n" +
-                                "Raciones de Grasas: 0\nRaciones de Lacteos: 3\nRaciones de Verduras: 5",
+                        text = "Raciones de Frutas: 2\nRaciones Proteina: 4\nRaciones de Hidratos: 2\n" +
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 1\nRaciones de Verduras: 5",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
@@ -371,8 +373,8 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                         modifier = Modifier.padding(16.dp)
                     )
                     Text(
-                        text = "Raciones de Frutas: 3\nRaciones Proteina: 8\nRaciones de Hidratos: 6\n" +
-                                "Raciones de Grasas: 1\nRaciones de Lacteos: 3\nRaciones de Verduras: 2",
+                        text = "Raciones de Frutas: 1\nRaciones Proteina: 8\nRaciones de Hidratos: 6\n" +
+                                "Raciones de Grasas: 3\nRaciones de Lacteos: 2\nRaciones de Verduras: 2",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
 
@@ -398,16 +400,14 @@ fun ObjetivoMarcado(perfilViewModel: PerfilViewModel) {
                     )
                     Text(
                         text = "Raciones de Frutas: 3\nRaciones Proteina: 3\nRaciones de Hidratos: 3\n" +
-                                "Raciones de Grasas: 2\nRaciones de Lacteos: 3\nRaciones de Verduras: 3",
+                                "Raciones de Grasas: 2\nRaciones de Lacteos: 2\nRaciones de Verduras: 3",
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
-
                     )
                 }
             }
         }
     }
-
 }
 
 

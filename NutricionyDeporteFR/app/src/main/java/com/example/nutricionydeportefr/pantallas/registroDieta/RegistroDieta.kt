@@ -39,6 +39,7 @@ fun RegistroDieta(navController: NavController, registroDietaViewModel: Registro
 
 @Composable
 fun Body(modifier: Modifier, navController: NavController, registroDietaViewModel: RegistroDietaViewModel) {
+
     Column(modifier = modifier) {
         Titulo()
         Spacer(modifier = Modifier.size(30.dp))
@@ -71,6 +72,7 @@ fun Titulo() {
 
 @Composable
 fun CampoFecha(registroDietaViewModel: RegistroDietaViewModel) {
+
     //Variable para obtener el contexto de la pantalla actual
     val context = LocalContext.current
 
